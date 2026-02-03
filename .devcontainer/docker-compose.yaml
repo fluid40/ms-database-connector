@@ -1,0 +1,52 @@
+services:
+  influx_database_v1:
+    image: influxdb:1.11.8
+    container_name: influx-database
+    volumes:
+      - influxdb_data:/var/lib/influxdb
+    restart: always
+    environment:
+      INFLUXDB_DB: submodel-db
+      INFLUXDB_ADMIN_USER: admin
+      INFLUXDB_ADMIN_PASSWORD: fluid40secure!
+      INFLUXDB_USER: fluid40
+      INFLUXDB_USER_PASSWORD: wbEx!S!#4OHcN!5X
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8086/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+
+  java_aas_server:
+    image: eclipsebasyx/aas-environment:2.0.0-milestone-08
+    container_name: javaserver-dbc
+    ports:
+      - '8077:8077'
+    environment:
+      - SERVER_PORT=8077
+      - SERVER_HOST=dbc
+    volumes:
+      - ./aas:/application/aas
+      - ./basyx/aas-env.properties:/application/application.properties
+
+  dev_container:
+    build: .
+    container_name: ms-dbc-dev-container
+    volumes:
+      - ../..:/workspaces:cached
+    command: sleep infinity
+    depends_on:
+        influx_database_v1:
+          condition: service_healthy
+        java_aas_server:
+          condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - RUNTIME_OAUTH_SECRET=nY0mjyECF60DGzNmQUjL81XurSl8etom
+      - RUNTIME_CONFIGURATION_FILE=./configuration/DevContainerEnv.json
+
+volumes:
+  influxdb_data:
+

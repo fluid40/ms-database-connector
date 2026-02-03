@@ -1,0 +1,56 @@
+{
+    "name": "Fluid4.0 Microservice DBC Development Container",
+    "dockerComposeFile": "./docker-compose.yaml",
+    "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+    "forwardPorts": [
+        1433
+    ],
+    "service": "dev_container",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                // Python extension for VS Code
+                "ms-python.python",
+                // Ruff linter for Python
+                "charliermarsh.ruff",
+                // Spelling Checker for Visual Studio Code
+                "streetsidesoftware.code-spell-checker",
+                // View a Git Graph of your repository
+                "mhutchie.git-graph",
+                // Makes indentation easier to read
+                "oderwat.indent-rainbow",
+                // Renders end of line characters
+                "medo64.render-crlf",
+                // Supercharge Git within VS Code
+                "eamodio.gitlens",
+                // Generates python docstrings
+                "njpwerner.autodocstring",
+                // mprove your code commenting
+                "aaron-bond.better-comments",
+                // Conventional Commits
+                "vivaxy.vscode-conventional-commits",
+                // Fully-featured TOML support
+                "tamasfe.even-better-toml",
+                // Changes VS Code's built-in markdown preview to match Github's style
+                "bierner.github-markdown-preview",
+                // Debugger for Python
+                "ms-python.debugpy",
+                // All you need to write Markdown
+                "yzhang.markdown-all-in-one",
+                // coverage visualization next to the code
+                "ryanluker.vscode-coverage-gutters",
+                // to-do highlighting
+                "gruntfuggly.todo-tree",
+                // Code formatter using prettier
+                "esbenp.prettier-vscode",
+                // Type checking support for Python files using Mypy
+                "ms-python.mypy-type-checker",
+                // Markdown linting and style checking
+                "DavidAnson.vscode-markdownlint",
+                // unicode emoji selector for vscode (F1-> type 'emoji')
+                "perkovec.emoji"
+            ]
+        }
+    },
+    "postCreateCommand": "pip install --no-cache-dir -r requirements.txt"
+}
