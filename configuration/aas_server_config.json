@@ -1,0 +1,15 @@
+{
+    "ServerConfiguration": {
+        "BaseUrl": "https://fluid40.imd.mw.tu-dresden.de/smt-repo",
+        "TimeOut": 60,
+        "ConnectionTimeOut": 60,
+        "TrustEnv": false,
+        "EncodedIds": false,
+        "AuthenticationSettings": {
+        "BasicAuth": {
+            "Username": "hackathon4-user"
+            }
+        }
+    },
+    "SecretVarName": "HACK_AAS_SERVER_SECRET"
+}
