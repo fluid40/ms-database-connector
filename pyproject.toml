@@ -1,0 +1,21 @@
+[project]
+name = "ms-database-connector"
+version = "0.0.1"
+description = "Fluid4.0 Microservice Database Connector"
+authors = [
+    {name = "Celina Adelhardt", email = "celina.adelhardt@em.ag"}
+]
+requires-python = ">=3.8"
+license = { file = "LICENSE" }
+readme = "README.md"
+keywords = ["influxdb", "AAS", "python", "microservice", "fluid4.0"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+# Missing library stubs or py.typed marker files are ignored to avoid mypy errors.
+[[tool.mypy.overrides]]
+module = ["influxdb.*"]
+ignore_missing_imports = true
