@@ -43,6 +43,75 @@ Requirements for the configuration:
 - For now, one must decide between the usage as `field` **or** `tag`. Both at once is not possible.
 - A default tag named `source` will be used with the value of the idShort of the AAS.
 
+### Local Dev Process
+
+```mermaid
+sequenceDiagram
+    participant DBC
+    participant DB@{ "type" : "database" }
+    participant Registry
+    actor User
+
+    DBC->>DB: Connect to InfluxDB with Credentials from Config (or AID)
+    alt db-mapping file missing
+        DBC->>Registry: Get AIMC SM for AAS-ID
+        Registry-->>DBC:
+        DBC->>DBC: Extract AIMC.Seconds & generate db-mapping template
+        User->>DBC: Get db-mapping
+        DBC-->>User: empty db-mapping
+        User->>DBC: upload updated db-mapping
+    end
+    loop Inverval N
+        DBC->>Registry: Retrieve values of AIMC.Seconds via Registry
+        Registry-->>DBC:
+        DBC->>DBC: Generate DB payload with db-mapping
+        DBC->>DB: Write payload as values
+    end
+```
+
+**Prerequisites for process:**
+
+Influx/ Server Configuration `aas_registry_server_config.json`
+
+```json
+{
+    "ServerConfiguration": {
+        "BaseUrl": "http://localhost:8030/",
+        "TimeOut": 60,
+        "ConnectionTimeOut": 60,
+        "TrustEnv": false,
+        "EncodedIds": false,
+        "AuthenticationSettings": {
+            "BasicAuthentication": {
+                "Username": ""
+            },
+            "ServiceProviderAuthentication": {
+                "ClientId": "",
+                "TokenUrl": "",
+                "GrantType": "client_credentials"
+            },
+            "BearerAuthentication": {
+                "Token": ""
+            }
+        }
+    },
+    "SecretVarName": "SECRET_VAR_NAME"
+}
+```
+
+`SECRET_VAR_NAME` must be set in compose.yml.
+
+Service Configuration `service_config.json`
+
+```json
+{
+    "AasId": "https://fluid40.de/ids/shell/5793_5449_7830_4223",
+    "PollingInterval": 5,
+    "ExternalUrl": "http://127.0.0.1",
+    "ExternalPort": "3088"
+}
+```
+
 ---
 The following sections are deprecated
 
