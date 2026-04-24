@@ -1,0 +1,16 @@
+{
+    "AASId": "https://fluid40.de/ids/aas/9911_6092_2508_3450",
+    "PollingInterval": 5,
+    "InfluxDbVersion": 2,
+    "InfluxDbServerConfig": {
+        "BaseUrl": "http://localhost:8031/",
+        "TimeOut": 60,
+        "ConnectionTimeOut": 60,
+        "TrustEnv": false,
+        "AuthenticationSettings": {
+            "BearerAuthentication": {
+                "Token": "KHp3QMb8S6G7XWkZRZQh5-4Ds_9DH1rj7Qxn2bmOA2gpDFKAx7A1w4XjCA6xN_GREDLwPWWhh5eRX39LqZ-g_A=="
+            }
+        }
+    }
+}

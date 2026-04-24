@@ -1,0 +1,13 @@
+{
+    "MappingConfigurations[0]": {
+            "EnergyConnection_Electric.EnergyMeasure_EnergyTotal.value": "field",
+            "EnergyConnection_Electric.EnergyMeasure_EnergyTotal.timeStamp": "timestamp",
+            "EnergyConnection_Pneumatic.EnergyMeasure_Pressure.timeStamp": "field",
+            "EnergyConnection_Pneumatic.EnergyMeasure_VolumeTotal.timeStamp": "field",
+            "EnergyConnection_Pneumatic.EnergyMeasure_VolumeTotal.value": "field",
+            "EnergyConnection_Pneumatic.EnergyMeasure_Pressure.value": "field",
+            "machineStateData.counter": "tag",
+            "machineStateData.pattern": "tag",
+            "machineStateData.machineState": "tag"
+    }
+}
