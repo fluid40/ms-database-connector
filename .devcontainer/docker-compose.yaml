@@ -1,9 +1,9 @@
 services:
   influx_database_v1:
     image: influxdb:1.11.8
-    container_name: influx-database
+    container_name: ms-dbc-influx-v1
     volumes:
-      - influxdb_data:/var/lib/influxdb
+      - influxdb_v1_data:/var/lib/influxdb
     restart: always
     environment:
       INFLUXDB_DB: submodel-db
@@ -18,17 +18,27 @@ services:
       retries: 5
       start_period: 10s
 
-  java_aas_server:
-    image: eclipsebasyx/aas-environment:2.0.0-milestone-08
-    container_name: javaserver-dbc
+  influx_database_v2:
+    image: influxdb:2.7
+    container_name: ms-dbc-influx-v2
     ports:
-      - '8077:8077'
-    environment:
-      - SERVER_PORT=8077
-      - SERVER_HOST=dbc
+      - "8031:8086"
     volumes:
-      - ./aas:/application/aas
-      - ./basyx/aas-env.properties:/application/application.properties
+      - influxdb_v2_data:/var/lib/influxdb2
+    restart: always
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: admin
+      DOCKER_INFLUXDB_INIT_PASSWORD: fluid40secure!
+      DOCKER_INFLUXDB_INIT_ORG: fluid40-org
+      DOCKER_INFLUXDB_INIT_BUCKET: fluid40-bucket
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: wbEx!S!#4OHcN!5X
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8086/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
 
   dev_container:
     build: .
@@ -39,14 +49,13 @@ services:
     depends_on:
         influx_database_v1:
           condition: service_healthy
-        java_aas_server:
+        influx_database_v2:
           condition: service_healthy
     extra_hosts:
       - "host.docker.internal:host-gateway"
     environment:
-      - RUNTIME_OAUTH_SECRET=nY0mjyECF60DGzNmQUjL81XurSl8etom
-      - RUNTIME_CONFIGURATION_FILE=./configuration/DevContainerEnv.json
+      INFLUX_DB_V1_SECRET: wbEx!S!#4OHcN!5X
 
 volumes:
-  influxdb_data:
-
+  influxdb_v1_data:
+  influxdb_v2_data:
