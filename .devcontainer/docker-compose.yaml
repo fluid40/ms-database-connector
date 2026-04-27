@@ -54,8 +54,10 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     environment:
-      INFLUX_DB_V1_SECRET: wbEx!S!#4OHcN!5X
-      INFLUXDB_V2_TOKEN: KHp3QMb8S6G7XWkZRZQh5-4Ds_9DH1rj7Qxn2bmOA2gpDFKAx7A1w4XjCA6xN_GREDLwPWWhh5eRX39LqZ-g_A==
+      - INFLUX_DB_V1_SECRET=wbEx!S!#4OHcN!5X
+      - INFLUXDB_V2_TOKEN=KHp3QMb8S6G7XWkZRZQh5-4Ds_9DH1rj7Qxn2bmOA2gpDFKAx7A1w4XjCA6xN_GREDLwPWWhh5eRX39LqZ-g_A==
+      - DBC_CONFIGURATION_FILE=/workspaces/ms-database-connector/configuration/service_config.json
+
 
 volumes:
   influxdb_v1_data:
