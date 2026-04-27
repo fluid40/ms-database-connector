@@ -1,6 +1,11 @@
-from pydantic import BaseModel, Field
+import logging
+from pathlib import Path
 
-from ms_database_connector.config.server_configuration import ServerConfiguration
+from pydantic import BaseModel, Field, ValidationError
+
+from ms_database_connector.services.influx_v2_service import InfluxV2Client
+
+logger = logging.getLogger(__name__)
 
 class ServiceConfiguration(BaseModel):
     """Represents the runtime configuration for the application.
@@ -23,4 +28,30 @@ class ServiceConfiguration(BaseModel):
         description="The external port for the server.",
     )
     influx_db_version: int = Field(default=2, alias="InfluxDbVersion", description="The version of the Influx DB to use (1 or 2).")
-    influx_db_server_config: ServerConfiguration = Field(default_factory=ServerConfiguration, alias="InfluxDbServerConfig", description="Configuration for the Influx DB server connection.")
+    influx_db_server_config: InfluxV2Client = Field(..., alias="InfluxDbConfig", description="Configuration for the Influx DB server connection.")
+
+
+def load_configuration(configuration_file: str) -> ServiceConfiguration:
+    """Load the configuration from a file.
+    TODO: make utility function for loading configuration files, as this is also needed in the AAS server.
+
+    :param configuration_file: The path to the configuration file.
+    :return: The loaded ServiceConfiguration object.
+    """
+    if not configuration_file:
+        raise ValueError("No configuration file provided.")
+
+    config_file = Path(configuration_file)
+
+    config_file = config_file.resolve()
+    logger.info(f"Load configuration file '{config_file}'.")
+    if not config_file.exists() or not config_file.is_file():
+        logger.error(f"Configuration file '{config_file}' not found or inaccessible. ")
+        raise FileNotFoundError(f"Configuration file '{config_file}' not found or inaccessible. ")
+    
+    config_string = config_file.read_text(encoding="utf-8")
+    logger.debug(f"Configuration  file '{config_file}' found.")
+    try:
+        return ServiceConfiguration.model_validate_json(config_string)
+    except ValidationError as ve:
+        raise ValidationError(f"Invalid BaSyx server connection file: {ve}") from ve
