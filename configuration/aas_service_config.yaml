@@ -1,0 +1,10 @@
+keycloak:
+    issuer: "http://keycloak.localhost:8080/realms/basyx"
+    client_id: "ms-database-connector"
+    client_secret: "your-client-secret-here"
+
+basyx:
+    aas_registry_url: "http://localhost:8082"
+    sm_registry_url: "http://localhost:8083"
+    aas_repository_url: "http://localhost:8081"
+    sm_repository_url: "http://localhost:8084"
