@@ -1,9 +1,11 @@
 {
     "AasId": "https://fluid40.de/ids/aas/9911_6092_2508_3450",
     "PollingInterval": 5,
+    "ExternalUrl": "http://127.0.0.1",
+    "ExternalPort": "3088",
     "InfluxDbVersion": 2,
     "InfluxDbConfig": {
-        "Url": "http://localhost:8031/",
+        "Url": "http://influx_database_v2:8086/",
         "Organization": "fluid40-org",
         "Bucket": "fluid40-bucket",
         "TimeOut": 60,
