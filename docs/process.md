@@ -61,6 +61,8 @@ sequenceDiagram
         DBC-->>User: empty db-mapping
         User->>DBC: upload updated db-mapping
     end
+    DBC->>DB: Initialize connection
+    DB-->>DBC: Connection healthy
     loop Inverval N
         DBC->>Registry: Retrieve values of AIMC.Seconds via Registry
         Registry-->>DBC:
@@ -71,7 +73,7 @@ sequenceDiagram
 
 **Prerequisites for process:**
 
-Influx/ Server Configuration `aas_registry_server_config.json`
+Influx/ Server Configuration `<server name or type>_server_config.json`
 
 ```json
 {

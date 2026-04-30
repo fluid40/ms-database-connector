@@ -12,12 +12,13 @@ from influxdb_client.domain.bucket_retention_rules import BucketRetentionRules
 logger = logging.getLogger(__name__)
 
 class InfluxV2Client(IInfluxClient, BaseModel):
-    """Client for InfluxDB interactions."""
+    """Client for InfluxDB v2 interactions."""
 
-    url: str = Field(default="influx_database", description="The base URL of the InfluxDB 2 database.", alias="Url")
+    url: str = Field(default="ms-dbc-influx-v2", description="The base URL of the InfluxDB 2 database.", alias="Url")
     organization: str = Field(..., description="The Organization name to use in InfluxDB.", alias="Organization")
     bucket: str = Field(..., description="The Bucket name to use in InfluxDB.", alias="Bucket")
     connection_time_out: int = Field(default=100, description="Connection establishment timeout in seconds.", alias="ConnectionTimeOut")
+    trust_env: bool = Field(default=False, description="Disable proxy usage from environment.", alias="TrustEnv")
     _client: InfluxDBClient = PrivateAttr()
     _tag: str = PrivateAttr(default="")
     _organization_id: str = PrivateAttr(default="")
@@ -28,6 +29,8 @@ class InfluxV2Client(IInfluxClient, BaseModel):
 
         :param token: The token for the InfluxDB user.
         """
+        # session = requests.Session()
+        # session.trust_env = self.trust_env
         client = InfluxDBClient(url=self.url, token=token, org=self.organization)
 
         if not client:
@@ -130,13 +133,13 @@ class InfluxV2Client(IInfluxClient, BaseModel):
 
 
 def create_client(config_dict: dict, token: str) -> IInfluxClient:
-    """Create a HTTP client for a asset connector connection from a given configuration.
+    """Initialize an InfluxDb v2 client for interaction with the database.
 
-    :param config_dict: The configuration dictionary for the asset connector.
-    :param token: The token for InfluxDB authentication.
-    :raises ValidationError: If the configuration is invalid.
-    :raises RuntimeError: If connection or database creation fails.
-    :return: A ConnectorClient instance.
+    :param config_dict: the configuration dictionary for the InfluxDB v2 client.
+    :param token: the authentication token for the InfluxDB v2 client.
+    :raises ValidationError: if the configuration is invalid.
+    :raises RuntimeError: if connection or database creation fails.
+    :return: an initialized InfluxV2Client instance.
     """
     logger.info("Create Influx Database client.")
 
