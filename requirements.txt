@@ -6,3 +6,5 @@ fastapi_health==0.4.0
 influxdb-client>=1.35.0
 python-json-logger>=4.0.0
 uvicorn>=0.40.0
+aas-http-client>=0.1.0
+aas_standard_parser>=0.5.0

@@ -3,11 +3,16 @@
 from functools import lru_cache
 import os
 
+from aas_http_client import SdkWrapper  # type: ignore[import-untyped]
+
 from ms_database_connector.config.service_configuration import (
 	ServiceConfiguration,
 	load_configuration,
 )
 from ms_database_connector.core.db_connection import initialize_db_connection
+from ms_database_connector.services.aas_registry_wrapper_factory import (
+	create_aas_registry_wrapper,
+)
 from ms_database_connector.services.influx_service import IInfluxClient
 from ms_database_connector.services.mapping_configuration_service import (
 	MappingConfigurationService,
@@ -44,3 +49,8 @@ def reconnect_influx_client() -> IInfluxClient | None:
 	"""Force a fresh InfluxDB client initialisation (used by POST /connect)."""
 	get_influx_client.cache_clear()
 	return get_influx_client()
+
+@lru_cache(maxsize=1)
+def get_aas_registry_wrapper() -> SdkWrapper:
+	"""Create and cache an authenticated AAS registry wrapper."""
+	return create_aas_registry_wrapper()
