@@ -53,10 +53,15 @@ services:
           condition: service_healthy
     extra_hosts:
       - "host.docker.internal:host-gateway"
+      - "keycloak.basyx.localhost:host-gateway"
+      - "aasreg.basyx.localhost:host-gateway"
+      - "smreg.basyx.localhost:host-gateway"
+      - "aasenv.basyx.localhost:host-gateway"
     environment:
       - INFLUX_DB_V1_SECRET=wbEx!S!#4OHcN!5X
       - INFLUXDB_V2_TOKEN=l_GnHjvFUJcL_AxupxMiGrMlDKYzKOsGB5S0VVqq-1IhftAK15mNe2JIGI_Nwj-K0gupeiWLTPDGJi-O8PyPNA==
       - DBC_CONFIGURATION_FILE=/workspaces/ms-database-connector/configuration/service_config.json
+      - DBC_AAS_CLIENT_SECRET=nY0mjyECF60DGzNmQUjL81XurSl8etom
 
   aas-registry:
     image: eclipsebasyx/aas-registry-log-mem:$BASYX_VERSION
