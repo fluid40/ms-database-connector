@@ -1,6 +1,7 @@
 import logging
 
-from aas_standard_parser import descriptor_json_helper
+from aas_standard_parser import descriptor_json_helper, aas_parser, aimc_parser, submodel_parser
+from aas_standard_parser.classes.aimc_parser_classes import MappingConfigurations
 from basyx.aas import model
 from fastapi import HTTPException
 
@@ -82,7 +83,7 @@ def get_submodel(server_handler: ServerHandler, submodel_id: str) -> model.Submo
     """
     if submodel_id is None:
         _logger.error("No Submodel ID provided in configuration file.")
-        raise HTTPException(status_code=StatusCode.CONFIGURATION_ERROR.value, detail="No Submodel ID provided in configuration file.")
+        raise HTTPException(status_code=StatusCode.BAD_REQUEST.value, detail="No Submodel ID provided in configuration file.")
 
     _logger.info(f"Get Submodel with ID '{submodel_id}' from server.")
 
@@ -92,7 +93,7 @@ def get_submodel(server_handler: ServerHandler, submodel_id: str) -> model.Submo
     if submodel_descriptor is None:
         _logger.error(f"Submodel descriptor with ID '{submodel_id}' not found in AAS registry.")
         raise HTTPException(
-            status_code=StatusCode.SHELL_NOT_FOUND.value,
+            status_code=StatusCode.NOT_FOUND.value,
             detail=f"Submodel descriptor with ID '{submodel_id}' not found in AAS registry.",
         )
 
@@ -113,7 +114,52 @@ def get_submodel(server_handler: ServerHandler, submodel_id: str) -> model.Submo
 
     if submodel is None:
         _logger.error(f"Submodel with ID '{submodel_id}' not found on server.")
-        raise HTTPException(status_code=StatusCode.SHELL_NOT_FOUND.value, detail=f"Submodel with ID '{submodel_id}' not found on server.")
+        raise HTTPException(status_code=StatusCode.NOT_FOUND.value, detail=f"Submodel with ID '{submodel_id}' not found on server.")
 
     _logger.debug(f"Submodel with ID '{submodel_id}' found on server.")
     return submodel
+
+
+def get_aimc_submodel(server_handler: ServerHandler, shell: model.AssetAdministrationShell) -> model.Submodel:
+    """Get the Asset Interface Mapping Configuration (AIMC) submodel from the AAS.
+
+    :param aas_server_wrapper: The SDK wrapper for the AAS server
+    :param shell: The AAS to get the submodel from
+    :raises HTTPException: If the AIMC submodel could not be found
+    :return: The AIMC submodel
+    """
+    _logger.info("Get AIMC submodel from Shell.")
+    submodel_ids = aas_parser.get_submodel_ids(shell)
+
+    for submodel_id in submodel_ids:
+        submodel = get_submodel(server_handler, submodel_id)
+
+        semantic_id_value = submodel_parser.get_semantic_id_value(submodel)
+
+        if semantic_id_value and "/idta/AssetInterfacesMappingConfiguration" in semantic_id_value:
+            _logger.info(f"AIMC submodel with ID '{submodel_id}' found on server.")
+            return submodel
+
+    _logger.error("No Submodel with semantic ID '/idta/AssetInterfacesMappingConfiguration' not found on server.")
+    raise HTTPException(
+        status_code=StatusCode.NOT_FOUND.value,
+        detail="No Submodel with semantic ID '/idta/AssetInterfacesMappingConfiguration' not found on server.",
+    )
+
+
+def get_mapping_configurations(aimc_submodel: model.Submodel) -> MappingConfigurations:
+    """Get the mapping configurations from the AIMC submodel.
+
+    :param aimc_submodel: The AIMC submodel
+    :return: The mapping configurations
+    """
+    mapping_configurations = aimc_parser.parse_mapping_configurations(aimc_submodel)
+
+    if mapping_configurations is None or len(mapping_configurations.configurations) == 0:
+        _logger.error("No mapping configurations found in AIMC submodel.")
+        raise HTTPException(
+            status_code=StatusCode.NOT_FOUND.value,
+            detail="No mapping configurations found in AIMC submodel.",
+        )
+
+    return mapping_configurations
