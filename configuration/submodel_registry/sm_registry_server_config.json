@@ -4,7 +4,14 @@
         "TimeOut": 60,
         "ConnectionTimeOut": 60,
         "TrustEnv": false,
-        "EncodedIds": false
+        "EncodedIds": false,
+        "AuthenticationSettings": {
+            "OAuth": {
+                "ClientId": "workstation-1",
+                "TokenUrl": "http://keycloak.basyx.localhost/realms/BaSyx/protocol/openid-connect/token",
+                "GrantType": "client_credentials"
+            }
+        }
     },
-    "SecretVarName": ""
+    "SecretVarName": "DBC_AAS_CLIENT_SECRET"
 }

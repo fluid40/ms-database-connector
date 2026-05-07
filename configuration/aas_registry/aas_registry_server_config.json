@@ -1,6 +1,6 @@
 {
     "ServerConfiguration": {
-        "BaseUrl": "ms-dbc-aas-registry:8067",
+        "BaseUrl": "http://aasreg.basyx.localhost",
         "TimeOut": 60,
         "ConnectionTimeOut": 60,
         "TrustEnv": false,
@@ -8,7 +8,7 @@
         "AuthenticationSettings": {
             "OAuth": {
                 "ClientId": "workstation-1",
-                "TokenUrl": "ms-dbc-keycloak:9095/realms/BaSyx/protocol/openid-connect/token",
+                "TokenUrl": "http://keycloak.basyx.localhost/realms/BaSyx/protocol/openid-connect/token",
                 "GrantType": "client_credentials"
             }
         }
