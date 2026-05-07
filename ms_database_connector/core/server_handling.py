@@ -6,6 +6,7 @@ from aas_http_client import AasHttpClient, SdkWrapper, sdk_wrapper
 from fastapi import HTTPException, status
 
 from ms_database_connector.config.server_configuration import ServerConfiguration
+from ms_database_connector.utils.configuration_handling import ServerConfigurationsHandler
 
 _logger = logging.getLogger(__name__)
 
@@ -21,6 +22,12 @@ class ServerHandler:
         self.aas_registry_client = None
         self.sm_registry_client = None
         self.aas_server_wrappers = {}
+
+    def connect_to_server(self, configuration_files_handler: ServerConfigurationsHandler):
+        """Create AAS server clients for all configured AAS servers and the AAS registry."""
+        self.connect_to_aas_registry(configuration_files_handler.aas_registry_configuration)
+        self.connect_to_sm_registry(configuration_files_handler.sm_registry_configuration)
+        self.connect_to_repo_server(configuration_files_handler.repo_server_configurations)
 
 
     def connect_to_aas_registry(self, configuration: ServerConfiguration) -> AasHttpClient:
