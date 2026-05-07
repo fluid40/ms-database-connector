@@ -15,6 +15,7 @@ class ServerConfigurationsHandler:
 
     aas_registry_configuration: ServerConfiguration
     sm_registry_configuration: ServerConfiguration
+    repo_server_configurations: list[ServerConfiguration]
 
     def __init__(self):
         """Initialize ConfigHandler with default values."""
@@ -33,6 +34,7 @@ class ServerConfigurationsHandler:
 
         self._get_aas_registry_config()
         self._get_sm_registry_config()
+        self._get_repos_configs()
 
     def _get_aas_registry_config(self):
         config_path = Path(f"{CONFIG_BASE_PATH}/aas_registry")
@@ -99,3 +101,33 @@ class ServerConfigurationsHandler:
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Invalid Submodel registry connection file.",
             ) from ve
+
+    def _get_repos_configs(self):
+        """Get the AAS server configurations from the service configuration.
+
+        :param configuration: The service configuration
+        :return: List of AAS server configurations
+        """
+        config_path = Path(f"{CONFIG_BASE_PATH}/repo_server")
+
+        if not config_path.exists() or not config_path.is_dir():
+            _logger.error(f"AAS repository configuration path '{config_path}' not found or inaccessible.")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"AAS repository configuration path '{config_path}' not found.",
+            )
+
+        json_files = list(config_path.rglob("*.json"))
+
+        if not json_files or len(json_files) == 0:
+            _logger.info(f"No AAS repository configuration files found in folder '{config_path}'.")
+            return
+
+        for json_file in json_files:
+            try:
+                aas_server_configuration = ServerConfiguration.model_validate_json(json_file.read_text())
+                self.repo_server_configurations.append(aas_server_configuration)
+            except ValidationError as ve:
+                _logger.error(f"Invalid AAS repository connection file '{json_file}': {ve}")
+
+        _logger.debug(f"Found {len(self.repo_server_configurations)} AAS repository configuration files in folder '{config_path}'.")
