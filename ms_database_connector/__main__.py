@@ -2,13 +2,14 @@
 import logging
 import os
 
+from basyx.aas import model
 import uvicorn
 
 from fastapi import FastAPI
 from fastapi.concurrency import asynccontextmanager
+from ms_database_connector.core.aas_env_processor import get_shell
 from ms_database_connector.core.server_handling import ServerHandler
 from ms_database_connector.dependencies import (
-	get_aas_registry_wrapper,
     get_influx_client,
     get_mapping_configuration_service,
     get_service_configuration,
@@ -31,7 +32,7 @@ async def lifespan(app: FastAPI):
         _logger.exception("Failed to load service configuration: %s", e)
         raise e
 
-    # Initialise mapping service singleton.
+    # Initialize mapping service singleton.
     _ = get_mapping_configuration_service()
 
     # Attempt InfluxDB connection at startup (non-fatal)
@@ -51,14 +52,24 @@ async def lifespan(app: FastAPI):
     try:
         server_handler = ServerHandler()
         server_configurations = ServerConfigurationsHandler()
-        server_handler.connect_to_aas_registry(server_configurations.aas_registry_configuration)
-        _logger.info("AAS registry wrapper initialized during startup.")
+
+        server_handler.connect_to_server(server_configurations)
+        _logger.info("Connection to AAS servers established during startup.")
     except Exception as e:
-        _logger.warning("Could not initialise AAS client: %s", e)
+        _logger.warning("Could not initialize AAS client: %s", e)
+
+    # AAS Retrieval
+    try:
+        aas_id: str = get_service_configuration().aas_id
+        shell: model.AssetAdministrationShell = get_shell(server_handler, aas_id)
+        _logger.info("AAS and submodels retrieved during startup.")
+    except Exception as e:
+        _logger.warning("Could not retrieve AAS and submodels at startup: %s", e)
 
     yield
     
     _logger.info("Shutting down the microservice database connector.")
+
 
 app = FastAPI(
     title="Microservice Database Connector",
