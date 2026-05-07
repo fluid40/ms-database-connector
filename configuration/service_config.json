@@ -5,7 +5,7 @@
     "ExternalPort": "3088",
     "InfluxDbVersion": 2,
     "InfluxDbConfig": {
-        "Url": "http://influx_database_v2:8086/",
+        "Url": "http://ms-dbc-influx-v2:8086/",
         "Organization": "fluid40-org",
         "Bucket": "fluid40-bucket",
         "TimeOut": 60,
