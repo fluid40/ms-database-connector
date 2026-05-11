@@ -1,5 +1,6 @@
 import json
 import logging
+import re
 import time
 import requests
 from datetime import datetime
@@ -92,6 +93,41 @@ class InfluxV2Client(IInfluxClient, BaseModel):
 
         return True
 
+    def _is_valid_measurement_name(self, measurement: str) -> bool:
+        """Validate measurement names to avoid accidental high-cardinality series creation."""
+        if not isinstance(measurement, str):
+            logger.error("Measurement name must be a string.")
+            return False
+
+        name = measurement.strip()
+
+        if not name:
+            logger.error("Measurement name must be non-empty.")
+            return False
+
+        # Keep names simple and predictable: letters, numbers, underscores, dots, colons and hyphens.
+        if not re.fullmatch(r"[A-Za-z][A-Za-z0-9_.:-]{0,127}", name):
+            logger.error(
+                "Measurement name '%s' is invalid. Use a stable identifier starting with a letter and only [A-Za-z0-9_.:-].",
+                measurement,
+            )
+            return False
+
+        # Common accidental dynamic-name patterns that create high cardinality.
+        if re.search(r"[0-9]{10,}", name):
+            logger.error("Measurement name '%s' appears dynamic (long numeric fragment).", measurement)
+            return False
+
+        if re.search(r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}", name):
+            logger.error("Measurement name '%s' appears dynamic (UUID-like pattern).", measurement)
+            return False
+
+        if re.search(r"\d{4}-\d{2}-\d{2}", name):
+            logger.error("Measurement name '%s' appears dynamic (date-like pattern).", measurement)
+            return False
+
+        return True
+
     def write_data(self, fields: dict, measurement: str, tags: dict) -> bool:
         """Write data to the InfluxDB.
 
@@ -101,6 +137,9 @@ class InfluxV2Client(IInfluxClient, BaseModel):
         :return: True if the data was written successfully, False otherwise.
         """
         logger.debug(f"Writing data to InfluxDB measurement '{measurement}' with tags: {tags}")
+
+        if not self._is_valid_measurement_name(measurement):
+            return False
 
         if fields is None or not isinstance(fields, dict):
             logger.debug(f"'{measurement}': Data must be a non-empty dictionary.")
