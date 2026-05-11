@@ -5,7 +5,7 @@ description = "Fluid4.0 Microservice Database Connector"
 authors = [
     {name = "Celina Adelhardt", email = "celina.adelhardt@em.ag"}
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.11"
 license = { file = "LICENSE" }
 readme = "README.md"
 keywords = ["influxdb", "AAS", "python", "microservice", "fluid4.0"]
@@ -19,3 +19,17 @@ classifiers = [
 [[tool.mypy.overrides]]
 module = ["influxdb.*"]
 ignore_missing_imports = true
+
+[tool.poetry.dependencies]
+pydantic = "^2.13.4"
+requests = "^2.33.1"
+influxdb = "^5.3.2"
+fastapi = "^0.136.1"
+python = ">=3.11,<4.0"
+influxdb-client = ">=1.35.0"
+uvicorn = "^0.46.0"
+aas-http-client = "^1.0.11"
+aas-standard-parser = "^0.5.1"
+basyx-python-sdk = "^2.0.1"
+fastapi-health = "^0.4.0"
+pydantic-settings = "^2.14.1"

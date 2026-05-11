@@ -1,0 +1,29 @@
+# ============================================================================================================
+# Poe the poet (Shell Tasks - like makefiles but nicer and in python)
+# ============================================================================================================
+
+[tool.poe.tasks.build]
+help = "build package into dist/ directory"
+cmd = "poetry build"
+
+[tool.poe.tasks.clean]
+help = "cleans the .build and dist directories"
+cmd = "rm -rf dist/ && echo cleaning done"
+
+[tool.poe.tasks.lint]
+help = "runs all linting/qa tasks over all files in the repository (don't forget to git-add them)"
+cmd = "pre-commit run --all-files"
+
+[tool.poe.tasks.lint_ci]
+help = "runs linting/qa tasks that are excuted during ci"
+shell = "SKIP=poetry-lock,auto-patch-header,yamllint,hadolint,shellcheck,mypy,gitleaks pre-commit run --all-files"
+# Note: We'll skip poetry-lock and auto-patch header as well as all hooks that are checked by our gitlab
+# standard linters
+
+[tool.poe.tasks.test]
+help = "runs all pytest unit-tests"
+cmd = "pytest"
+
+[tool.poe.tasks.cover]
+help = "runs all pytest unit-tests with coverage"
+cmd = "pytest --cov"
