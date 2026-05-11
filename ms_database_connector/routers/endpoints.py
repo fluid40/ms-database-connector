@@ -27,9 +27,7 @@ from ms_database_connector.dependencies import (
     reconnect_influx_client,
 )
 from ms_database_connector.services.influx_service import IInfluxClient
-from ms_database_connector.services.mapping_configuration_service import (
-    MappingConfigurationService,
-)
+from ms_database_connector.utils.mapping_handler import MappingConfigurationHandler
 
 _logger = logging.getLogger(__name__)
 
@@ -45,7 +43,7 @@ router = APIRouter()
 def health_check(
     service_config: Annotated[ServiceConfiguration, Depends(get_service_configuration)],
     mapping_service: Annotated[
-        MappingConfigurationService, Depends(get_mapping_configuration_service)
+        MappingConfigurationHandler, Depends(get_mapping_configuration_service)
     ],
     influx_client: Annotated[IInfluxClient | None, Depends(get_influx_client)],
 ) -> dict:
@@ -110,7 +108,7 @@ def connect(
 @router.get("/db-mapping")
 def get_db_mapping(
     mapping_service: Annotated[
-        MappingConfigurationService, Depends(get_mapping_configuration_service)
+        MappingConfigurationHandler, Depends(get_mapping_configuration_service)
     ],
 ) -> dict:
     """Return the currently stored SME-DB mapping configuration."""
@@ -129,7 +127,7 @@ def get_db_mapping(
 def set_db_mapping(
     body: dict,
     mapping_service: Annotated[
-        MappingConfigurationService, Depends(get_mapping_configuration_service)
+        MappingConfigurationHandler, Depends(get_mapping_configuration_service)
     ],
 ) -> dict:
     """Validate and overwrite the SME-DB mapping configuration.
@@ -186,12 +184,11 @@ def set_db_mapping(
                 ),
             )
 
-    try:
-        mapping_service.update_mapping(mapping)
-    except OSError as exc:
+    if not mapping_service.update_mapping(mapping):
         raise HTTPException(
-            status_code=500, detail=f"Failed to persist mapping: {exc}"
-        ) from exc
+            status_code=500,
+            detail="Failed to persist mapping.",
+        )
 
     _logger.info("Mapping configuration updated via POST /db-mapping.")
     return {"status": "mapping_updated"}
@@ -208,7 +205,7 @@ _VALID_TARGET_TYPES = {t.value for t in MappingTargetType} | {None}
 def initialize_db_mapping(
     body: dict,
     mapping_service: Annotated[
-        MappingConfigurationService, Depends(get_mapping_configuration_service)
+        MappingConfigurationHandler, Depends(get_mapping_configuration_service)
     ],
 ) -> dict:
     """Store a mapping template with null/uninitialized values.
