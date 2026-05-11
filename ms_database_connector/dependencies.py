@@ -9,9 +9,7 @@ from ms_database_connector.config.service_configuration import (
 )
 from ms_database_connector.core.db_connection import initialize_db_connection
 from ms_database_connector.services.influx_service import IInfluxClient
-from ms_database_connector.services.mapping_configuration_service import (
-    MappingConfigurationService,
-)
+from ms_database_connector.utils.mapping_handler import MappingConfigurationHandler
 
 
 @lru_cache(maxsize=1)
@@ -25,15 +23,6 @@ def get_service_configuration() -> ServiceConfiguration:
 
 
 @lru_cache(maxsize=1)
-def get_mapping_configuration_service() -> MappingConfigurationService:
-    """Create a singleton mapping configuration service."""
-    mapping_file = os.getenv(
-        "DBC_MAPPING_CONFIG_FILE", "configuration/mapping_configuration.json"
-    )
-    return MappingConfigurationService(mapping_file)
-
-
-@lru_cache(maxsize=1)
 def get_influx_client() -> IInfluxClient | None:
     """Create and cache an InfluxDB client using current service configuration."""
     configuration = get_service_configuration()
@@ -44,3 +33,9 @@ def reconnect_influx_client() -> IInfluxClient | None:
     """Force a fresh InfluxDB client initialisation (used by POST /connect)."""
     get_influx_client.cache_clear()
     return get_influx_client()
+
+
+@lru_cache(maxsize=1)
+def get_mapping_configuration_service() -> MappingConfigurationHandler:
+    """Create and cache the mapping configuration handler singleton."""
+    return MappingConfigurationHandler()
