@@ -12,14 +12,33 @@ from influxdb_client.domain.bucket_retention_rules import BucketRetentionRules
 
 logger = logging.getLogger(__name__)
 
+
 class InfluxV2Client(IInfluxClient, BaseModel):
     """Client for InfluxDB v2 interactions."""
 
-    url: str = Field(default="ms-dbc-influx-v2", description="The base URL of the InfluxDB 2 database.", alias="Url")
-    organization: str = Field(..., description="The Organization name to use in InfluxDB.", alias="Organization")
-    bucket: str = Field(..., description="The Bucket name to use in InfluxDB.", alias="Bucket")
-    connection_time_out: int = Field(default=100, description="Connection establishment timeout in seconds.", alias="ConnectionTimeOut")
-    trust_env: bool = Field(default=False, description="Disable proxy usage from environment.", alias="TrustEnv")
+    url: str = Field(
+        default="ms-dbc-influx-v2",
+        description="The base URL of the InfluxDB 2 database.",
+        alias="Url",
+    )
+    organization: str = Field(
+        ...,
+        description="The Organization name to use in InfluxDB.",
+        alias="Organization",
+    )
+    bucket: str = Field(
+        ..., description="The Bucket name to use in InfluxDB.", alias="Bucket"
+    )
+    connection_time_out: int = Field(
+        default=100,
+        description="Connection establishment timeout in seconds.",
+        alias="ConnectionTimeOut",
+    )
+    trust_env: bool = Field(
+        default=False,
+        description="Disable proxy usage from environment.",
+        alias="TrustEnv",
+    )
     _client: InfluxDBClient = PrivateAttr()
     _tag: str = PrivateAttr(default="")
     _organization_id: str = PrivateAttr(default="")
@@ -115,15 +134,27 @@ class InfluxV2Client(IInfluxClient, BaseModel):
 
         # Common accidental dynamic-name patterns that create high cardinality.
         if re.search(r"[0-9]{10,}", name):
-            logger.error("Measurement name '%s' appears dynamic (long numeric fragment).", measurement)
+            logger.error(
+                "Measurement name '%s' appears dynamic (long numeric fragment).",
+                measurement,
+            )
             return False
 
-        if re.search(r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}", name):
-            logger.error("Measurement name '%s' appears dynamic (UUID-like pattern).", measurement)
+        if re.search(
+            r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
+            name,
+        ):
+            logger.error(
+                "Measurement name '%s' appears dynamic (UUID-like pattern).",
+                measurement,
+            )
             return False
 
         if re.search(r"\d{4}-\d{2}-\d{2}", name):
-            logger.error("Measurement name '%s' appears dynamic (date-like pattern).", measurement)
+            logger.error(
+                "Measurement name '%s' appears dynamic (date-like pattern).",
+                measurement,
+            )
             return False
 
         return True
@@ -136,7 +167,9 @@ class InfluxV2Client(IInfluxClient, BaseModel):
         :param tags: The tags to associate with the data point.
         :return: True if the data was written successfully, False otherwise.
         """
-        logger.debug(f"Writing data to InfluxDB measurement '{measurement}' with tags: {tags}")
+        logger.debug(
+            f"Writing data to InfluxDB measurement '{measurement}' with tags: {tags}"
+        )
 
         if not self._is_valid_measurement_name(measurement):
             return False
@@ -155,7 +188,14 @@ class InfluxV2Client(IInfluxClient, BaseModel):
         for field_key, field_value in fields.items():
             if field_key.lower() != "timestamp":
                 point.field(field_key, field_value)
-        point.time(int(datetime.fromisoformat(fields["timestamp"].replace("Z", "+00:00")).timestamp() * 1e9))
+        point.time(
+            int(
+                datetime.fromisoformat(
+                    fields["timestamp"].replace("Z", "+00:00")
+                ).timestamp()
+                * 1e9
+            )
+        )
 
         logger.info(
             f"Writing data to InfluxDB:\nMeasurement: '{measurement}'\nTags:\n{json.dumps(tags, indent=4)}'\nValues:\n{json.dumps(fields, indent=4)}"
@@ -189,17 +229,23 @@ def create_client(config_dict: dict, token: str) -> IInfluxClient:
         raise ValidationError(f"Invalid Influx DB configuration file: {ve}") from ve
 
     if not client.organization.endswith("-org"):
-        logger.warning(f"Adjusting Influx DB organization name from '{client.organization}' to '{client.organization}-org'.")
+        logger.warning(
+            f"Adjusting Influx DB organization name from '{client.organization}' to '{client.organization}-org'."
+        )
         client.organization = f"{client.organization}-org"
 
-    logger.info(f"Using Influx DB configuration: '{client.url}' | organization: '{client.organization}'.")
+    logger.info(
+        f"Using Influx DB configuration: '{client.url}' | organization: '{client.organization}'."
+    )
 
     client.initialize(token)
 
     connected = _establish_connection(client)
 
     if not connected:
-        raise RuntimeError(f"Failed to establish connection to InfluxDB at '{client.url}'")
+        raise RuntimeError(
+            f"Failed to establish connection to InfluxDB at '{client.url}'"
+        )
 
     try:
         client.create_database()
@@ -212,7 +258,9 @@ def create_client(config_dict: dict, token: str) -> IInfluxClient:
 
 def _establish_connection(client: InfluxV2Client) -> bool:
     start_time = time.time()
-    logger.info(f"Try to connect to Influx DB '{client.url}' for {client.connection_time_out} seconds")
+    logger.info(
+        f"Try to connect to Influx DB '{client.url}' for {client.connection_time_out} seconds"
+    )
     counter: int = 0
     while True:
         try:
@@ -223,7 +271,9 @@ def _establish_connection(client: InfluxV2Client) -> bool:
         except requests.exceptions.ConnectionError:
             pass
         if time.time() - start_time > client.connection_time_out:
-            logger.error(f"Connection to Influx DB timed out after {client.connection_time_out} seconds.")
+            logger.error(
+                f"Connection to Influx DB timed out after {client.connection_time_out} seconds."
+            )
             return False
 
         counter += 1

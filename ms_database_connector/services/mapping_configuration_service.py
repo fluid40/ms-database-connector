@@ -107,12 +107,8 @@ class MappingConfigurationService:
     def _save_to_file(self, data: dict) -> None:
         try:
             self._config_file.parent.mkdir(parents=True, exist_ok=True)
-            self._config_file.write_text(
-                json.dumps(data, indent=4), encoding="utf-8"
-            )
-            _logger.info(
-                "Saved mapping configuration to '%s'.", self._config_file
-            )
+            self._config_file.write_text(json.dumps(data, indent=4), encoding="utf-8")
+            _logger.info("Saved mapping configuration to '%s'.", self._config_file)
         except OSError as exc:
             _logger.error(
                 "Failed to save mapping configuration to '%s': %s",

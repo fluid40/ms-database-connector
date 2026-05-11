@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 
+
 class ServerConfiguration(BaseModel):
     """Represents the HTTP server configuration.
 

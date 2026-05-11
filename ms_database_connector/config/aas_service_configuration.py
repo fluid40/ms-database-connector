@@ -1,20 +1,34 @@
 from __future__ import annotations
 
 import os
-
-import yaml
-from functools import lru_cache
+from yaml import safe_load  # type: ignore
 from pathlib import Path
 
 from pydantic import BaseModel, Field, SecretStr, AnyHttpUrl, model_validator
 from pydantic_settings import BaseSettings
 
+
 class AasInfraConfiguration(BaseModel):
     """Deprecated Config Model"""
-    oauth_issuer: str = Field(..., alias="OAuthIssuer", description="The URL of the OAuth issuer for authentication.")
-    oauth_client_id: str = Field(..., alias="OAuthClientId", description="The client ID for OAuth authentication.")
-    oauth_client_secret: SecretStr = Field(..., alias="OAuthClientSecret", description="The client secret for OAuth authentication.")
-    oauth_token_url: str = Field(..., alias="OAuthTokenUrl", description="The URL for obtaining OAuth tokens.")
+
+    oauth_issuer: str = Field(
+        ...,
+        alias="OAuthIssuer",
+        description="The URL of the OAuth issuer for authentication.",
+    )
+    oauth_client_id: str = Field(
+        ...,
+        alias="OAuthClientId",
+        description="The client ID for OAuth authentication.",
+    )
+    oauth_client_secret: SecretStr = Field(
+        ...,
+        alias="OAuthClientSecret",
+        description="The client secret for OAuth authentication.",
+    )
+    oauth_token_url: str = Field(
+        ..., alias="OAuthTokenUrl", description="The URL for obtaining OAuth tokens."
+    )
 
 
 class KeycloakConfig(BaseSettings):
@@ -64,29 +78,16 @@ class AasServiceConfig(BaseSettings):
         config_path = os.getenv("AAS_SERVICE_CONFIG_PATH")
 
         if not config_path:
-            raise ValueError(
-                "Environment variable AAS_SERVICE_CONFIG_PATH is not set."
-            )
+            raise ValueError("Environment variable AAS_SERVICE_CONFIG_PATH is not set.")
 
         path = Path(config_path)
 
         if not path.exists():
-            raise FileNotFoundError(
-                f"Configuration file not found: {path}"
-            )
+            raise FileNotFoundError(f"Configuration file not found: {path}")
 
         with path.open("r", encoding="utf-8") as f:
-            yaml_data = yaml.safe_load(f)
+            yaml_data = safe_load(f)
 
         # YAML data takes precedence, overwrite directly passed values
         yaml_data.update(values)
         return yaml_data
-
-
-@lru_cache(maxsize=1)
-def get_config() -> AasServiceConfig:
-    """
-    Returns a cached instance of the AasServiceConfig.
-    Used as a FastAPI dependency.
-    """
-    return AasServiceConfig()

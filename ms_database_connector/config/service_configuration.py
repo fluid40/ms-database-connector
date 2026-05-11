@@ -5,15 +5,20 @@ from pydantic import BaseModel, Field, ValidationError
 
 logger = logging.getLogger(__name__)
 
+
 class ServiceConfiguration(BaseModel):
     """Represents the runtime configuration for the application.
 
     :param BaseModel: Base model class for Pydantic
     """
 
-    aas_id: str = Field(..., alias="AasId", description="The ID of the AAS used by the microservice.")
+    aas_id: str = Field(
+        ..., alias="AasId", description="The ID of the AAS used by the microservice."
+    )
     polling_interval: int = Field(
-        default=5, alias="PollingInterval", description="Polling interval in seconds for retrieving values from the broker."
+        default=5,
+        alias="PollingInterval",
+        description="Polling interval in seconds for retrieving values from the broker.",
     )
     external_url: str = Field(
         default="http://127.0.0.1",
@@ -25,8 +30,16 @@ class ServiceConfiguration(BaseModel):
         alias="ExternalPort",
         description="The external port for the server.",
     )
-    influx_db_version: int = Field(default=2, alias="InfluxDbVersion", description="The version of the Influx DB to use (1 or 2).")
-    influx_db_server_config: dict = Field(default={}, alias="InfluxDbConfig", description="Configuration for the Influx DB server connection.")
+    influx_db_version: int = Field(
+        default=2,
+        alias="InfluxDbVersion",
+        description="The version of the Influx DB to use (1 or 2).",
+    )
+    influx_db_server_config: dict = Field(
+        default={},
+        alias="InfluxDbConfig",
+        description="Configuration for the Influx DB server connection.",
+    )
 
 
 def load_configuration(configuration_file: str) -> ServiceConfiguration:
@@ -45,8 +58,10 @@ def load_configuration(configuration_file: str) -> ServiceConfiguration:
     logger.info(f"Load configuration file '{config_file}'.")
     if not config_file.exists() or not config_file.is_file():
         logger.error(f"Configuration file '{config_file}' not found or inaccessible. ")
-        raise FileNotFoundError(f"Configuration file '{config_file}' not found or inaccessible. ")
-    
+        raise FileNotFoundError(
+            f"Configuration file '{config_file}' not found or inaccessible. "
+        )
+
     config_string = config_file.read_text(encoding="utf-8")
     logger.debug(f"Configuration  file '{config_file}' found.")
     try:

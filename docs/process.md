@@ -125,16 +125,16 @@ sequenceDiagram
     participant DBC
     participant DMP
     participant DB@{ "type" : "database" }
-    
+
     Config->>DBC: DMP Endpoint
     Config->>DBC: (SM-ID AIMC)
     DBC->>DMP: Get all cached SMs (incl. AIMC)
     DMP-->>DBC:
-    
+
     DBC->>DBC: Extract Data Structure from cached SMs
 
     DBC->>DB: Write Data to Influx Table
-    
+
 ```
 
 ## Option 2: Configure DBC for usage of Registry
@@ -146,7 +146,7 @@ sequenceDiagram
     participant DMP
     participant Registry
     participant DB@{ "type" : "database" }
-    
+
 
     Config->>DBC: SM-ID AIMC
     DBC->>Registry: Get AIMC SM-Descriptor
@@ -155,7 +155,7 @@ sequenceDiagram
     Repository-->>DBC:
     DBC->>DMP: Get AIMC SM Option B
     DMP-->>DBC:
-    
+
     Config->>DBC: SM-ID Energy
     DBC->>Registry: Get Energy SM-Descriptor
     Registry-->>DBC:
@@ -167,5 +167,5 @@ sequenceDiagram
     DBC->>DBC: Extract Data Structure from SMs Energy + AIMC
 
     DBC->>DB: Write Data to Influx Table
-    
+
 ```

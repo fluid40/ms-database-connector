@@ -40,11 +40,25 @@ class CustomConsoleFormatter(logging.Formatter):
     """
 
     FORMATS: ClassVar[dict] = {
-        logging.DEBUG: ColorCodes.blue + "%(levelname)s" + ColorCodes.reset + ":   %(message)s (%(filename)s:%(lineno)d)",
-        logging.INFO: ColorCodes.green + "%(levelname)s" + ColorCodes.reset + ":   %(message)s",
-        logging.WARNING: ColorCodes.yellow + "%(levelname)s" + ColorCodes.reset + ":   %(message)s",
-        logging.ERROR: ColorCodes.red + "%(levelname)s" + ColorCodes.reset + ":    %(message)s (%(filename)s:%(lineno)d)",
-        logging.CRITICAL: ColorCodes.bold_red + "%(levelname)s:  %(message)s (%(filename)s:%(lineno)d)" + ColorCodes.reset,
+        logging.DEBUG: ColorCodes.blue
+        + "%(levelname)s"
+        + ColorCodes.reset
+        + ":   %(message)s (%(filename)s:%(lineno)d)",
+        logging.INFO: ColorCodes.green
+        + "%(levelname)s"
+        + ColorCodes.reset
+        + ":   %(message)s",
+        logging.WARNING: ColorCodes.yellow
+        + "%(levelname)s"
+        + ColorCodes.reset
+        + ":   %(message)s",
+        logging.ERROR: ColorCodes.red
+        + "%(levelname)s"
+        + ColorCodes.reset
+        + ":    %(message)s (%(filename)s:%(lineno)d)",
+        logging.CRITICAL: ColorCodes.bold_red
+        + "%(levelname)s:  %(message)s (%(filename)s:%(lineno)d)"
+        + ColorCodes.reset,
     }
 
     def format(self, record) -> str:
@@ -67,7 +81,9 @@ def _handle_file_rotation(log_file_path: Path, max_file_count: int = 5) -> None:
     if not log_folder.exists():
         return
 
-    existing_log_files: list[Path] = [file for file in log_folder.iterdir() if file.name.endswith(LOG_FILE_SUFFIX)]
+    existing_log_files: list[Path] = [
+        file for file in log_folder.iterdir() if file.name.endswith(LOG_FILE_SUFFIX)
+    ]
 
     if len(existing_log_files) < max_file_count:
         return
@@ -93,7 +109,9 @@ def initialize_logging(console_level=logging.INFO) -> Path:
 
     log_file_path = log_path / "api.log"
 
-    log_file_format = "%(asctime)s %(levelname)s: %(message)s   (%(filename)s:%(lineno)d)"
+    log_file_format = (
+        "%(asctime)s %(levelname)s: %(message)s   (%(filename)s:%(lineno)d)"
+    )
     logging.basicConfig(
         filename=log_file_path,
         level=logging.DEBUG,
@@ -167,7 +185,9 @@ def set_log_file(
     _handle_file_rotation(log_path, max_log_files)
 
     # Add a new file handler with the new log file path
-    json_formatter = jsonlogger.JsonFormatter("%(asctime)s %(levelname)s %(name)s %(message)s %(filename)s %(lineno)d")
+    json_formatter = jsonlogger.JsonFormatter(
+        "%(asctime)s %(levelname)s %(name)s %(message)s %(filename)s %(lineno)d"
+    )
     json_file_handler = logging.FileHandler(log_file_path, mode="w")
     json_file_handler.setFormatter(json_formatter)
     json_file_handler.setLevel(logging.DEBUG)

@@ -40,6 +40,7 @@ router = APIRouter()
 # Endpoint: GET /health
 # ------------------------------------------------------------------ #
 
+
 @router.get("/health")
 def health_check(
     service_config: Annotated[ServiceConfiguration, Depends(get_service_configuration)],
@@ -68,6 +69,7 @@ def health_check(
 # ------------------------------------------------------------------ #
 # Endpoint: POST /connect
 # ------------------------------------------------------------------ #
+
 
 @router.post("/connect")
 def connect(
@@ -104,6 +106,7 @@ def connect(
 # Endpoint: GET /db-mapping
 # ------------------------------------------------------------------ #
 
+
 @router.get("/db-mapping")
 def get_db_mapping(
     mapping_service: Annotated[
@@ -120,6 +123,7 @@ def get_db_mapping(
 # ------------------------------------------------------------------ #
 # Endpoint: POST /db-mapping
 # ------------------------------------------------------------------ #
+
 
 @router.post("/db-mapping")
 def set_db_mapping(
