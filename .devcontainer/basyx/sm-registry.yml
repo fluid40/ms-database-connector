@@ -1,3 +1,4 @@
+---
 basyx:
   cors:
     allowed-origins: '*'
