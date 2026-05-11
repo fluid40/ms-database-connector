@@ -7,8 +7,10 @@ import uvicorn
 
 from fastapi import FastAPI
 from fastapi.concurrency import asynccontextmanager
-from ms_database_connector.services.aas_infrastructure_service import get_shell_via_registry, get_aimc_submodel, get_mapping_configurations
+from aas_standard_parser.classes.aimc_parser_classes import MappingConfigurations  # type: ignore
+from ms_database_connector.services.aas_infrastructure_service import get_shell_via_registry
 from ms_database_connector.core.server_handling import ServerHandler
+from ms_database_connector.core.influx_mapping import get_aimc_submodel, get_mapping_configurations
 from ms_database_connector.dependencies import (
     get_influx_client,
     get_mapping_configuration_service,
@@ -63,7 +65,7 @@ async def lifespan(app: FastAPI):
         aas_id: str = get_service_configuration().aas_id
         shell: model.AssetAdministrationShell = get_shell_via_registry(server_handler, aas_id)
         aimc_sm: model.Submodel = get_aimc_submodel(server_handler, shell)
-        mapping_configurations = get_mapping_configurations(aimc_sm)
+        mapping_configurations: MappingConfigurations = get_mapping_configurations(aimc_sm)
         _logger.info("AAS and submodels retrieved during startup.")
     except Exception as e:
         _logger.warning("Could not retrieve AAS and submodels at startup: %s", e)
