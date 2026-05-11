@@ -1,6 +1,6 @@
 import logging
 
-from aas_standard_parser import descriptor_json_helper  # type: ignore
+from aas_standard_parser import descriptor_json_helper, submodel_parser  # type: ignore
 from basyx.aas import model
 from fastapi import HTTPException
 
@@ -159,3 +159,26 @@ def get_submodel_via_registry(
 
     _logger.debug(f"Submodel with ID '{submodel_id}' found on server.")
     return submodel
+
+
+def has_access_to_sme(
+    server_handler: ServerHandler, sm_id: str, element_path: str
+) -> bool:
+    """Check if the read access to the SubmodelElement specified by the SubmodelId and the element path is granted.
+
+    :param server_handler: Server handler
+    :param sm_id: ID of the Submodel, that contains the SubmodelElement
+    :param element_path: IdShortPath of the SubmodelElement
+    :return: True if access is granted, False otherwise
+    """
+    try:
+        submodel = get_submodel_via_registry(server_handler, sm_id)
+        submodel_element: model.SubmodelElement = (
+            submodel_parser.get_submodel_element_by_id_short_path(
+                submodel, element_path
+            )
+        )
+        return submodel_element is not None
+    except Exception as e:
+        _logger.warning("Could not access to SME: %s", e)
+        return False

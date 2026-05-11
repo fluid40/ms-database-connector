@@ -12,6 +12,7 @@ from fastapi import HTTPException
 from ms_database_connector.core.server_handling import ServerHandler
 from ms_database_connector.services.aas_infrastructure_service import (
     get_submodel_via_registry,
+    has_access_to_sme,
 )
 from http import HTTPStatus as StatusCode
 
@@ -106,3 +107,23 @@ def extract_target_references_from_mapping_configuration(
             )
             target_references.append(target_reference)
     return target_references
+
+
+def check_access_to_elements(
+    server_handler: ServerHandler, target_references: list[ReferenceProperties]
+) -> bool:
+    """Check if the read access to the target SME references is granted.
+
+    :param server_handler: Server handler
+    :param target_references: List of target SME references
+    :return: True if access is granted for all target references, False otherwise
+    """
+    for reference in target_references:
+        submodel_id = reference.submodel_id
+        element_path = ".".join(reference.parent_path + [reference.property_name])
+        if not has_access_to_sme(server_handler, submodel_id, element_path):
+            _logger.warning(
+                f"No access to SME '{element_path}' in Submodel with ID '{submodel_id}'."
+            )
+            return False
+    return True
