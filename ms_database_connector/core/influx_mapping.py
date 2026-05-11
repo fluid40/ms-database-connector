@@ -55,16 +55,27 @@ def get_mapping_configurations(aimc_submodel: model.Submodel) -> MappingConfigur
 
     return mapping_configurations
 
+def extract_target_references_from_aimc(aimc_sm: model.Submodel) -> list[ReferenceProperties]:
+    """Extract the target SME references from the AIMC submodel.
+
+    :param aimc_sm: The AIMC submodel
+    :return: List of target SME references
+    """
+    mapping_configurations: MappingConfigurations = get_mapping_configurations(aimc_sm)
+    return extract_target_references_from_mapping_configuration(mapping_configurations)
+
 def extract_target_references_from_mapping_configuration(mapping_configurations: MappingConfigurations) -> list[ReferenceProperties]:
-    """Extract the target Submodel references from the mapping configurations.
+    """Extract the target SME references from the mapping configurations (contained in the AIMC submodel).
 
     :param mapping_configurations: The mapping configurations
-    :return: List of target Submodel references
+    :return: List of target SME references
     """
     target_references = []
     for configuration in mapping_configurations.configurations:
         relations: list[SourceSinkRelation] = configuration.source_sink_relations
+        _logger.debug(f"Found {len(relations)} source-sink relations in mapping configuration with interface reference '{configuration.interface_reference}'.")
         for relation in relations:
             target_reference: ReferenceProperties = relation.sink_properties
+            _logger.debug(f"Extracted target SME reference '{target_reference.parent_path}.{target_reference.property_name}' from mapping configuration.")
             target_references.append(target_reference)
     return target_references
