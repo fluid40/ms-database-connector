@@ -1,6 +1,7 @@
 {
     "name": "Fluid4.0 Microservice DBC Development Container",
     "dockerComposeFile": "./docker-compose.yaml",
+    "shutdownAction": "stopCompose",
     "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
     "forwardPorts": [
         1433
@@ -8,49 +9,62 @@
     "service": "dev_container",
     "customizations": {
         "vscode": {
+            "settings": {
+                "python.defaultInterpreterPath": "$/usr/local/bin/python",
+                "python.poetryPath": "/home/vscode/.local/bin/poetry",
+                "python.analysis.extraPaths": [
+                    "${containerWorkspaceFolder}"
+                ],
+                "python.analysis.exclude": [
+                    ".build",
+                    ".cache",
+                    ".mypy_cache",
+                    ".pytest_cache",
+                    "dist",
+                    "docs"
+                ],
+                "terminal.integrated.profiles.linux": {
+                    "zsh": {
+                        "path": "/bin/zsh"
+                    },
+                    "bash": null
+                },
+                "terminal.integrated.defaultProfile.linux": "zsh",
+                "http.proxyStrictSSL": false
+            },
             "extensions": [
-                // Python extension for VS Code
-                "ms-python.python",
-                // Ruff linter for Python
-                "charliermarsh.ruff",
-                // Spelling Checker for Visual Studio Code
-                "streetsidesoftware.code-spell-checker",
-                // View a Git Graph of your repository
-                "mhutchie.git-graph",
-                // Makes indentation easier to read
-                "oderwat.indent-rainbow",
-                // Renders end of line characters
-                "medo64.render-crlf",
-                // Supercharge Git within VS Code
-                "eamodio.gitlens",
-                // Generates python docstrings
-                "njpwerner.autodocstring",
-                // mprove your code commenting
-                "aaron-bond.better-comments",
-                // Conventional Commits
-                "vivaxy.vscode-conventional-commits",
-                // Fully-featured TOML support
-                "tamasfe.even-better-toml",
-                // Changes VS Code's built-in markdown preview to match Github's style
-                "bierner.github-markdown-preview",
-                // Debugger for Python
-                "ms-python.debugpy",
-                // All you need to write Markdown
-                "yzhang.markdown-all-in-one",
-                // coverage visualization next to the code
-                "ryanluker.vscode-coverage-gutters",
-                // to-do highlighting
-                "gruntfuggly.todo-tree",
-                // Code formatter using prettier
-                "esbenp.prettier-vscode",
-                // Type checking support for Python files using Mypy
-                "ms-python.mypy-type-checker",
-                // Markdown linting and style checking
-                "DavidAnson.vscode-markdownlint",
-                // unicode emoji selector for vscode (F1-> type 'emoji')
-                "perkovec.emoji"
+                // vscode nice to have
+                "eamodio.gitlens",                          // better git views in vscode
+                "mhutchie.git-graph",                       // a nice git graph
+                "vivaxy.vscode-conventional-commits",       // conventional commits support
+                "ryanluker.vscode-coverage-gutters",        // coverage visualization next to the code
+                "aaron-bond.better-comments",               // comment highlighting
+                "gruntfuggly.todo-tree",                    // to-do highlighting
+                "medo64.render-crlf",                       // render CRLF line endings
+                "esbenp.prettier-vscode",                   // automatic code formatting/prettifying
+                // python related
+                "ms-python.python",                         // python support
+                "charliermarsh.ruff",                       // ruff linter (flake8 replacement)
+                "ms-python.mypy-type-checker",              // mypy type checker
+                "njpwerner.autodocstring",                  // auto docstrings
+                "tamasfe.even-better-toml",                 // better TOML support (for pyproject.toml)
+                "streetsidesoftware.code-spell-checker",    // Spelling Checker for Visual Studio Code
+                "ms-python.debugpy",                        // Debugger for Python
+                // documentation related
+                "DavidAnson.vscode-markdownlint",           // markdown linting
+                "bierner.github-markdown-preview",          // markdown preview pack that mimics github
+                "perkovec.emoji",                           // unicode emoji selector for vscode (F1-> type 'emoji')
+                "yzhang.markdown-all-in-one",               // All you need to write Markdown
+                // ai related
+                "GitHub.copilot",
+                "GitHub.copilot-chat"
             ]
         }
     },
-    "postCreateCommand": "pip install --no-cache-dir -r requirements.txt"
+    // As a post create command we install the poetry dependencies and also install the pre-commit hooks.
+    // It's necessary to do this here because in Dockerfile we do not have the config files (pyproject.toml +
+    // .pre-commit-config.yaml) available.
+    "onCreateCommand": "chmod +x .devcontainer/on_create_command.sh && .devcontainer/on_create_command.sh",
+    "remoteUser": "vscode"
+    //"postCreateCommand": "pip install --no-cache-dir -r requirements.txt"
 }
