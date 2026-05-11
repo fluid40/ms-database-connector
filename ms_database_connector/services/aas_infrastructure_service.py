@@ -11,8 +11,8 @@ from http import HTTPStatus as StatusCode
 _logger = logging.getLogger(__name__)
 
 
-def get_shell(server_handler: ServerHandler, shell_id: str) -> model.AssetAdministrationShell:
-    """Get a Asset Administration Shell from a AAS server environment.
+def get_shell_via_registry(server_handler: ServerHandler, shell_id: str) -> model.AssetAdministrationShell:
+    """Get an Asset Administration Shell from an AAS server environment using the AAS registry.
 
     :param server_handler: Server handler
     :param shell_id: ID of the Asset Administration Shell to get
@@ -70,8 +70,8 @@ def get_shell(server_handler: ServerHandler, shell_id: str) -> model.AssetAdmini
     return shell
 
 
-def get_submodel(server_handler: ServerHandler, submodel_id: str) -> model.Submodel:
-    """Get a Submodel from a AAS server environment.
+def get_submodel_via_registry(server_handler: ServerHandler, submodel_id: str) -> model.Submodel:
+    """Get a Submodel from an AAS server environment using the AAS registry.
 
     :param server_handler: Server handler
     :param submodel_id: ID of the Submodel to get
@@ -132,7 +132,7 @@ def get_aimc_submodel(server_handler: ServerHandler, shell: model.AssetAdministr
     submodel_ids = aas_parser.get_submodel_ids(shell)
 
     for submodel_id in submodel_ids:
-        submodel = get_submodel(server_handler, submodel_id)
+        submodel = get_submodel_via_registry(server_handler, submodel_id)
 
         semantic_id_value = submodel_parser.get_semantic_id_value(submodel)
 
