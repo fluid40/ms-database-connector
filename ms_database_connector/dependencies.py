@@ -59,7 +59,7 @@ def reconnect_influx_client() -> IInfluxClient | None:
 
 
 @lru_cache(maxsize=1)
-def get_mapping_configuration_service() -> DbMappingHandler:
+def get_db_mapping_handler() -> DbMappingHandler:
     """Create and cache the mapping configuration handler singleton.
 
     Initializes and caches the mapping configuration handler based on the service

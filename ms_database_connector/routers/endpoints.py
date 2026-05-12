@@ -22,7 +22,7 @@ from ms_database_connector.config.db_mapping import (
 from ms_database_connector.config.service_configuration import ServiceConfiguration
 from ms_database_connector.dependencies import (
     get_influx_client,
-    get_mapping_configuration_service,
+    get_db_mapping_handler,
     get_service_configuration,
     reconnect_influx_client,
 )
@@ -43,9 +43,7 @@ router = APIRouter()
 def health_check(
     request: Request,
     service_config: Annotated[ServiceConfiguration, Depends(get_service_configuration)],
-    mapping_service: Annotated[
-        DbMappingHandler, Depends(get_mapping_configuration_service)
-    ],
+    mapping_service: Annotated[DbMappingHandler, Depends(get_db_mapping_handler)],
     influx_client: Annotated[IInfluxClient | None, Depends(get_influx_client)],
 ) -> dict:
     """Readiness check: verifies service health and connectivity.
@@ -153,9 +151,7 @@ def connect(
 
 @router.get("/db-mapping")
 def get_db_mapping(
-    mapping_service: Annotated[
-        DbMappingHandler, Depends(get_mapping_configuration_service)
-    ],
+    mapping_service: Annotated[DbMappingHandler, Depends(get_db_mapping_handler)],
 ) -> dict:
     """Retrieve the current AIMC-to-InfluxDB field mapping configuration.
 
@@ -180,9 +176,7 @@ def get_db_mapping(
 @router.post("/db-mapping")
 def set_db_mapping(
     body: dict,
-    mapping_service: Annotated[
-        DbMappingHandler, Depends(get_mapping_configuration_service)
-    ],
+    mapping_service: Annotated[DbMappingHandler, Depends(get_db_mapping_handler)],
 ) -> dict:
     """Validate and store the AIMC-to-InfluxDB field mapping configuration.
 
@@ -275,9 +269,7 @@ _VALID_TARGET_TYPES = {t.value for t in MappingTargetType} | {None}
 @router.put("/initialize-db-mapping")
 def initialize_db_mapping(
     body: dict,
-    mapping_service: Annotated[
-        DbMappingHandler, Depends(get_mapping_configuration_service)
-    ],
+    mapping_service: Annotated[DbMappingHandler, Depends(get_db_mapping_handler)],
 ) -> dict:
     """Create a mapping template with uninitialized (null) values.
 
