@@ -17,7 +17,7 @@ classifiers = [
 
 # Missing library stubs or py.typed marker files are ignored to avoid mypy errors.
 [[tool.mypy.overrides]]
-module = ["influxdb.*"]
+module = ["influxdb.*", "aas_http_client", "aas_http_client.*"]
 ignore_missing_imports = true
 
 [tool.poetry.dependencies]
