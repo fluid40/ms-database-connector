@@ -241,13 +241,24 @@ class InfluxV2Client(IInfluxClient, BaseModel):
             f"Writing data to InfluxDB:\nMeasurement: '{measurement}'\nTags:\n{json.dumps(tags, indent=4)}'\nValues:\n{json.dumps(fields, indent=4)}"
         )
 
+        return self.write_point(point)
+
+    def write_point(self, point: Point) -> bool:
+        """Write a pre-built Point object directly to InfluxDB.
+
+        Args:
+            point: A fully constructed InfluxDB Point to write.
+
+        Returns:
+            bool: True if the point was written successfully, False otherwise.
+        """
+        logger.debug(f"Writing Point to InfluxDB bucket '{self.bucket}'.")
         try:
             write_api = self._client.write_api(write_options=SYNCHRONOUS)
             write_api.write(record=point, bucket=self.bucket)
         except Exception as e:
-            logger.error(f"Failed to write data point '{point}' to InfluxDB: {e}")
+            logger.error(f"Failed to write Point to InfluxDB: {e}")
             return False
-
         return True
 
 
