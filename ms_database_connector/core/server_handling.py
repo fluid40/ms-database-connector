@@ -13,14 +13,27 @@ _logger = logging.getLogger(__name__)
 
 
 class ServerHandler:
-    """Class to handle connections to AAS servers and the AAS registry."""
+    """Manage connections to AAS infrastructure endpoints.
+
+    The handler initializes and caches clients/wrappers for:
+    - AAS registry
+    - Submodel registry
+    - Repository AAS servers
+
+    Instances are intended to be reused so created wrappers can be served from
+    an in-memory cache.
+    """
 
     aas_registry_client: AasHttpClient
     sm_registry_client: AasHttpClient
     aas_server_wrappers: dict[str, SdkWrapper]
 
     def __init__(self):
-        """Initialize ServerHandler with default values."""
+        """Initialize an empty connection state.
+
+        The created instance starts without connected registry clients and with
+        an empty repository-wrapper cache.
+        """
         self.aas_registry_client = None
         self.sm_registry_client = None
         self.aas_server_wrappers = {}
@@ -28,7 +41,16 @@ class ServerHandler:
     def connect_to_server(
         self, configuration_files_handler: ServerConfigurationsHandler
     ):
-        """Create AAS server clients for all configured AAS servers and the AAS registry."""
+        """Initialize all configured registry clients and repository wrappers.
+
+        Args:
+            configuration_files_handler: Provider for AAS registry, Submodel
+                registry, and repository server configurations.
+
+        Raises:
+            HTTPException: Propagated if a required registry client cannot be
+                established.
+        """
         self.connect_to_aas_registry(
             configuration_files_handler.aas_registry_configuration
         )
@@ -42,10 +64,17 @@ class ServerHandler:
     def connect_to_aas_registry(
         self, configuration: ServerConfiguration
     ) -> AasHttpClient:
-        """Create AAS registry client using the provided configuration.
+        """Create and store the AAS registry client.
 
-        :param configuration: The server configuration
-        :raises HTTPException: If the connection to the AAS registry could not be established
+        This method updates ``self.aas_registry_client`` when the connection
+        succeeds.
+
+        Args:
+            configuration: Server configuration for the AAS registry.
+
+        Raises:
+            HTTPException: If the connection to the AAS registry cannot be
+                established.
         """
         _logger.info("Create AAS registry client.")
         registry_wrapper = connect_to_aas_server(
@@ -64,10 +93,17 @@ class ServerHandler:
     def connect_to_sm_registry(
         self, configuration: ServerConfiguration
     ) -> AasHttpClient:
-        """Create Submodel registry client using the provided configuration.
+        """Create and store the Submodel registry client.
 
-        :param configuration: The server configuration
-        :raises HTTPException: If the connection to the AAS registry could not be established
+        This method updates ``self.sm_registry_client`` when the connection
+        succeeds.
+
+        Args:
+            configuration: Server configuration for the Submodel registry.
+
+        Raises:
+            HTTPException: If the connection to the Submodel registry cannot
+                be established.
         """
         _logger.info("Create Submodel registry client.")
         registry_wrapper = connect_to_aas_server(
@@ -84,9 +120,13 @@ class ServerHandler:
         self.sm_registry_client = registry_wrapper.get_client()
 
     def connect_to_repo_server(self, configurations: list[ServerConfiguration]):
-        """Create AAS server wrappers for all configured AAS servers.
+        """Create and cache wrappers for configured repository servers.
 
-        :param configuration: The server configuration
+        Existing entries are preserved. New wrappers are cached by their base
+        URL and duplicates are ignored.
+
+        Args:
+            configurations: List of server configurations for repository servers.
         """
         _logger.info(
             f"Create AAS server wrappers for {len(configurations)} configured AAS servers."
@@ -104,10 +144,19 @@ class ServerHandler:
                 self.aas_server_wrappers[wrapper.base_url] = wrapper
 
     def get_or_create_repo_wrapper(self, base_url: str) -> SdkWrapper:
-        """Get or create an AAS server wrapper for the given base URL.
+        """Return a cached wrapper or create one for a repository base URL.
 
-        :param base_url: The base URL of the AAS server
-        :return: The AAS server wrapper or None
+        If no cached wrapper exists, a new connection attempt is made using the
+        provided URL.
+
+        Args:
+            base_url: Base URL of the AAS server.
+
+        Returns:
+            SdkWrapper: A cached or newly created AAS server wrapper.
+
+        Raises:
+            HTTPException: If the wrapper cannot be created.
         """
         if base_url in self.aas_server_wrappers:
             _logger.debug(
@@ -136,11 +185,19 @@ class ServerHandler:
 def connect_to_aas_server(
     server_configuration: dict, secret_var_name: str
 ) -> SdkWrapper | None:
-    """Connect to the AAS server and create a server wrapper by a given configuration file.
+    """Create an AAS SDK wrapper from server configuration and secret.
 
-    :param server_configuration: The AAS server configuration
-    :param secret_var_name: The name of the environment variable that contains the AAS authentication secret.
-    :return: The created server wrapper or None
+    The function forces ``EncodedIds`` to ``False`` before wrapper creation to
+    ensure a consistent client setup.
+
+    Args:
+        server_configuration: AAS server configuration dictionary.
+        secret_var_name: Name of the environment variable containing the AAS
+            authentication secret.
+
+    Returns:
+        SdkWrapper | None: Created server wrapper, or ``None`` if wrapper
+            creation fails or returns no wrapper.
     """
     _logger.info("Connect to AAS server.")
 

@@ -24,10 +24,15 @@ def get_aimc_submodel(
 ) -> model.Submodel:
     """Get the Asset Interface Mapping Configuration (AIMC) submodel from the AAS.
 
-    :param server_handler: The handler for the AAS server
-    :param shell: The AAS to get the submodel from
-    :raises HTTPException: If the AIMC submodel could not be found
-    :return: The AIMC submodel
+    Args:
+        server_handler: The handler for the AAS server.
+        shell: The AAS to get the submodel from.
+
+    Returns:
+        model.Submodel: The AIMC submodel.
+
+    Raises:
+        HTTPException: If the AIMC submodel could not be found.
     """
     _logger.info("Get AIMC submodel from Shell.")
     submodel_ids = aas_parser.get_submodel_ids(shell)
@@ -56,8 +61,15 @@ def get_aimc_submodel(
 def get_mapping_configurations(aimc_submodel: model.Submodel) -> MappingConfigurations:
     """Get the mapping configurations from the AIMC submodel.
 
-    :param aimc_submodel: The AIMC submodel
-    :return: The mapping configurations
+    Args:
+        aimc_submodel: The AIMC submodel.
+
+    Returns:
+        MappingConfigurations: The mapping configurations.
+
+    Raises:
+        HTTPException: If no mapping configurations are found in the AIMC
+            submodel.
     """
     mapping_configurations = aimc_parser.parse_mapping_configurations(aimc_submodel)
 
@@ -79,8 +91,11 @@ def extract_target_references_from_aimc(
 ) -> list[ReferenceProperties]:
     """Extract the target SME references from the AIMC submodel.
 
-    :param aimc_sm: The AIMC submodel
-    :return: List of target SME references
+    Args:
+        aimc_sm: The AIMC submodel.
+
+    Returns:
+        list[ReferenceProperties]: List of target SME references.
     """
     mapping_configurations: MappingConfigurations = get_mapping_configurations(aimc_sm)
     return extract_target_references_from_mapping_configuration(mapping_configurations)
@@ -91,8 +106,11 @@ def extract_target_references_from_mapping_configuration(
 ) -> list[ReferenceProperties]:
     """Extract the target SME references from the mapping configurations (contained in the AIMC submodel).
 
-    :param mapping_configurations: The mapping configurations
-    :return: List of target SME references
+    Args:
+        mapping_configurations: The mapping configurations.
+
+    Returns:
+        list[ReferenceProperties]: List of target SME references.
     """
     target_references = []
     for configuration in mapping_configurations.configurations:
@@ -114,9 +132,13 @@ def check_access_to_elements(
 ) -> bool:
     """Check if the read access to the target SME references is granted.
 
-    :param server_handler: Server handler
-    :param target_references: List of target SME references
-    :return: True if access is granted for all target references, False otherwise
+    Args:
+        server_handler: Server handler.
+        target_references: List of target SME references.
+
+    Returns:
+        bool: ``True`` if access is granted for all target references,
+        ``False`` otherwise.
     """
     for reference in target_references:
         submodel_id = reference.submodel_id
