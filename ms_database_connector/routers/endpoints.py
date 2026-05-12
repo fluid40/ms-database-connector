@@ -12,7 +12,7 @@ PUT  /initialize-db-mapping  – store a null-template mapping
 import logging
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import ValidationError
 
 from ms_database_connector.config.mapping_configuration import (
@@ -41,13 +41,14 @@ router = APIRouter()
 
 @router.get("/health")
 def health_check(
+    request: Request,
     service_config: Annotated[ServiceConfiguration, Depends(get_service_configuration)],
     mapping_service: Annotated[
         MappingConfigurationHandler, Depends(get_mapping_configuration_service)
     ],
     influx_client: Annotated[IInfluxClient | None, Depends(get_influx_client)],
 ) -> dict:
-    """Readiness check: verifies configuration, mapping, and InfluxDB connectivity."""
+    """Readiness check: verifies configuration, mapping, startup dependency state, and InfluxDB connectivity."""
     influxdb_reachable = False
     if influx_client is not None:
         try:
@@ -60,8 +61,23 @@ def health_check(
         "mapping_initialized": mapping_service.is_initialized,
         "influxdb_reachable": influxdb_reachable,
     }
+
+    startup_state = getattr(request.app.state, "startup", None)
+    # Prefer runtime startup state from FastAPI lifespan when available.
+    # During tests or isolated router usage this may be missing.
+    if startup_state is None:
+        checks["errors"] = (
+            []
+            if checks["influxdb_reachable"]
+            else ["influxdb: ping failed after successful startup"]
+        )
+    else:
+        checks["registry_connected"] = bool(startup_state.get("registry_connected"))
+        checks["aimc_loaded"] = bool(startup_state.get("aimc_loaded"))
+        checks["errors"] = startup_state.get("errors", [])
+
     _logger.debug("Health check result: %s", checks)
-    return {"status": "ok"}
+    return {"status": "ok", "checks": checks}
 
 
 # ------------------------------------------------------------------ #
