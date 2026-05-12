@@ -40,7 +40,6 @@ async def lifespan(app: FastAPI):
         "registry_connected": False,
         "influx_connected": False,
         "aimc_loaded": False,
-        "degraded": False,
         "errors": [],
     }
 
@@ -62,23 +61,24 @@ async def lifespan(app: FastAPI):
         app.state.startup["errors"].append(f"mapping_configuration: {e}")
         raise
 
-    # Attempt InfluxDB connection at startup (non-fatal)
+    # InfluxDB connectivity is required for this service.
     try:
         client = get_influx_client()
         if client:
             _logger.info("InfluxDB connection established during startup.")
             app.state.startup["influx_connected"] = True
         else:
-            _logger.warning(
+            message = (
                 "InfluxDB connection not established at startup. "
-                "Use POST /connect to connect manually."
+                "Set INFLUXDB_V2_TOKEN and ensure server reachability."
             )
-            app.state.startup["degraded"] = True
+            _logger.error(message)
             app.state.startup["errors"].append("influxdb: not connected")
+            raise RuntimeError(message)
     except Exception as e:
-        _logger.warning("Could not establish InfluxDB connection at startup: %s", e)
-        app.state.startup["degraded"] = True
+        _logger.exception("Could not establish InfluxDB connection at startup: %s", e)
         app.state.startup["errors"].append(f"influxdb: {e}")
+        raise
 
     # AAS connectivity is required for this service.
     try:
