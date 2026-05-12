@@ -8,9 +8,9 @@ from aas_standard_parser.classes.aimc_parser_classes import (  # type: ignore
 )
 from basyx.aas import model
 from fastapi import HTTPException
-from influxdb_client import Point
 
 from ms_database_connector.core.server_handling import ServerHandler
+from ms_database_connector.models.influx_data import InfluxDataPoint
 from ms_database_connector.services.aas_infrastructure_service import (
     get_submodel_via_registry,
     has_access_to_sme,
@@ -178,21 +178,21 @@ class InfluxMapper:
         self.db_mapping = db_mapping
         self.target_references = target_references
 
-    def map_smes_to_influx(self) -> dict[str, list[Point]]:
-        """Create InfluxDB Point objects from mapped SubmodelElements.
+    def map_smes_to_influx(self) -> dict[str, list[InfluxDataPoint]]:
+        """Create InfluxDB data points from mapped SubmodelElements.
 
         Validates accessibility of all mapped elements, retrieves their values,
-        and constructs Point objects with fields and tags according to the mapping.
+        and constructs InfluxDataPoint objects with fields and tags according to the mapping.
 
         Returns:
-            Dictionary mapping measurement names to lists of Point objects.
+            Dictionary mapping measurement names to lists of InfluxDataPoint objects.
 
         Raises:
             HTTPException: If elements are not accessible.
         """
         self._validate_element_access()
         reference_map = self._build_reference_map()
-        influx_points: dict[str, list[Point]] = {}
+        influx_points: dict[str, list[InfluxDataPoint]] = {}
 
         for measurement_name, measurement_mapping in self.db_mapping.root.items():
             point = self._process_measurement(
@@ -201,9 +201,7 @@ class InfluxMapper:
             if point is not None:
                 influx_points[measurement_name] = [point]
 
-        _logger.info(
-            f"Created {len(influx_points)} measurement(s) with Point object(s)."
-        )
+        _logger.info(f"Created {len(influx_points)} measurement(s) with data point(s).")
         return influx_points
 
     def _validate_element_access(self) -> None:
@@ -235,7 +233,7 @@ class InfluxMapper:
         measurement_name: str,
         measurement_mapping,
         reference_map: dict[str, ReferenceProperties],
-    ) -> Point | None:
+    ) -> InfluxDataPoint | None:
         """Process a single measurement and its mapped sink paths.
 
         Args:
@@ -244,9 +242,9 @@ class InfluxMapper:
             reference_map: Lookup map for sink paths to references.
 
         Returns:
-            Point object with fields/tags, or None if no values were added.
+            InfluxDataPoint object with fields/tags, or None if no values were added.
         """
-        point = Point(measurement_name)
+        point = InfluxDataPoint(measurement=measurement_name)
         has_values = False
 
         for sink_path, target_type in measurement_mapping.root.items():
@@ -263,7 +261,7 @@ class InfluxMapper:
 
     def _add_value_to_point(
         self,
-        point: Point,
+        point: InfluxDataPoint,
         sink_path: str,
         target_type,
         reference_map: dict[str, ReferenceProperties],
@@ -322,19 +320,19 @@ class InfluxMapper:
         return sme.value
 
     def _assign_value_to_point(
-        self, point: Point, sink_path: str, sme_value, target_type
+        self, point: InfluxDataPoint, sink_path: str, sme_value, target_type
     ) -> None:
-        """Assign a value to the Point object as field, tag, or timestamp.
+        """Assign a value to the InfluxDataPoint as field, tag, or timestamp.
 
         Args:
-            point: Point object to add value to.
+            point: InfluxDataPoint object to add value to.
             sink_path: Identifier for this value.
             sme_value: The value to add.
             target_type: Target type determining assignment method.
         """
         if target_type == MappingTargetType.FIELD:
-            point.field(sink_path, sme_value)
+            point.fields[sink_path] = sme_value
         elif target_type == MappingTargetType.TAG:
-            point.tag(sink_path, str(sme_value))
+            point.tags[sink_path] = str(sme_value)
         elif target_type == MappingTargetType.TIMESTAMP:
             _logger.debug(f"Timestamp field '{sink_path}' will be set separately.")
