@@ -14,10 +14,11 @@ from ms_database_connector.core.server_handling import ServerHandler
 from ms_database_connector.core.influx_mapping import (
     get_aimc_submodel,
     extract_target_references_from_aimc,
+    InfluxMapper,
 )
 from ms_database_connector.dependencies import (
     get_influx_client,
-    get_mapping_configuration_service,
+    get_db_mapping_handler,
     get_service_configuration,
 )
 from ms_database_connector.routers.endpoints import router as mapping_router
@@ -101,7 +102,7 @@ def _setup_mapping_service(startup_state: dict) -> None:
     """
     with _track_startup(startup_state, "mapping_configuration", "mapping_initialized"):
         _logger.info("Initializing mapping configuration service.")
-        get_mapping_configuration_service()
+        get_db_mapping_handler()
 
 
 def _setup_influx_connection(startup_state: dict) -> None:
@@ -235,15 +236,46 @@ class PollingWorker:
         retrieved from the app state.
         """
         _logger.debug("Polling cycle started.")
+
         influx_client = get_influx_client()
         if influx_client is None:
             _logger.warning("InfluxDB client unavailable – skipping cycle.")
             return
 
         target_references = getattr(self._app.state, "target_references", [])
+        if not target_references:
+            _logger.warning("No target references available – skipping cycle.")
+            return
+
+        db_mapping = get_db_mapping_handler().db_mapping
+        if db_mapping is None:
+            _logger.warning("No DB mapping configuration available – skipping cycle.")
+            return
+
+        mapper = InfluxMapper(
+            server_handler=self._server_handler,
+            db_mapping=db_mapping,
+            target_references=target_references,
+        )
+
+        try:
+            influx_points = mapper.map_smes_to_influx()
+        except Exception:
+            _logger.exception("Failed to map SMEs to InfluxDB points.")
+            return
+
+        for measurement_name, points in influx_points.items():
+            for point in points:
+                success = influx_client.write_data(
+                    fields=point.fields, measurement=point.measurement, tags=point.tags
+                )
+                if not success:
+                    _logger.error(
+                        "Failed to write point for measurement '%s'.", measurement_name
+                    )
+
         _logger.debug(
-            "Polling cycle completed: %d target reference(s) available.",
-            len(target_references),
+            "Polling cycle completed: %d measurement(s) written.", len(influx_points)
         )
 
 
