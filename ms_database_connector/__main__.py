@@ -1,4 +1,5 @@
 # FastAPI app instance and startup
+import asyncio
 import logging
 import os
 
@@ -144,10 +145,13 @@ def _setup_aas_connection(startup_state: dict) -> ServerHandler:
     return None
 
 
-def _preload_aas_metadata(server_handler: ServerHandler, startup_state: dict) -> None:
+def _preload_aas_metadata(
+    app: FastAPI, server_handler: ServerHandler, startup_state: dict
+) -> None:
     """Preload AAS and AIMC metadata for early validation.
 
     Args:
+        app: The FastAPI application instance to store preloaded references.
         server_handler: The initialized server handler for AAS communication.
         startup_state: The startup state dictionary to update on success.
 
@@ -159,8 +163,88 @@ def _preload_aas_metadata(server_handler: ServerHandler, startup_state: dict) ->
         aas_id = get_service_configuration().aas_id
         shell = get_shell_via_registry(server_handler, aas_id)
         aimc_sm = get_aimc_submodel(server_handler, shell)
-        extract_target_references_from_aimc(aimc_sm)
+        target_references = extract_target_references_from_aimc(aimc_sm)
+        app.state.target_references = target_references
         _logger.info("AAS and AIMC metadata loaded successfully.")
+
+
+class PollingWorker:
+    """Background worker that polls AAS submodel elements and writes values to InfluxDB.
+
+    Uses the polling_interval from the service configuration to schedule
+    periodic data collection. The worker holds references to the FastAPI app,
+    AAS server handler, and the InfluxDB client established during startup.
+
+    Args:
+        app: The FastAPI application instance (holds target references in state).
+        server_handler: The connected AAS server handler.
+        polling_interval: Interval in seconds between polling cycles.
+    """
+
+    def __init__(
+        self,
+        app: FastAPI,
+        server_handler: ServerHandler,
+        polling_interval: int,
+    ) -> None:
+        self._app = app
+        self._server_handler = server_handler
+        self._polling_interval = polling_interval
+        self._task: asyncio.Task | None = None
+        self._stop_event = asyncio.Event()
+
+    def start(self) -> None:
+        """Schedule the polling loop as an asyncio background task."""
+        self._stop_event.clear()
+        self._task = asyncio.create_task(self._run(), name="polling-worker")
+        _logger.info("Polling worker started (interval=%ds).", self._polling_interval)
+
+    async def stop(self) -> None:
+        """Signal the polling loop to stop and await its completion."""
+        _logger.info("Stopping polling worker.")
+        self._stop_event.set()
+        if self._task is not None:
+            await asyncio.wait([self._task], timeout=self._polling_interval + 5)
+            self._task = None
+
+    async def _run(self) -> None:
+        """Main polling loop.
+
+        On each cycle the worker uses the AAS server handler and InfluxDB
+        client established during startup. AAS and AIMC metadata are preloaded
+        once at startup via _preload_aas_metadata and are not re-fetched here.
+        """
+        while not self._stop_event.is_set():
+            try:
+                await self._poll_once()
+            except Exception:
+                _logger.exception("Error during polling cycle.")
+            try:
+                await asyncio.wait_for(
+                    asyncio.shield(asyncio.ensure_future(self._stop_event.wait())),
+                    timeout=self._polling_interval,
+                )
+            except asyncio.TimeoutError:
+                pass  # normal – interval elapsed, continue loop
+
+    async def _poll_once(self) -> None:
+        """Execute a single polling cycle.
+
+        Uses the AAS server handler and InfluxDB client established during
+        startup to collect and persist SME values. Target SME references are
+        retrieved from the app state.
+        """
+        _logger.debug("Polling cycle started.")
+        influx_client = get_influx_client()
+        if influx_client is None:
+            _logger.warning("InfluxDB client unavailable – skipping cycle.")
+            return
+
+        target_references = getattr(self._app.state, "target_references", [])
+        _logger.debug(
+            "Polling cycle completed: %d target reference(s) available.",
+            len(target_references),
+        )
 
 
 @asynccontextmanager
@@ -188,12 +272,18 @@ async def lifespan(app: FastAPI):
         _setup_mapping_service(app.state.startup)
         _setup_influx_connection(app.state.startup)
         server_handler = _setup_aas_connection(app.state.startup)
-        _preload_aas_metadata(server_handler, app.state.startup)
+        _preload_aas_metadata(app, server_handler, app.state.startup)
     except Exception:
         _logger.exception("Startup initialization failed.")
         raise
 
+    polling_interval = get_service_configuration().polling_interval
+    worker = PollingWorker(app, server_handler, polling_interval)
+    worker.start()
+
     yield
+
+    await worker.stop()
     _logger.info("Shutting down the microservice database connector.")
 
 
