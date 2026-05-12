@@ -9,7 +9,7 @@ from ms_database_connector.config.service_configuration import (
 )
 from ms_database_connector.core.db_connection import initialize_db_connection
 from ms_database_connector.services.influx_service import IInfluxClient
-from ms_database_connector.utils.mapping_handler import MappingConfigurationHandler
+from ms_database_connector.utils.mapping_handler import DbMappingHandler
 
 
 @lru_cache(maxsize=1)
@@ -59,22 +59,22 @@ def reconnect_influx_client() -> IInfluxClient | None:
 
 
 @lru_cache(maxsize=1)
-def get_mapping_configuration_service() -> MappingConfigurationHandler:
+def get_mapping_configuration_service() -> DbMappingHandler:
     """Create and cache the mapping configuration handler singleton.
 
     Initializes and caches the mapping configuration handler based on the service
     configuration. This handler manages AIMC to InfluxDB field mappings.
 
     Returns:
-        MappingConfigurationHandler: The initialized and cached mapping configuration
+        DbMappingHandler: The initialized and cached DB mapping configuration
             handler instance.
 
     Raises:
-        Exception: If mapping configuration cannot be loaded or initialized.
+        Exception: If DB mapping configuration cannot be loaded or initialized.
     """
     configuration = get_service_configuration()
-    mapping_handler = MappingConfigurationHandler()
-    mapping_handler._persist_mapping_file_changes = (
-        configuration.persist_mapping_file_changes
+    mapping_handler = DbMappingHandler()
+    mapping_handler._persist_db_mapping_file_changes = (
+        configuration.persist_db_mapping_file_changes
     )
     return mapping_handler

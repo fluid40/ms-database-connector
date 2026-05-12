@@ -37,7 +37,7 @@ class MeasurementMapping(RootModel[dict[str, MappingTargetType]]):
         return self
 
 
-class MappingConfiguration(RootModel[dict[str, MeasurementMapping]]):
+class DbMapping(RootModel[dict[str, MeasurementMapping]]):
     """Complete AIMC-to-InfluxDB field mapping configuration.
 
     Top-level mapping keyed by InfluxDB measurement names, with each measurement

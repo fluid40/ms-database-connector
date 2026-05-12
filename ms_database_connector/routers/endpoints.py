@@ -15,8 +15,8 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import ValidationError
 
-from ms_database_connector.config.mapping_configuration import (
-    MappingConfiguration,
+from ms_database_connector.config.db_mapping import (
+    DbMapping,
     MappingTargetType,
 )
 from ms_database_connector.config.service_configuration import ServiceConfiguration
@@ -27,7 +27,7 @@ from ms_database_connector.dependencies import (
     reconnect_influx_client,
 )
 from ms_database_connector.services.influx_service import IInfluxClient
-from ms_database_connector.utils.mapping_handler import MappingConfigurationHandler
+from ms_database_connector.utils.mapping_handler import DbMappingHandler
 
 _logger = logging.getLogger(__name__)
 
@@ -44,7 +44,7 @@ def health_check(
     request: Request,
     service_config: Annotated[ServiceConfiguration, Depends(get_service_configuration)],
     mapping_service: Annotated[
-        MappingConfigurationHandler, Depends(get_mapping_configuration_service)
+        DbMappingHandler, Depends(get_mapping_configuration_service)
     ],
     influx_client: Annotated[IInfluxClient | None, Depends(get_influx_client)],
 ) -> dict:
@@ -154,7 +154,7 @@ def connect(
 @router.get("/db-mapping")
 def get_db_mapping(
     mapping_service: Annotated[
-        MappingConfigurationHandler, Depends(get_mapping_configuration_service)
+        DbMappingHandler, Depends(get_mapping_configuration_service)
     ],
 ) -> dict:
     """Retrieve the current AIMC-to-InfluxDB field mapping configuration.
@@ -181,7 +181,7 @@ def get_db_mapping(
 def set_db_mapping(
     body: dict,
     mapping_service: Annotated[
-        MappingConfigurationHandler, Depends(get_mapping_configuration_service)
+        DbMappingHandler, Depends(get_mapping_configuration_service)
     ],
 ) -> dict:
     """Validate and store the AIMC-to-InfluxDB field mapping configuration.
@@ -210,7 +210,7 @@ def set_db_mapping(
         - Posted mapping must match existing measurement structure exactly.
     """
     try:
-        mapping = MappingConfiguration.model_validate(body)
+        mapping = DbMapping.model_validate(body)
     except ValidationError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
@@ -255,7 +255,7 @@ def set_db_mapping(
                 ),
             )
 
-    if not mapping_service.update_mapping(mapping):
+    if not mapping_service.update_db_mapping(mapping):
         raise HTTPException(
             status_code=500,
             detail="Failed to persist mapping.",
@@ -276,7 +276,7 @@ _VALID_TARGET_TYPES = {t.value for t in MappingTargetType} | {None}
 def initialize_db_mapping(
     body: dict,
     mapping_service: Annotated[
-        MappingConfigurationHandler, Depends(get_mapping_configuration_service)
+        DbMappingHandler, Depends(get_mapping_configuration_service)
     ],
 ) -> dict:
     """Create a mapping template with uninitialized (null) values.
@@ -321,7 +321,7 @@ def initialize_db_mapping(
                 )
 
     try:
-        result = mapping_service.initialize_mapping(body)
+        result = mapping_service.initialize_db_mapping(body)
     except OSError as exc:
         raise HTTPException(
             status_code=500, detail=f"Failed to persist mapping template: {exc}"

@@ -19,7 +19,7 @@ class ServiceConfiguration(BaseModel):
         external_port: External port for server access (default: 3088).
         influx_db_version: InfluxDB version to use (1 or 2, default: 2).
         influx_db_server_config: Server connection details for InfluxDB.
-        persist_mapping_file_changes: Whether to persist mapping updates to disk.
+        persist_db_mapping_file_changes: Whether to persist DB mapping updates to disk.
     """
 
     aas_id: str = Field(
@@ -50,12 +50,12 @@ class ServiceConfiguration(BaseModel):
         alias="InfluxDbConfig",
         description="Configuration for the Influx DB server connection.",
     )
-    persist_mapping_file_changes: bool = Field(
+    persist_db_mapping_file_changes: bool = Field(
         default=True,
-        alias="PersistMappingFileChanges",
+        alias="PersistDbMappingFileChanges",
         description=(
-            "Whether mapping configuration updates should be persisted to "
-            "mapping_configuration.json."
+            "Whether DB mapping configuration updates should be persisted to "
+            "db_mapping_configuration.json."
         ),
     )
 
