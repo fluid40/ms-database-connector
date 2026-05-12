@@ -20,8 +20,13 @@ class MappingConfigurationHandler:
     Invalid mapping files are logged and ignored so they can be corrected and reloaded.
     """
 
-    def __init__(self, config_base_path: str = CONFIG_BASE_PATH):
+    def __init__(
+        self,
+        config_base_path: str = CONFIG_BASE_PATH,
+        persist_mapping_file_changes: bool = True,
+    ):
         self._mapping_file = Path(config_base_path) / "mapping_configuration.json"
+        self._persist_mapping_file_changes = persist_mapping_file_changes
         self._mapping_configuration: MappingConfiguration | None = None
         self._raw_mapping: dict[str, dict[str, str | None]] | None = None
         self.reload_mapping_from_file()
@@ -176,6 +181,13 @@ class MappingConfigurationHandler:
 
     def _persist_mapping(self, raw_mapping: dict) -> None:
         """Persist raw mapping structure to disk as JSON."""
+        if not self._persist_mapping_file_changes:
+            _logger.debug(
+                "Skipping persistence of mapping configuration because "
+                "persist_mapping_file_changes is disabled."
+            )
+            return
+
         self._mapping_file.parent.mkdir(parents=True, exist_ok=True)
         self._mapping_file.write_text(
             json.dumps(raw_mapping, indent=4, sort_keys=False),

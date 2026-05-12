@@ -3,6 +3,7 @@
     "PollingInterval": 5,
     "ExternalUrl": "http://127.0.0.1",
     "ExternalPort": "3088",
+    "PersistMappingFileChanges": true,
     "InfluxDbVersion": 2,
     "InfluxDbConfig": {
         "Url": "http://ms-dbc-influx-v2:8086/",

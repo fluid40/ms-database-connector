@@ -40,6 +40,14 @@ class ServiceConfiguration(BaseModel):
         alias="InfluxDbConfig",
         description="Configuration for the Influx DB server connection.",
     )
+    persist_mapping_file_changes: bool = Field(
+        default=True,
+        alias="PersistMappingFileChanges",
+        description=(
+            "Whether mapping configuration updates should be persisted to "
+            "mapping_configuration.json."
+        ),
+    )
 
 
 def load_configuration(configuration_file: str) -> ServiceConfiguration:

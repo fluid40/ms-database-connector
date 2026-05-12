@@ -38,4 +38,9 @@ def reconnect_influx_client() -> IInfluxClient | None:
 @lru_cache(maxsize=1)
 def get_mapping_configuration_service() -> MappingConfigurationHandler:
     """Create and cache the mapping configuration handler singleton."""
-    return MappingConfigurationHandler()
+    configuration = get_service_configuration()
+    mapping_handler = MappingConfigurationHandler()
+    mapping_handler._persist_mapping_file_changes = (
+        configuration.persist_mapping_file_changes
+    )
+    return mapping_handler
