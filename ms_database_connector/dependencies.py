@@ -16,7 +16,14 @@ from ms_database_connector.utils.mapping_handler import MappingConfigurationHand
 def get_service_configuration() -> ServiceConfiguration:
     """Load the runtime service configuration from environment.
 
-    Uses a singleton cache to avoid repeated file parsing.
+    Uses a singleton cache to avoid repeated file parsing. The configuration file
+    path is read from the DBC_CONFIGURATION_FILE environment variable.
+
+    Returns:
+        ServiceConfiguration: The loaded and parsed service configuration.
+
+    Raises:
+        Exception: If configuration file cannot be loaded or parsed.
     """
     configuration_file = os.getenv("DBC_CONFIGURATION_FILE", "")
     return load_configuration(configuration_file)
@@ -24,20 +31,47 @@ def get_service_configuration() -> ServiceConfiguration:
 
 @lru_cache(maxsize=1)
 def get_influx_client() -> IInfluxClient | None:
-    """Create and cache an InfluxDB client using current service configuration."""
+    """Create and cache an InfluxDB client using current service configuration.
+
+    Initializes a singleton InfluxDB client based on the active service configuration.
+    The client is cached to avoid repeated initialization.
+
+    Returns:
+        IInfluxClient | None: The initialized InfluxDB client instance, or None if
+            initialization fails (e.g., missing credentials or invalid configuration).
+    """
     configuration = get_service_configuration()
     return initialize_db_connection(configuration)
 
 
 def reconnect_influx_client() -> IInfluxClient | None:
-    """Force a fresh InfluxDB client initialisation (used by POST /connect)."""
+    """Force a fresh InfluxDB client initialization.
+
+    Clears the cached client and initializes a new one. This is typically called
+    when the user requests to reconnect to the InfluxDB server via the API.
+
+    Returns:
+        IInfluxClient | None: The newly initialized InfluxDB client instance,
+            or None if initialization fails.
+    """
     get_influx_client.cache_clear()
     return get_influx_client()
 
 
 @lru_cache(maxsize=1)
 def get_mapping_configuration_service() -> MappingConfigurationHandler:
-    """Create and cache the mapping configuration handler singleton."""
+    """Create and cache the mapping configuration handler singleton.
+
+    Initializes and caches the mapping configuration handler based on the service
+    configuration. This handler manages AIMC to InfluxDB field mappings.
+
+    Returns:
+        MappingConfigurationHandler: The initialized and cached mapping configuration
+            handler instance.
+
+    Raises:
+        Exception: If mapping configuration cannot be loaded or initialized.
+    """
     configuration = get_service_configuration()
     mapping_handler = MappingConfigurationHandler()
     mapping_handler._persist_mapping_file_changes = (

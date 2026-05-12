@@ -2,31 +2,45 @@
 
 
 class IInfluxClient:
-    """Interface for InfluxDB clients."""
+    """Interface for InfluxDB client implementations.
+
+    Defines the contract for database client implementations supporting
+    different InfluxDB versions (v1 and v2).
+    """
 
     def initialize(self, password: str) -> None:
-        """Initialize the InfluxDB client with the given password.
+        """Initialize the InfluxDB client with credentials.
 
-        :param password: The password for the InfluxDB user.
+        Args:
+            password: The authentication password or token for the InfluxDB user.
         """
         raise NotImplementedError
 
     def ping(self) -> bool:
-        """Ping the InfluxDB server to check if it's reachable.
+        """Verify InfluxDB server connectivity.
 
-        :return: True if the server is reachable, False otherwise.
+        Returns:
+            bool: True if the server is reachable and healthy, False otherwise.
         """
         raise NotImplementedError
 
     def write_data(self, fields: dict, measurement: str, tags: dict) -> bool:
-        """Write data to the InfluxDB.
+        """Write a data point to InfluxDB.
 
-        :param data: The data to write, must include a 'timestamp' field in ISO format.
-        :param measurement_name: The name of the measurement.
-        :return: True if the data was written successfully, False otherwise.
+        Args:
+            fields: Dictionary of field values. Must include a 'timestamp' field
+                in ISO 8601 format.
+            measurement: The name of the measurement.
+            tags: Dictionary of tag key-value pairs for indexing.
+
+        Returns:
+            bool: True if the data was written successfully, False otherwise.
         """
         raise NotImplementedError
 
     def create_database(self):
-        """Check if the specified database exists, and create it if it does not."""
+        """Verify or create the configured database/bucket.
+
+        Ensures the target database or bucket exists, creating it if necessary.
+        """
         raise NotImplementedError

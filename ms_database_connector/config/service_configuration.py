@@ -7,9 +7,19 @@ logger = logging.getLogger(__name__)
 
 
 class ServiceConfiguration(BaseModel):
-    """Represents the runtime configuration for the application.
+    """Runtime configuration for the microservice application.
 
-    :param BaseModel: Base model class for Pydantic
+    Contains settings for AAS connectivity, InfluxDB configuration, polling intervals,
+    and API endpoints.
+
+    Attributes:
+        aas_id: Unique identifier of the Asset Administration Shell.
+        polling_interval: Interval in seconds for polling data from message broker.
+        external_url: External URL for server access (default: http://127.0.0.1).
+        external_port: External port for server access (default: 3088).
+        influx_db_version: InfluxDB version to use (1 or 2, default: 2).
+        influx_db_server_config: Server connection details for InfluxDB.
+        persist_mapping_file_changes: Whether to persist mapping updates to disk.
     """
 
     aas_id: str = Field(
@@ -51,11 +61,21 @@ class ServiceConfiguration(BaseModel):
 
 
 def load_configuration(configuration_file: str) -> ServiceConfiguration:
-    """Load the configuration from a file.
-    TODO: make utility function for loading configuration files, as this is also needed in the AAS server.
+    """Load and validate the service configuration from a JSON file.
 
-    :param configuration_file: The path to the configuration file.
-    :return: The loaded ServiceConfiguration object.
+    Reads the configuration file specified by the path parameter, validates it
+    against the ServiceConfiguration schema, and returns the parsed object.
+
+    Args:
+        configuration_file: Absolute or relative path to the configuration JSON file.
+
+    Returns:
+        ServiceConfiguration: The validated configuration object.
+
+    Raises:
+        ValueError: If no configuration file path is provided.
+        FileNotFoundError: If the configuration file does not exist.
+        ValidationError: If the configuration is invalid or missing required fields.
     """
     if not configuration_file:
         raise ValueError("No configuration file provided.")

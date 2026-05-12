@@ -29,7 +29,11 @@ _logger = logging.getLogger(__name__)
 
 
 def _init_startup_state() -> dict:
-    """Initialize application startup state tracking."""
+    """Initialize application startup state tracking.
+
+    Returns:
+        dict: A dictionary with initialization status flags and error tracking.
+    """
     return {
         "config_loaded": False,
         "mapping_initialized": False,
@@ -41,7 +45,16 @@ def _init_startup_state() -> dict:
 
 
 def _track_startup(state: dict, key: str, flag: str):
-    """Context manager helper for tracking initialization steps."""
+    """Context manager helper for tracking initialization steps.
+
+    Args:
+        state: The startup state dictionary to track initialization steps.
+        key: The key representing the initialization step.
+        flag: The flag to set in the startup state upon successful completion.
+
+    Returns:
+        StartupTracker: A context manager for tracking the initialization step.
+    """
 
     class StartupTracker:
         def __init__(self, state, key, flag):
@@ -63,21 +76,42 @@ def _track_startup(state: dict, key: str, flag: str):
 
 
 def _setup_service_config(startup_state: dict) -> None:
-    """Load and validate service configuration."""
+    """Load and validate service configuration.
+
+    Args:
+        startup_state: The startup state dictionary to update on success.
+
+    Raises:
+        Exception: If service configuration fails to load.
+    """
     with _track_startup(startup_state, "service_configuration", "config_loaded"):
         _logger.info("Loading service configuration.")
         get_service_configuration()
 
 
 def _setup_mapping_service(startup_state: dict) -> None:
-    """Initialize mapping configuration service singleton."""
+    """Initialize mapping configuration service singleton.
+
+    Args:
+        startup_state: The startup state dictionary to update on success.
+
+    Raises:
+        Exception: If mapping configuration service initialization fails.
+    """
     with _track_startup(startup_state, "mapping_configuration", "mapping_initialized"):
         _logger.info("Initializing mapping configuration service.")
         get_mapping_configuration_service()
 
 
 def _setup_influx_connection(startup_state: dict) -> None:
-    """Establish InfluxDB connection."""
+    """Establish InfluxDB connection.
+
+    Args:
+        startup_state: The startup state dictionary to update on success.
+
+    Raises:
+        RuntimeError: If InfluxDB connection cannot be established.
+    """
     with _track_startup(startup_state, "influxdb", "influx_connected"):
         _logger.info("Establishing InfluxDB connection.")
         client = get_influx_client()
@@ -89,7 +123,17 @@ def _setup_influx_connection(startup_state: dict) -> None:
 
 
 def _setup_aas_connection(startup_state: dict) -> ServerHandler:
-    """Initialize AAS server connections."""
+    """Initialize AAS server connections.
+
+    Args:
+        startup_state: The startup state dictionary to update on success.
+
+    Returns:
+        ServerHandler: The initialized server handler instance.
+
+    Raises:
+        Exception: If AAS server connection initialization fails.
+    """
     with _track_startup(startup_state, "aas_client", "registry_connected"):
         _logger.info("Initializing AAS server connections.")
         server_handler = ServerHandler()
@@ -101,7 +145,15 @@ def _setup_aas_connection(startup_state: dict) -> ServerHandler:
 
 
 def _preload_aas_metadata(server_handler: ServerHandler, startup_state: dict) -> None:
-    """Preload AAS and AIMC metadata for early validation."""
+    """Preload AAS and AIMC metadata for early validation.
+
+    Args:
+        server_handler: The initialized server handler for AAS communication.
+        startup_state: The startup state dictionary to update on success.
+
+    Raises:
+        Exception: If AAS or AIMC metadata cannot be retrieved.
+    """
     with _track_startup(startup_state, "aas_retrieval", "aimc_loaded"):
         _logger.info("Loading AAS and AIMC metadata.")
         aas_id = get_service_configuration().aas_id
@@ -113,7 +165,21 @@ def _preload_aas_metadata(server_handler: ServerHandler, startup_state: dict) ->
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Lifespan function for the FastAPI application, handling startup and shutdown events."""
+    """Lifespan function for the FastAPI application.
+
+    Handles startup initialization and shutdown cleanup events. Initializes all
+    required services and validates connectivity before the application starts
+    serving requests.
+
+    Args:
+        app: The FastAPI application instance.
+
+    Yields:
+        None: Context is yielded after startup, allowing the app to run.
+
+    Raises:
+        Exception: If any required initialization step fails.
+    """
     _logger.info("Starting up the microservice database connector.")
     app.state.startup = _init_startup_state()
 

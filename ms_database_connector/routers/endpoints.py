@@ -48,7 +48,20 @@ def health_check(
     ],
     influx_client: Annotated[IInfluxClient | None, Depends(get_influx_client)],
 ) -> dict:
-    """Readiness check: verifies configuration, mapping, startup dependency state, and InfluxDB connectivity."""
+    """Readiness check: verifies service health and connectivity.
+
+    Performs a comprehensive health check including:
+    - Service configuration loaded
+    - Mapping service initialized
+    - AAS registry and AIMC metadata loaded (if available at startup)
+    - InfluxDB connectivity and ping
+
+    Returns:
+        dict: A status dictionary containing:
+            - status: Always "ok" if endpoint responds
+            - checks: Dict with boolean checks for each component
+            - errors: List of error messages encountered during startup
+    """
     influxdb_reachable = False
     if influx_client is not None:
         try:
@@ -89,7 +102,24 @@ def health_check(
 def connect(
     service_config: Annotated[ServiceConfiguration, Depends(get_service_configuration)],
 ) -> dict:
-    """(Re-)initialise the InfluxDB connection using the loaded service configuration."""
+    """Reinitialize the InfluxDB connection.
+
+    Forces a fresh InfluxDB client initialization using the current service
+    configuration. This is useful after updating credentials or recovering
+    from a connection loss.
+
+    Args:
+        service_config: The current service configuration (dependency injection).
+
+    Returns:
+        dict: Connection status with keys:
+            - status: Always "connected" on success
+            - bucket: The InfluxDB bucket name the client is configured to use
+
+    Raises:
+        HTTPException: Status 500 if connection initialization fails or InfluxDB
+            is not reachable.
+    """
     _logger.info("Received request to (re-)initialise InfluxDB connection.")
     try:
         _ = service_config
@@ -127,7 +157,15 @@ def get_db_mapping(
         MappingConfigurationHandler, Depends(get_mapping_configuration_service)
     ],
 ) -> dict:
-    """Return the currently stored SME-DB mapping configuration."""
+    """Retrieve the current AIMC-to-InfluxDB field mapping configuration.
+
+    Args:
+        mapping_service: The mapping configuration handler (dependency injection).
+
+    Returns:
+        dict: The current mapping configuration, or an empty dict if no mapping
+            has been initialized yet.
+    """
     raw = mapping_service.get_raw()
     if raw is None:
         return {}
@@ -146,13 +184,30 @@ def set_db_mapping(
         MappingConfigurationHandler, Depends(get_mapping_configuration_service)
     ],
 ) -> dict:
-    """Validate and overwrite the SME-DB mapping configuration.
+    """Validate and store the AIMC-to-InfluxDB field mapping configuration.
 
-    Validation rules
-    ----------------
-    * All target values must be one of: ``"field"``, ``"tag"``, ``"timestamp"``.
-    * At most **one** ``"timestamp"`` per measurement (enforced by the Pydantic model).
-    * Each measurement must have at least one mapping entry.
+    Validates the mapping structure and persists it to storage. All target
+    types must be either 'field', 'tag', or 'timestamp'.
+
+    Args:
+        body: The mapping configuration dict with structure:
+            {"measurement_name": {"path": "field|tag|timestamp"}}
+        mapping_service: The mapping configuration handler (dependency injection).
+
+    Returns:
+        dict: Status response with key:
+            - status: "mapping_updated" on success
+
+    Raises:
+        HTTPException: Status 400 if validation fails or structure doesn't match
+            initialized template. Status 500 if persistence fails.
+
+    Note:
+        Validation rules:
+        - All target values must be one of: "field", "tag", "timestamp".
+        - At most one "timestamp" per measurement.
+        - Each measurement must have at least one mapping entry.
+        - Posted mapping must match existing measurement structure exactly.
     """
     try:
         mapping = MappingConfiguration.model_validate(body)
@@ -224,11 +279,25 @@ def initialize_db_mapping(
         MappingConfigurationHandler, Depends(get_mapping_configuration_service)
     ],
 ) -> dict:
-    """Store a mapping template with null/uninitialized values.
+    """Create a mapping template with uninitialized (null) values.
 
-    Each top-level key must map to a ``dict`` of path -> ``null | "field" | "tag" |
-    "timestamp"`` entries.  Null values are explicitly allowed here; fully-typed
-    mappings should use POST /db-mapping instead.
+    Initializes the mapping structure based on detected AIMC measurements and
+    paths, allowing gradual completion via POST /db-mapping afterwards.
+
+    Args:
+        body: Template structure: {"measurement_name": {"path": null|"field"|"tag"|"timestamp"}}
+        mapping_service: The mapping configuration handler (dependency injection).
+
+    Returns:
+        dict: Initialization result with status and any generated template data.
+
+    Raises:
+        HTTPException: Status 400 if structure is invalid or target types are not
+            recognized. Status 500 if template persistence fails.
+
+    Note:
+        Null values are explicitly allowed here for partial initialization.
+        Use POST /db-mapping to submit fully-typed mappings.
     """
     for key, value in body.items():
         if not isinstance(value, dict):

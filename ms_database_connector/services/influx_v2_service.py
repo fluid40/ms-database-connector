@@ -14,7 +14,18 @@ logger = logging.getLogger(__name__)
 
 
 class InfluxV2Client(IInfluxClient, BaseModel):
-    """Client for InfluxDB v2 interactions."""
+    """Client for InfluxDB v2 interactions.
+
+    Manages connections to InfluxDB v2 servers, handles data writing, and manages
+    bucket creation and retention policies.
+
+    Attributes:
+        url: Base URL of the InfluxDB 2 server (default: "ms-dbc-influx-v2").
+        organization: Organization name in InfluxDB.
+        bucket: Bucket name for storing data.
+        connection_time_out: Timeout in seconds for connection establishment.
+        trust_env: Whether to use environment proxy settings.
+    """
 
     url: str = Field(
         default="ms-dbc-influx-v2",
@@ -45,9 +56,13 @@ class InfluxV2Client(IInfluxClient, BaseModel):
     _bucket_id: str = PrivateAttr(default="")
 
     def initialize(self, token: str) -> None:
-        """Initialize the InfluxDB client with the given token.
+        """Initialize the InfluxDB v2 client with authentication token.
 
-        :param token: The token for the InfluxDB user.
+        Establishes connection to the InfluxDB server and retrieves the organization ID
+        for subsequent API calls.
+
+        Args:
+            token: Authentication token for InfluxDB user.
         """
         # session = requests.Session()
         # session.trust_env = self.trust_env
@@ -68,7 +83,11 @@ class InfluxV2Client(IInfluxClient, BaseModel):
         self._client = client
 
     def create_database(self):
-        """Check if the specified bucket exists, and create it if it does not."""
+        """Check if the specified bucket exists and create it if needed.
+
+        Verifies bucket existence and creates it with 30-day retention policy if not found.
+        Sets the bucket ID for later operations.
+        """
         logger.debug(f"Create bucket '{self.bucket}'")
         buckets_api = self._client.buckets_api()
 
@@ -91,9 +110,12 @@ class InfluxV2Client(IInfluxClient, BaseModel):
         self._bucket_id = bucket.id
 
     def ping(self) -> bool:
-        """Ping the InfluxDB server to check if it's reachable.
+        """Ping the InfluxDB server to verify connectivity.
 
-        :return: True if the server is reachable, False otherwise.
+        Checks if the InfluxDB server is reachable and healthy.
+
+        Returns:
+            bool: True if the server is reachable and healthy, False otherwise.
         """
         logger.debug(f"Pinging InfluxDB server '{self.url}'.")
         if self._client is None:
@@ -113,7 +135,18 @@ class InfluxV2Client(IInfluxClient, BaseModel):
         return True
 
     def _is_valid_measurement_name(self, measurement: str) -> bool:
-        """Validate measurement names to avoid accidental high-cardinality series creation."""
+        """Validate measurement names to prevent high-cardinality series creation.
+
+        Enforces naming rules to prevent accidental dynamic measurement names that could
+        create excessive series in InfluxDB. Valid names must start with a letter and
+        contain only [A-Za-z0-9_.:-] characters.
+
+        Args:
+            measurement: The measurement name to validate.
+
+        Returns:
+            bool: True if the measurement name is valid, False otherwise.
+        """
         if not isinstance(measurement, str):
             logger.error("Measurement name must be a string.")
             return False
@@ -160,12 +193,19 @@ class InfluxV2Client(IInfluxClient, BaseModel):
         return True
 
     def write_data(self, fields: dict, measurement: str, tags: dict) -> bool:
-        """Write data to the InfluxDB.
+        """Write data point to InfluxDB.
 
-        :param fields: The data to write, must include a 'timestamp' field in ISO format.
-        :param measurement: The name of the measurement.
-        :param tags: The tags to associate with the data point.
-        :return: True if the data was written successfully, False otherwise.
+        Writes a time-series data point with fields and tags to the configured bucket.
+        The 'timestamp' field is required and must be in ISO 8601 format.
+
+        Args:
+            fields: Dictionary of field values. Must include a 'timestamp' field
+                in ISO format (e.g., "2026-05-12T10:30:00Z").
+            measurement: The name of the measurement to write to.
+            tags: Dictionary of tag key-value pairs for indexing.
+
+        Returns:
+            bool: True if the data was written successfully, False otherwise.
         """
         logger.debug(
             f"Writing data to InfluxDB measurement '{measurement}' with tags: {tags}"
@@ -212,13 +252,20 @@ class InfluxV2Client(IInfluxClient, BaseModel):
 
 
 def create_client(config_dict: dict, token: str) -> IInfluxClient:
-    """Initialize an InfluxDb v2 client for interaction with the database.
+    """Create and initialize an InfluxDB v2 client.
 
-    :param config_dict: the configuration dictionary for the InfluxDB v2 client.
-    :param token: the authentication token for the InfluxDB v2 client.
-    :raises ValidationError: if the configuration is invalid.
-    :raises RuntimeError: if connection or database creation fails.
-    :return: an initialized InfluxV2Client instance.
+    Validates configuration, establishes connection, and creates bucket if needed.
+
+    Args:
+        config_dict: Configuration dictionary with server details, organization, and bucket.
+        token: Authentication token for InfluxDB user.
+
+    Returns:
+        IInfluxClient: An initialized and connected InfluxV2Client instance.
+
+    Raises:
+        ValidationError: If the configuration is invalid.
+        RuntimeError: If connection establishment or database creation fails.
     """
     logger.info("Create Influx Database client.")
 
@@ -257,6 +304,17 @@ def create_client(config_dict: dict, token: str) -> IInfluxClient:
 
 
 def _establish_connection(client: InfluxV2Client) -> bool:
+    """Establish connection to InfluxDB with retry logic.
+
+    Attempts to connect to the InfluxDB server with exponential backoff,
+    retrying for up to the configured connection timeout duration.
+
+    Args:
+        client: The InfluxV2Client instance to connect.
+
+    Returns:
+        bool: True if connection is established, False if timeout is exceeded.
+    """
     start_time = time.time()
     logger.info(
         f"Try to connect to Influx DB '{client.url}' for {client.connection_time_out} seconds"

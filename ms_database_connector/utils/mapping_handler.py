@@ -14,10 +14,17 @@ _logger = logging.getLogger(__name__)
 
 
 class MappingConfigurationHandler:
-    """Load and manage the SME-to-DB mapping configuration.
+    """Load, validate, and manage AIMC-to-InfluxDB field mappings.
 
-    The handler keeps the latest mapping in memory and can persist updates to disk.
-    Invalid mapping files are logged and ignored so they can be corrected and reloaded.
+    Maintains mapping configuration in memory and optionally persists updates to disk.
+    Supports both full validated mappings and partial templates with null values.
+    Invalid mapping files are logged and ignored to allow manual correction.
+
+    Attributes:
+        is_initialized: Property indicating whether a mapping template or validated
+            mapping is currently loaded.
+        mapping_configuration: Property providing typed mapping when fully validated
+            (None for partial templates).
     """
 
     def __init__(
@@ -51,10 +58,14 @@ class MappingConfigurationHandler:
         return deepcopy(self._raw_mapping)
 
     def reload_mapping_from_file(self) -> bool:
-        """Reload mapping_configuration.json from disk.
+        """Reload mapping configuration from disk.
 
-        Returns ``True`` when a valid filled mapping was loaded, otherwise ``False``.
-        Invalid files do not raise and are only logged.
+        Reads mapping_configuration.json and validates it. Invalid or missing files
+        are logged but do not raise exceptions, allowing recovery via API.
+
+        Returns:
+            bool: True if a fully-validated mapping was loaded, False if file is
+                missing, invalid, or contains unfilled entries.
         """
         if not self._mapping_file.exists() or not self._mapping_file.is_file():
             _logger.error(
@@ -89,7 +100,17 @@ class MappingConfigurationHandler:
         return self.update_mapping_from_raw(raw_mapping, persist=False)
 
     def update_mapping(self, mapping_configuration: MappingConfiguration) -> bool:
-        """Store and persist a validated mapping configuration."""
+        """Store and persist a validated mapping configuration.
+
+        Serializes the typed mapping to raw dict format and persists to disk.
+
+        Args:
+            mapping_configuration: A validated MappingConfiguration object.
+
+        Returns:
+            bool: True if mapping was updated and persisted successfully,
+                False if persistence fails.
+        """
         serialized_mapping: dict[str, dict[str, str | None]] = {
             measurement_name: {
                 sink_path: target_type.value
@@ -118,9 +139,17 @@ class MappingConfigurationHandler:
         raw_mapping: dict,
         persist: bool = True,
     ) -> bool:
-        """Validate raw mapping data and store it.
+        """Validate raw mapping data and optionally persist it.
 
-        Invalid mappings are logged and return ``False``. No exception is raised.
+        Validates that all entries have target types (no null or 'one' values).
+        Invalid mappings are logged but do not raise exceptions.
+
+        Args:
+            raw_mapping: The raw mapping structure to validate and store.
+            persist: If True, persist the mapping to disk (default: True).
+
+        Returns:
+            bool: True if valid and stored/persisted successfully, False otherwise.
         """
         if self._contains_unfilled_entries(raw_mapping):
             _logger.error(
@@ -169,9 +198,16 @@ class MappingConfigurationHandler:
         return True
 
     def initialize_mapping(self, mapping_template: dict) -> dict:
-        """Store and persist an unfilled mapping template.
+        """Create and persist an unfilled mapping template.
 
-        The template may contain ``null`` values and is kept as raw structure only.
+        Stores a mapping structure with null values for later completion.
+        Used when initializing mappings based on detected AIMC measurements.
+
+        Args:
+            mapping_template: Template dict with structure {"measurement": {"path": null}}.
+
+        Returns:
+            dict: Status response with key 'status': 'mapping_initialized'.
         """
         self._mapping_configuration = None
         self._raw_mapping = deepcopy(mapping_template)
@@ -180,7 +216,17 @@ class MappingConfigurationHandler:
         return {"status": "mapping_initialized"}
 
     def _persist_mapping(self, raw_mapping: dict) -> None:
-        """Persist raw mapping structure to disk as JSON."""
+        """Persist a mapping structure to disk as formatted JSON.
+
+        Creates parent directories if needed. If persistence is disabled via
+        constructor, logs and returns without writing.
+
+        Args:
+            raw_mapping: The mapping structure to persist.
+
+        Raises:
+            OSError: If file writing fails.
+        """
         if not self._persist_mapping_file_changes:
             _logger.debug(
                 "Skipping persistence of mapping configuration because "
@@ -196,7 +242,17 @@ class MappingConfigurationHandler:
 
     @staticmethod
     def _contains_unfilled_entries(raw_mapping: dict) -> bool:
-        """Check for placeholder/unfilled values in a raw mapping payload."""
+        """Check for placeholder or unfilled values in a mapping structure.
+
+        Validates that all measurements and paths have filled target type values
+        (not null or the string 'one').
+
+        Args:
+            raw_mapping: The mapping structure to check.
+
+        Returns:
+            bool: True if unfilled entries are found, False if fully filled.
+        """
         if not isinstance(raw_mapping, dict):
             return True
 

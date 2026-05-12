@@ -11,7 +11,22 @@ _logger = logging.getLogger(__name__)
 def initialize_db_connection(
     configuration: ServiceConfiguration,
 ) -> IInfluxClient | None:
-    """Initialize the database connection."""
+    """Initialize the database connection based on service configuration.
+
+    Reads the InfluxDB password from the INFLUXDB_V2_TOKEN environment variable
+    and creates an appropriate client based on the configured InfluxDB version.
+
+    Args:
+        configuration: The service configuration containing InfluxDB version
+            and server connection details.
+
+    Returns:
+        IInfluxClient | None: An initialized InfluxDB client instance, or None
+            if the password is not provided or the InfluxDB version is unsupported.
+
+    Raises:
+        None: Returns None on error rather than raising exceptions.
+    """
 
     _logger.info("Get Influx DB password from environment variable 'RUNTIME_INFLUX_PW'")
     password = os.getenv("INFLUXDB_V2_TOKEN")

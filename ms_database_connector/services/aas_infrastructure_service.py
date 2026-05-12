@@ -13,15 +13,21 @@ _logger = logging.getLogger(__name__)
 def get_shell_via_registry(
     server_handler: ServerHandler, shell_id: str
 ) -> model.AssetAdministrationShell:
-    """Get an Asset Administration Shell from an AAS server environment using the AAS registry.
+    """Retrieve an Asset Administration Shell from AAS servers using the registry.
 
-    :param server_handler: Server handler
-    :param shell_id: ID of the Asset Administration Shell to get
-    :raises HTTPException: If no Asset Administration Shell ID is provided in the configuration file.
-    :raises HTTPException: If the Asset Administration Shell descriptor with the provided ID could not be found in the AAS registry.
-    :raises HTTPException: If a repository wrapper for the AAS server could not be created.
-    :raises HTTPException: If the Asset Administration Shell with the provided ID could not be found on the AAS server.
-    :return: Asset Administration Shell with the provided ID from the AAS server
+    Looks up the AAS descriptor in the registry, retrieves the server endpoint from
+    the descriptor, and fetches the complete AAS object from the repository server.
+
+    Args:
+        server_handler: Server handler managing AAS registry and repository connections.
+        shell_id: Unique identifier of the Asset Administration Shell to retrieve.
+
+    Returns:
+        model.AssetAdministrationShell: The complete AAS object with the given ID.
+
+    Raises:
+        HTTPException: Status 400 if no shell_id provided or repository connection fails.
+        HTTPException: Status 404 if AAS descriptor or object not found on servers.
     """
     if shell_id is None:
         _logger.error(
@@ -92,15 +98,21 @@ def get_shell_via_registry(
 def get_submodel_via_registry(
     server_handler: ServerHandler, submodel_id: str
 ) -> model.Submodel:
-    """Get a Submodel from an AAS server environment using the AAS registry.
+    """Retrieve a Submodel from AAS servers using the registry.
 
-    :param server_handler: Server handler
-    :param submodel_id: ID of the Submodel to get
-    :raises HTTPException: If no Submodel ID is provided in the configuration file.
-    :raises HTTPException: If the Submodel descriptor with the provided ID could not be found in the AAS registry.
-    :raises HTTPException: If a repository wrapper for the AAS server could not be created.
-    :raises HTTPException: If the Submodel with the provided ID could not be found on the AAS server.
-    :return: Submodel with the provided ID from the AAS server
+    Looks up the Submodel descriptor in the registry, retrieves the server endpoint from
+    the descriptor, and fetches the complete Submodel object from the repository server.
+
+    Args:
+        server_handler: Server handler managing AAS registry and repository connections.
+        submodel_id: Unique identifier of the Submodel to retrieve.
+
+    Returns:
+        model.Submodel: The complete Submodel object with the given ID.
+
+    Raises:
+        HTTPException: Status 400 if no submodel_id provided or repository connection fails.
+        HTTPException: Status 404 if Submodel descriptor or object not found on servers.
     """
     if submodel_id is None:
         _logger.error("No Submodel ID provided in configuration file.")
@@ -164,12 +176,18 @@ def get_submodel_via_registry(
 def has_access_to_sme(
     server_handler: ServerHandler, sm_id: str, element_path: str
 ) -> bool:
-    """Check if the read access to the SubmodelElement specified by the SubmodelId and the element path is granted.
+    """Check if read access to a SubmodelElement is available.
 
-    :param server_handler: Server handler
-    :param sm_id: ID of the Submodel, that contains the SubmodelElement
-    :param element_path: IdShortPath of the SubmodelElement
-    :return: True if access is granted, False otherwise
+    Attempts to retrieve the Submodel and then locate the SubmodelElement by its
+    path. Returns False if either operation fails.
+
+    Args:
+        server_handler: Server handler managing AAS connections.
+        sm_id: Unique identifier of the Submodel containing the element.
+        element_path: IdShortPath (dot-separated) of the SubmodelElement to access.
+
+    Returns:
+        bool: True if the SubmodelElement exists and is accessible, False otherwise.
     """
     try:
         submodel = get_submodel_via_registry(server_handler, sm_id)

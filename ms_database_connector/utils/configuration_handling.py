@@ -11,18 +11,46 @@ _logger = logging.getLogger(__name__)
 
 
 class ServerConfigurationsHandler:
-    """Handler for loading and managing server configurations."""
+    """Handler for loading and managing server configurations.
+
+    Loads and manages configuration files for AAS registry, Submodel registry,
+    and AAS repository servers from the configuration directory.
+
+    Attributes:
+        aas_registry_configuration: Configuration for the AAS registry server.
+        sm_registry_configuration: Configuration for the Submodel registry server.
+        repo_server_configurations: List of configurations for AAS repository servers.
+    """
 
     aas_registry_configuration: ServerConfiguration
     sm_registry_configuration: ServerConfiguration
     repo_server_configurations: list[ServerConfiguration]
 
     def __init__(self):
-        """Initialize ConfigHandler with default values."""
+        """Initialize ServerConfigurationsHandler and load all configuration files.
+
+        Loads configuration files from the predefined configuration directory:
+        - AAS registry configuration from aas_registry/
+        - Submodel registry configuration from submodel_registry/
+        - AAS repository configurations from repo_server/
+
+        Raises:
+            HTTPException: If configuration directory does not exist or required
+                configuration files are not found.
+        """
         self.repo_server_configurations = []
         self._get_config_files()
 
     def _get_config_files(self):
+        """Initialize configuration file loading for all server types.
+
+        Verifies that the configuration base path exists and loads configurations
+        for AAS registry, Submodel registry, and AAS repositories.
+
+        Raises:
+            HTTPException: If the configuration base path does not exist or is
+                not accessible.
+        """
         config_base_path = Path(CONFIG_BASE_PATH)
 
         if not config_base_path.exists() or not config_base_path.is_dir():
@@ -39,6 +67,15 @@ class ServerConfigurationsHandler:
         self._get_repos_configs()
 
     def _get_aas_registry_config(self):
+        """Load and validate AAS registry server configuration.
+
+        Reads the first JSON configuration file found in the aas_registry directory
+        and parses it into a ServerConfiguration object.
+
+        Raises:
+            HTTPException: If configuration directory does not exist, no configuration
+                files are found, or the configuration file is invalid (validation error).
+        """
         config_path = Path(f"{CONFIG_BASE_PATH}/aas_registry")
 
         if not config_path.exists() or not config_path.is_dir():
@@ -82,6 +119,15 @@ class ServerConfigurationsHandler:
             ) from ve
 
     def _get_sm_registry_config(self):
+        """Load and validate Submodel registry server configuration.
+
+        Reads the first JSON configuration file found in the submodel_registry directory
+        and parses it into a ServerConfiguration object.
+
+        Raises:
+            HTTPException: If configuration directory does not exist, no configuration
+                files are found, or the configuration file is invalid (validation error).
+        """
         config_path = Path(f"{CONFIG_BASE_PATH}/submodel_registry")
 
         if not config_path.exists() or not config_path.is_dir():
@@ -125,10 +171,14 @@ class ServerConfigurationsHandler:
             ) from ve
 
     def _get_repos_configs(self):
-        """Get the AAS server configurations from the service configuration.
+        """Load all AAS repository server configurations.
 
-        :param configuration: The service configuration
-        :return: List of AAS server configurations
+        Reads all JSON configuration files found in the repo_server directory
+        and parses them into ServerConfiguration objects. If no files are found,
+        the repository configurations list remains empty (not an error).
+
+        Invalid configuration files are logged as errors but do not prevent
+        loading of other files.
         """
         config_path = Path(f"{CONFIG_BASE_PATH}/repo_server")
 
