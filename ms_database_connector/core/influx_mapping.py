@@ -8,6 +8,7 @@ from aas_standard_parser.classes.aimc_parser_classes import (  # type: ignore
 )
 from basyx.aas import model
 from fastapi import HTTPException
+from influxdb_client import Point
 
 from ms_database_connector.core.server_handling import ServerHandler
 from ms_database_connector.services.aas_infrastructure_service import (
@@ -15,6 +16,8 @@ from ms_database_connector.services.aas_infrastructure_service import (
     has_access_to_sme,
 )
 from http import HTTPStatus as StatusCode
+
+from ms_database_connector.config.db_mapping import DbMapping, MappingTargetType
 
 _logger = logging.getLogger(__name__)
 
@@ -149,3 +152,189 @@ def check_access_to_elements(
             )
             return False
     return True
+
+
+class InfluxMapper:
+    """Maps SubmodelElements from AAS to InfluxDB Point objects based on configuration.
+
+    Responsible for validating element accessibility, retrieving SME values, and
+    constructing InfluxDB Point objects with appropriate field/tag assignments.
+    """
+
+    def __init__(
+        self,
+        server_handler: ServerHandler,
+        db_mapping: DbMapping,
+        target_references: list[ReferenceProperties],
+    ):
+        """Initialize the mapper with server handler, mapping config, and element references.
+
+        Args:
+            server_handler: Handler for AAS server communication.
+            db_mapping: Database mapping configuration (measurements to sink paths).
+            target_references: List of accessible SubmodelElement references.
+        """
+        self.server_handler = server_handler
+        self.db_mapping = db_mapping
+        self.target_references = target_references
+
+    def map_smes_to_influx(self) -> dict[str, list[Point]]:
+        """Create InfluxDB Point objects from mapped SubmodelElements.
+
+        Validates accessibility of all mapped elements, retrieves their values,
+        and constructs Point objects with fields and tags according to the mapping.
+
+        Returns:
+            Dictionary mapping measurement names to lists of Point objects.
+
+        Raises:
+            HTTPException: If elements are not accessible.
+        """
+        self._validate_element_access()
+        reference_map = self._build_reference_map()
+        influx_points: dict[str, list[Point]] = {}
+
+        for measurement_name, measurement_mapping in self.db_mapping.root.items():
+            point = self._process_measurement(
+                measurement_name, measurement_mapping, reference_map
+            )
+            if point is not None:
+                influx_points[measurement_name] = [point]
+
+        _logger.info(
+            f"Created {len(influx_points)} measurement(s) with Point object(s)."
+        )
+        return influx_points
+
+    def _validate_element_access(self) -> None:
+        """Validate that all target elements are accessible.
+
+        Raises:
+            HTTPException: If any element is not accessible.
+        """
+        if not check_access_to_elements(self.server_handler, self.target_references):
+            _logger.warning("Some mapped elements are not accessible.")
+            raise HTTPException(
+                status_code=StatusCode.BAD_REQUEST.value,
+                detail="Some mapped elements are not accessible.",
+            )
+
+    def _build_reference_map(self) -> dict[str, ReferenceProperties]:
+        """Build a lookup map from sink paths to their references.
+
+        Returns:
+            Dictionary mapping sink path strings to ReferenceProperties objects.
+        """
+        return {
+            ".".join(ref.parent_path + [ref.property_name]): ref
+            for ref in self.target_references
+        }
+
+    def _process_measurement(
+        self,
+        measurement_name: str,
+        measurement_mapping,
+        reference_map: dict[str, ReferenceProperties],
+    ) -> Point | None:
+        """Process a single measurement and its mapped sink paths.
+
+        Args:
+            measurement_name: Name of the InfluxDB measurement.
+            measurement_mapping: Mapping of sink paths to target types for this measurement.
+            reference_map: Lookup map for sink paths to references.
+
+        Returns:
+            Point object with fields/tags, or None if no values were added.
+        """
+        point = Point(measurement_name)
+        has_values = False
+
+        for sink_path, target_type in measurement_mapping.root.items():
+            if sink_path not in reference_map:
+                _logger.debug(
+                    f"Sink path '{sink_path}' not found in target references."
+                )
+                continue
+
+            if self._add_value_to_point(point, sink_path, target_type, reference_map):
+                has_values = True
+
+        return point if has_values else None
+
+    def _add_value_to_point(
+        self,
+        point: Point,
+        sink_path: str,
+        target_type,
+        reference_map: dict[str, ReferenceProperties],
+    ) -> bool:
+        """Retrieve a SME value and add it to the Point object.
+
+        Args:
+            point: Point object to add value to.
+            sink_path: Path identifier for the sink element.
+            target_type: Target type (field, tag, or timestamp).
+            reference_map: Lookup map for sink paths to references.
+
+        Returns:
+            True if value was successfully added, False otherwise.
+        """
+        try:
+            reference = reference_map[sink_path]
+            sme_value = self._retrieve_sme_value(reference)
+
+            if sme_value is None:
+                return False
+
+            self._assign_value_to_point(point, sink_path, sme_value, target_type)
+            return True
+
+        except Exception as e:
+            _logger.error(f"Error processing sink path '{sink_path}': {e}")
+            return False
+
+    def _retrieve_sme_value(self, reference: ReferenceProperties):
+        """Retrieve the value from a SubmodelElement.
+
+        Args:
+            reference: Reference properties identifying the element location.
+
+        Returns:
+            The element's value, or None if not found or has no value.
+        """
+        submodel = get_submodel_via_registry(self.server_handler, reference.submodel_id)
+        element_path = ".".join(reference.parent_path + [reference.property_name])
+
+        sme = submodel_parser.get_submodel_element_by_id_short_path(
+            submodel, element_path
+        )
+
+        if sme is None:
+            _logger.warning(
+                f"SubmodelElement '{element_path}' not found in Submodel '{reference.submodel_id}'."
+            )
+            return None
+
+        if not hasattr(sme, "value"):
+            _logger.warning(f"SubmodelElement '{element_path}' has no value attribute.")
+            return None
+
+        return sme.value
+
+    def _assign_value_to_point(
+        self, point: Point, sink_path: str, sme_value, target_type
+    ) -> None:
+        """Assign a value to the Point object as field, tag, or timestamp.
+
+        Args:
+            point: Point object to add value to.
+            sink_path: Identifier for this value.
+            sme_value: The value to add.
+            target_type: Target type determining assignment method.
+        """
+        if target_type == MappingTargetType.FIELD:
+            point.field(sink_path, sme_value)
+        elif target_type == MappingTargetType.TAG:
+            point.tag(sink_path, str(sme_value))
+        elif target_type == MappingTargetType.TIMESTAMP:
+            _logger.debug(f"Timestamp field '{sink_path}' will be set separately.")
