@@ -2,7 +2,6 @@
 import logging
 import os
 
-from basyx.aas import model
 import uvicorn
 
 from fastapi import FastAPI
@@ -29,12 +28,9 @@ from ms_database_connector.utils.logging_handler import initialize_logging
 _logger = logging.getLogger(__name__)
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    """Lifespan function for the FastAPI application, handling startup and shutdown events."""
-    _logger.info("Starting up the microservice database connector.")
-
-    app.state.startup = {
+def _init_startup_state() -> dict:
+    """Initialize application startup state tracking."""
+    return {
         "config_loaded": False,
         "mapping_initialized": False,
         "registry_connected": False,
@@ -43,69 +39,92 @@ async def lifespan(app: FastAPI):
         "errors": [],
     }
 
-    try:
+
+def _track_startup(state: dict, key: str, flag: str):
+    """Context manager helper for tracking initialization steps."""
+
+    class StartupTracker:
+        def __init__(self, state, key, flag):
+            self.state = state
+            self.key = key
+            self.flag = flag or key
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc_val, exc_tb):
+            if exc_type is None:
+                self.state[self.flag] = True
+            else:
+                self.state["errors"].append(f"{self.key}: {exc_val}")
+            return False
+
+    return StartupTracker(state, key, flag)
+
+
+def _setup_service_config(startup_state: dict) -> None:
+    """Load and validate service configuration."""
+    with _track_startup(startup_state, "service_configuration", "config_loaded"):
         _logger.info("Loading service configuration.")
-        _ = get_service_configuration()
-        app.state.startup["config_loaded"] = True
-    except Exception as e:
-        _logger.exception("Failed to load service configuration: %s", e)
-        app.state.startup["errors"].append(f"service_configuration: {e}")
-        raise
+        get_service_configuration()
 
-    # Initialize mapping service singleton (required).
-    try:
-        _ = get_mapping_configuration_service()
-        app.state.startup["mapping_initialized"] = True
-    except Exception as e:
-        _logger.exception("Failed to initialize mapping configuration service: %s", e)
-        app.state.startup["errors"].append(f"mapping_configuration: {e}")
-        raise
 
-    # InfluxDB connectivity is required for this service.
-    try:
+def _setup_mapping_service(startup_state: dict) -> None:
+    """Initialize mapping configuration service singleton."""
+    with _track_startup(startup_state, "mapping_configuration", "mapping_initialized"):
+        _logger.info("Initializing mapping configuration service.")
+        get_mapping_configuration_service()
+
+
+def _setup_influx_connection(startup_state: dict) -> None:
+    """Establish InfluxDB connection."""
+    with _track_startup(startup_state, "influxdb", "influx_connected"):
+        _logger.info("Establishing InfluxDB connection.")
         client = get_influx_client()
-        if client:
-            _logger.info("InfluxDB connection established during startup.")
-            app.state.startup["influx_connected"] = True
-        else:
-            message = (
-                "InfluxDB connection not established at startup. "
-                "Set INFLUXDB_V2_TOKEN and ensure server reachability."
+        if not client:
+            raise RuntimeError(
+                "InfluxDB connection failed. Set INFLUXDB_V2_TOKEN and ensure server reachability."
             )
-            _logger.error(message)
-            app.state.startup["errors"].append("influxdb: not connected")
-            raise RuntimeError(message)
-    except Exception as e:
-        _logger.exception("Could not establish InfluxDB connection at startup: %s", e)
-        app.state.startup["errors"].append(f"influxdb: {e}")
-        raise
+        _logger.info("InfluxDB connection established.")
 
-    # AAS connectivity is required for this service.
-    try:
+
+def _setup_aas_connection(startup_state: dict) -> ServerHandler:
+    """Initialize AAS server connections."""
+    with _track_startup(startup_state, "aas_client", "registry_connected"):
+        _logger.info("Initializing AAS server connections.")
         server_handler = ServerHandler()
         server_configurations = ServerConfigurationsHandler()
-
         server_handler.connect_to_server(server_configurations)
-        _logger.info("Connection to AAS servers established during startup.")
-        app.state.startup["registry_connected"] = True
-    except Exception as e:
-        _logger.exception("Could not initialize AAS client: %s", e)
-        app.state.startup["errors"].append(f"aas_client: {e}")
-        raise
+        _logger.info("AAS server connections established.")
+        return server_handler
+    return None
 
-    # Preload AAS and AIMC metadata for early validation.
-    try:
-        aas_id: str = get_service_configuration().aas_id
-        shell: model.AssetAdministrationShell = get_shell_via_registry(
-            server_handler, aas_id
-        )
-        aimc_sm: model.Submodel = get_aimc_submodel(server_handler, shell)
+
+def _preload_aas_metadata(server_handler: ServerHandler, startup_state: dict) -> None:
+    """Preload AAS and AIMC metadata for early validation."""
+    with _track_startup(startup_state, "aas_retrieval", "aimc_loaded"):
+        _logger.info("Loading AAS and AIMC metadata.")
+        aas_id = get_service_configuration().aas_id
+        shell = get_shell_via_registry(server_handler, aas_id)
+        aimc_sm = get_aimc_submodel(server_handler, shell)
         extract_target_references_from_aimc(aimc_sm)
-        _logger.info("AAS and submodels retrieved during startup.")
-        app.state.startup["aimc_loaded"] = True
-    except Exception as e:
-        _logger.exception("Could not retrieve AAS and submodels at startup: %s", e)
-        app.state.startup["errors"].append(f"aas_retrieval: {e}")
+        _logger.info("AAS and AIMC metadata loaded successfully.")
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Lifespan function for the FastAPI application, handling startup and shutdown events."""
+    _logger.info("Starting up the microservice database connector.")
+    app.state.startup = _init_startup_state()
+
+    try:
+        _setup_service_config(app.state.startup)
+        _setup_mapping_service(app.state.startup)
+        _setup_influx_connection(app.state.startup)
+        server_handler = _setup_aas_connection(app.state.startup)
+        _preload_aas_metadata(server_handler, app.state.startup)
+    except Exception:
+        _logger.exception("Startup initialization failed.")
         raise
 
     yield
