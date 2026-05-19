@@ -224,7 +224,7 @@ class InfluxMapper:
             Dictionary mapping sink path strings to ReferenceProperties objects.
         """
         return {
-            ".".join(ref.parent_path + [ref.property_name]): ref
+            f"{ref.submodel_id}/submodel-elements/{'.'.join(ref.parent_path + [ref.property_name])}": ref
             for ref in self.target_references
         }
 
