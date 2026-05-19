@@ -139,7 +139,8 @@ class InfluxV2Client(IInfluxClient, BaseModel):
 
         Enforces naming rules to prevent accidental dynamic measurement names that could
         create excessive series in InfluxDB. Valid names must start with a letter and
-        contain only [A-Za-z0-9_.:-] characters.
+        contain only [A-Za-z0-9_.:-] characters, plus optional numeric index segments
+        like [0] for submodel-element paths.
 
         Args:
             measurement: The measurement name to validate.
@@ -157,10 +158,12 @@ class InfluxV2Client(IInfluxClient, BaseModel):
             logger.error("Measurement name must be non-empty.")
             return False
 
-        # Keep names simple and predictable: letters, numbers, underscores, dots, colons and hyphens.
-        if not re.fullmatch(r"[A-Za-z][A-Za-z0-9_.:-]{0,127}", name):
+        # Keep names simple and predictable and allow indexed path segments like Mapping[0].
+        if len(name) > 128 or not re.fullmatch(
+            r"[A-Za-z][A-Za-z0-9_.:-]*(?:\[\d+\][A-Za-z0-9_.:-]*)*", name
+        ):
             logger.error(
-                "Measurement name '%s' is invalid. Use a stable identifier starting with a letter and only [A-Za-z0-9_.:-].",
+                "Measurement name '%s' is invalid. Use a stable identifier starting with a letter and only [A-Za-z0-9_.:-] plus optional [index] segments.",
                 measurement,
             )
             return False
