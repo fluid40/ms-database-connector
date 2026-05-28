@@ -267,7 +267,10 @@ class PollingWorker:
         for measurement_name, points in influx_points.items():
             for point in points:
                 success = influx_client.write_data(
-                    fields=point.fields, measurement=point.measurement, tags=point.tags
+                    fields=point.fields,
+                    measurement=point.measurement,
+                    tags=point.tags,
+                    time=point.timestamp,
                 )
                 if not success:
                     _logger.error(
