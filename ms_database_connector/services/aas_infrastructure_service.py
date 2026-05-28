@@ -121,7 +121,7 @@ def get_submodel_via_registry(
             detail="No Submodel ID provided in configuration file.",
         )
 
-    _logger.info(f"Get Submodel with ID '{submodel_id}' from server.")
+    _logger.debug(f"Get Submodel with ID '{submodel_id}' from server.")
 
     _logger.debug(
         f"Retrieving Submodel descriptor with ID '{submodel_id}' from AAS registry server '{server_handler.aas_registry_client.base_url}'."

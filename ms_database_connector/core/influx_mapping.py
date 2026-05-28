@@ -202,7 +202,7 @@ class InfluxMapper:
             if point is not None:
                 influx_points[measurement_name] = [point]
 
-        _logger.info(f"Created {len(influx_points)} measurement(s) with data point(s).")
+        _logger.info(f"Prepare {len(influx_points)} measurement(s) with data point(s).")
         return influx_points
 
     def _validate_element_access(self) -> None:
