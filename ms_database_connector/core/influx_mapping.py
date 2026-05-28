@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime, timezone
 
 from aas_standard_parser import aas_parser, aimc_parser, submodel_parser  # type: ignore
 from aas_standard_parser.classes.aimc_parser_classes import (  # type: ignore
@@ -319,6 +320,34 @@ class InfluxMapper:
 
         return sme.value
 
+    def _convert_to_iso_timestamp(self, sme_value) -> str:
+        """Convert different timestamp formats to ISO 8601 format.
+
+        Args:
+            sme_value: The value to convert (can be string, datetime, or numeric timestamp).
+
+        Returns:
+            ISO 8601 formatted datetime string.
+        """
+        if isinstance(sme_value, str):
+            try:
+                dt = datetime.fromisoformat(sme_value.replace("Z", "+00:00"))
+                return dt.isoformat()
+            except (ValueError, AttributeError):
+                _logger.warning(f"Could not parse timestamp string: {sme_value}")
+                return sme_value
+        elif isinstance(sme_value, datetime):
+            return sme_value.isoformat()
+        elif isinstance(sme_value, (int, float)):
+            try:
+                dt = datetime.fromtimestamp(sme_value, tz=timezone.utc)
+                return dt.isoformat()
+            except (ValueError, OSError):
+                _logger.warning(f"Could not convert numeric timestamp: {sme_value}")
+                return str(sme_value)
+        else:
+            return str(sme_value)
+
     def _assign_value_to_point(
         self, point: InfluxDataPoint, sink_path: str, sme_value, target_type
     ) -> None:
@@ -335,4 +364,4 @@ class InfluxMapper:
         elif target_type == MappingTargetType.TAG:
             point.tags[sink_path] = str(sme_value)
         elif target_type == MappingTargetType.TIMESTAMP:
-            _logger.debug(f"Timestamp field '{sink_path}' will be set separately.")
+            point.timestamp = self._convert_to_iso_timestamp(sme_value)
