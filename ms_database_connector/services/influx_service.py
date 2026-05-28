@@ -24,7 +24,7 @@ class IInfluxClient:
         """
         raise NotImplementedError
 
-    def write_data(self, fields: dict, measurement: str, tags: dict) -> bool:
+    def write_data(self, fields: dict, measurement: str, tags: dict, time: str) -> bool:
         """Write a data point to InfluxDB.
 
         Args:
@@ -32,6 +32,7 @@ class IInfluxClient:
                 in ISO 8601 format.
             measurement: The name of the measurement.
             tags: Dictionary of tag key-value pairs for indexing.
+            time: Timestamp for the data point in ISO 8601 format (e.g. 2023-03-15T12:34:56.789Z).
 
         Returns:
             bool: True if the data was written successfully, False otherwise.

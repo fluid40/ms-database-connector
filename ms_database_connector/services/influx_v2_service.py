@@ -195,17 +195,17 @@ class InfluxV2Client(IInfluxClient, BaseModel):
 
         return True
 
-    def write_data(self, fields: dict, measurement: str, tags: dict) -> bool:
+    def write_data(self, fields: dict, measurement: str, tags: dict, time: str) -> bool:
         """Write data point to InfluxDB.
 
         Writes a time-series data point with fields and tags to the configured bucket.
         The 'timestamp' field is required and must be in ISO 8601 format.
 
         Args:
-            fields: Dictionary of field values. Must include a 'timestamp' field
-                in ISO format (e.g., "2026-05-12T10:30:00Z").
+            fields: Dictionary of field values. Datetime values will be converted to ISO 8601 strings.
             measurement: The name of the measurement to write to.
             tags: Dictionary of tag key-value pairs for indexing.
+            time: Timestamp for the data point in ISO 8601 format (e.g. 2023-03-15T12:34:56.789Z).
 
         Returns:
             bool: True if the data was written successfully, False otherwise.
@@ -221,27 +221,18 @@ class InfluxV2Client(IInfluxClient, BaseModel):
             logger.debug(f"'{measurement}': Data must be a non-empty dictionary.")
             return False
 
-        if "timestamp" not in fields and "Timestamp" not in fields:
-            logger.error(f"{measurement}: Data must include a 'timestamp' field.")
-            return False
-
         point: Point = Point(measurement)
         for tag_key, tag_value in tags.items():
             point.tag(tag_key, tag_value)
         for field_key, field_value in fields.items():
-            if field_key.lower() != "timestamp":
+            if isinstance(field_value, datetime):
+                point.field(field_key, field_value.isoformat())
+            else:
                 point.field(field_key, field_value)
-        point.time(
-            int(
-                datetime.fromisoformat(
-                    fields["timestamp"].replace("Z", "+00:00")
-                ).timestamp()
-                * 1e9
-            )
-        )
+        point.time(time, write_precision="ms")
 
         logger.info(
-            f"Writing data to InfluxDB:\nMeasurement: '{measurement}'\nTags:\n{json.dumps(tags, indent=4)}'\nValues:\n{json.dumps(fields, indent=4)}"
+            f"Writing data to InfluxDB:\nMeasurement: '{measurement}'\nTags:\n{json.dumps(tags, indent=4)}'\nValues:\n{json.dumps(fields, indent=4, default=str)}"
         )
 
         return self.write_point(point)
