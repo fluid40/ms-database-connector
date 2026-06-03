@@ -1,0 +1,13 @@
+{
+    "MappingConfigurations[0]": {
+            "https://fluid40.de/ids/sm/9413_4589_8838_2510/submodel-elements/EnergyConnection_Electric.EnergyMeasure_EnergyTotal.value": "field",
+            "https://fluid40.de/ids/sm/9413_4589_8838_2510/submodel-elements/EnergyConnection_Electric.EnergyMeasure_EnergyTotal.timeStamp": "field",
+            "https://fluid40.de/ids/sm/9413_4589_8838_2510/submodel-elements/EnergyConnection_Pneumatic.EnergyMeasure_Pressure.timeStamp": "field",
+            "https://fluid40.de/ids/sm/9413_4589_8838_2510/submodel-elements/EnergyConnection_Pneumatic.EnergyMeasure_VolumeTotal.timeStamp": "field",
+            "https://fluid40.de/ids/sm/9413_4589_8838_2510/submodel-elements/EnergyConnection_Pneumatic.EnergyMeasure_VolumeTotal.value": "field",
+            "https://fluid40.de/ids/sm/9413_4589_8838_2510/submodel-elements/EnergyConnection_Pneumatic.EnergyMeasure_Pressure.value": "field",
+            "https://fluid40.de/ids/sm/4383_5760_6913_4373/submodel-elements/machineStateData.counter": "tag",
+            "https://fluid40.de/ids/sm/4383_5760_6913_4373/submodel-elements/machineStateData.pattern": "tag",
+            "https://fluid40.de/ids/sm/4383_5760_6913_4373/submodel-elements/machineStateData.machineState": "tag"
+    }
+}
