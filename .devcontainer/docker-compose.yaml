@@ -40,6 +40,8 @@ services:
       timeout: 10s
       retries: 5
       start_period: 10s
+    networks:
+      - ms-shared-network
 
   dev_container:
     build: .
@@ -62,6 +64,8 @@ services:
       - DBC_CONFIGURATION_FILE=/workspaces/ms-database-connector/configuration/service_config.json
       - INFLUXDB_V2_TOKEN=$INFLUXDB_V2_TOKEN
       - DBC_AAS_CLIENT_SECRET=$DBC_AAS_CLIENT_SECRET
+    networks:
+      - ms-shared-network
 
   aas-registry:
     image: eclipsebasyx/aas-registry-log-mem:$BASYX_VERSION
@@ -90,7 +94,7 @@ services:
     ports:
       - "8076:8080"
     networks:
-      - bridge
+      - ms-shared-network
 
   sm-registry:
     image: eclipsebasyx/submodel-registry-log-mem:$BASYX_VERSION
@@ -119,7 +123,7 @@ services:
     ports:
       - "8077:8080"
     networks:
-      - bridge
+      - ms-shared-network
 
   aas-discovery:
     image: eclipsebasyx/aas-discovery:$BASYX_VERSION
@@ -139,7 +143,7 @@ services:
       keycloak-healthcheck:
         condition: service_completed_successfully
     networks:
-      - bridge
+      - ms-shared-network
 
   aas-env:
     image: eclipsebasyx/aas-environment:$BASYX_VERSION
@@ -161,7 +165,7 @@ services:
       sm-registry:
         condition: service_healthy
     networks:
-      - bridge
+      - ms-shared-network
 
   aas-web-ui:
     image: eclipsebasyx/aas-gui:$AAS_WEBUI_VERSION
@@ -191,7 +195,7 @@ services:
       aas-env:
         condition: service_healthy
     networks:
-      - bridge
+      - ms-shared-network
 
   # nginx reverse proxy to support dns lookup
   nginx-proxy:
@@ -205,7 +209,7 @@ services:
     environment:
       DEFAULT_HOST: aasgui.basyx.localhost
     networks:
-      - bridge
+      - ms-shared-network
 
   keycloak:
     image: keycloak/keycloak:24.0.4
@@ -226,7 +230,7 @@ services:
     volumes:
       - ./keycloak/realm:/opt/keycloak/data/import
     networks:
-      - bridge
+      - ms-shared-network
 
   keycloak-healthcheck:
     image: curlimages/curl:latest
@@ -241,10 +245,11 @@ services:
     depends_on:
       - keycloak
     networks:
-      - bridge
+      - ms-shared-network
 
 networks:
-  bridge:
+  ms-shared-network:
+    external: true
 
 volumes:
   # influxdb_v1_data:

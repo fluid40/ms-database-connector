@@ -3,7 +3,7 @@ services:
     image: engineeringmethodsag/fluid-opcua-press-mockup:latest
     container_name: demo-opcua-press-mockup
     networks:
-      - bridge
+      - ms-shared-network
 
   asset_connector:
     image: engineeringmethodsag/fluid-asset-connector-python:latest
@@ -13,7 +13,7 @@ services:
     depends_on:
       - opcua_press_mockup
     networks:
-      - bridge
+      - ms-shared-network
 
   ms_data_mapping_processor:
     image: engineeringmethodsag/ms-data-mapping-processor:latest
@@ -37,7 +37,8 @@ services:
       asset_connector:
         condition: service_started
     networks:
-      - bridge
+      - ms-shared-network
 
 networks:
-  bridge:
+  ms-shared-network:
+    external: true
