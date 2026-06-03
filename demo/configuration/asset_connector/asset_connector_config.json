@@ -1,0 +1,8 @@
+{
+    "ServerConfiguration": {
+        "BaseUrl": "http://demo-ms-asset-connector:8000/",
+        "TimeOut": 60,
+        "ConnectionTimeOut": 60,
+        "TrustEnv": false
+    }
+}

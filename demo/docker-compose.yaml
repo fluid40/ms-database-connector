@@ -1,0 +1,43 @@
+services:
+  opcua_press_mockup:
+    image: engineeringmethodsag/fluid-opcua-press-mockup:latest
+    container_name: demo-opcua-press-mockup
+    networks:
+      - bridge
+
+  asset_connector:
+    image: engineeringmethodsag/fluid-asset-connector-python:latest
+    container_name: demo-ms-asset-connector
+    ports:
+      - 8000:8000
+    depends_on:
+      - opcua_press_mockup
+    networks:
+      - bridge
+
+  ms_data_mapping_processor:
+    image: engineeringmethodsag/ms-data-mapping-processor:latest
+    container_name: demo-ms-data-mapping-processor
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "keycloak.basyx.localhost:host-gateway"
+      - "aasreg.basyx.localhost:host-gateway"
+      - "smreg.basyx.localhost:host-gateway"
+      - "aasenv.basyx.localhost:host-gateway"
+    ports:
+      - "3088:3088"
+    environment:
+      APP_HOST: ${APP_HOST}
+      APP_PORT: ${APP_PORT}
+      CONFIG_FILE_NAME: ${CONFIG_FILE_NAME}
+      DBC_AAS_CLIENT_SECRET: ${DBC_AAS_CLIENT_SECRET}
+    volumes:
+      - ./configuration:/app/configuration:ro
+    depends_on:
+      asset_connector:
+        condition: service_started
+    networks:
+      - bridge
+
+networks:
+  bridge:
