@@ -373,5 +373,5 @@ if __name__ == "__main__" and os.getenv("RUN_SERVER", "1") == "1":
     """Run the FastAPI application."""
     initialize_logging()
     host = os.getenv("APP_HOST", "127.0.0.1")
-    port = int(os.getenv("APP_PORT", "3088"))
+    port = int(os.getenv("APP_PORT", "3090"))
     uvicorn.run(app, host=host, port=port, log_config=None)
