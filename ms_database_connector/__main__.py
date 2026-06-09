@@ -77,46 +77,61 @@ def _track_startup(state: dict, key: str, flag: str):
     return StartupTracker(state, key, flag)
 
 
-def _setup_service_config(startup_state: dict) -> None:
+def _setup_service_config(
+    startup_state: dict,
+    get_config=get_service_configuration,
+) -> None:
     """Load and validate service configuration.
 
     Args:
         startup_state: The startup state dictionary to update on success.
+        get_config: Provider callable for the service configuration. Defaults to
+            :func:`get_service_configuration`. Pass a fake in tests.
 
     Raises:
         Exception: If service configuration fails to load.
     """
     with _track_startup(startup_state, "service_configuration", "config_loaded"):
         _logger.info("Loading service configuration.")
-        get_service_configuration()
+        get_config()
 
 
-def _setup_mapping_service(startup_state: dict) -> None:
+def _setup_mapping_service(
+    startup_state: dict,
+    get_mapping=get_db_mapping_handler,
+) -> None:
     """Initialize mapping configuration service singleton.
 
     Args:
         startup_state: The startup state dictionary to update on success.
+        get_mapping: Provider callable for the DB mapping handler. Defaults to
+            :func:`get_db_mapping_handler`. Pass a fake in tests.
 
     Raises:
         Exception: If mapping configuration service initialization fails.
     """
     with _track_startup(startup_state, "mapping_configuration", "mapping_initialized"):
         _logger.info("Initializing mapping configuration service.")
-        get_db_mapping_handler()
+        get_mapping()
 
 
-def _setup_influx_connection(startup_state: dict) -> None:
+def _setup_influx_connection(
+    startup_state: dict,
+    get_client=get_influx_client,
+) -> None:
     """Establish InfluxDB connection.
 
     Args:
         startup_state: The startup state dictionary to update on success.
+        get_client: Provider callable for the InfluxDB client. Defaults to
+            :func:`get_influx_client`. Pass a fake in tests.
 
     Raises:
         RuntimeError: If InfluxDB connection cannot be established.
     """
     with _track_startup(startup_state, "influxdb", "influx_connected"):
         _logger.info("Establishing InfluxDB connection.")
-        client = get_influx_client()
+        client = get_client()
         if not client:
             raise RuntimeError(
                 "InfluxDB connection failed. Set INFLUXDB_V2_TOKEN and ensure server reachability."
@@ -124,11 +139,20 @@ def _setup_influx_connection(startup_state: dict) -> None:
         _logger.info("InfluxDB connection established.")
 
 
-def _setup_aas_connection(startup_state: dict) -> ServerHandler:
+def _setup_aas_connection(
+    startup_state: dict,
+    server_handler_factory=ServerHandler,
+    server_config_factory=ServerConfigurationsHandler,
+) -> ServerHandler:
     """Initialize AAS server connections.
 
     Args:
         startup_state: The startup state dictionary to update on success.
+        server_handler_factory: Callable that returns a :class:`ServerHandler`
+            instance. Defaults to :class:`ServerHandler`. Pass a fake in tests.
+        server_config_factory: Callable that returns a
+            :class:`ServerConfigurationsHandler` instance. Defaults to
+            :class:`ServerConfigurationsHandler`. Pass a fake in tests.
 
     Returns:
         ServerHandler: The initialized server handler instance.
@@ -138,8 +162,8 @@ def _setup_aas_connection(startup_state: dict) -> ServerHandler:
     """
     with _track_startup(startup_state, "aas_client", "registry_connected"):
         _logger.info("Initializing AAS server connections.")
-        server_handler = ServerHandler()
-        server_configurations = ServerConfigurationsHandler()
+        server_handler = server_handler_factory()
+        server_configurations = server_config_factory()
         server_handler.connect_to_server(server_configurations)
         _logger.info("AAS server connections established.")
         return server_handler
@@ -147,7 +171,13 @@ def _setup_aas_connection(startup_state: dict) -> ServerHandler:
 
 
 def _preload_aas_metadata(
-    app: FastAPI, server_handler: ServerHandler, startup_state: dict
+    app: FastAPI,
+    server_handler: ServerHandler,
+    startup_state: dict,
+    get_config=get_service_configuration,
+    get_shell=get_shell_via_registry,
+    get_aimc_sm=get_aimc_submodel,
+    extract_refs=extract_target_references_from_aimc,
 ) -> None:
     """Preload AAS and AIMC metadata for early validation.
 
@@ -155,16 +185,24 @@ def _preload_aas_metadata(
         app: The FastAPI application instance to store preloaded references.
         server_handler: The initialized server handler for AAS communication.
         startup_state: The startup state dictionary to update on success.
+        get_config: Provider callable for the service configuration. Defaults to
+            :func:`get_service_configuration`. Pass a fake in tests.
+        get_shell: Callable ``(server_handler, aas_id) -> shell``. Defaults to
+            :func:`get_shell_via_registry`. Pass a fake in tests.
+        get_aimc_sm: Callable ``(server_handler, shell) -> submodel``. Defaults
+            to :func:`get_aimc_submodel`. Pass a fake in tests.
+        extract_refs: Callable ``(submodel) -> target_references``. Defaults to
+            :func:`extract_target_references_from_aimc`. Pass a fake in tests.
 
     Raises:
         Exception: If AAS or AIMC metadata cannot be retrieved.
     """
     with _track_startup(startup_state, "aas_retrieval", "aimc_loaded"):
         _logger.info("Loading AAS and AIMC metadata.")
-        aas_id = get_service_configuration().aas_id
-        shell = get_shell_via_registry(server_handler, aas_id)
-        aimc_sm = get_aimc_submodel(server_handler, shell)
-        target_references = extract_target_references_from_aimc(aimc_sm)
+        aas_id = get_config().aas_id
+        shell = get_shell(server_handler, aas_id)
+        aimc_sm = get_aimc_sm(server_handler, shell)
+        target_references = extract_refs(aimc_sm)
         app.state.target_references = target_references
         _logger.info("AAS and AIMC metadata loaded successfully.")
 
