@@ -19,7 +19,9 @@ from ms_database_connector.dependencies import (
     AppRuntimeDeps,
     build_app_runtime_deps,
 )
+from ms_database_connector.models.polling import InfluxPointBatch, PollingCyclePayload
 from ms_database_connector.routers.endpoints import router as mapping_router
+from ms_database_connector.services.influx_service import IInfluxClient
 from ms_database_connector.utils.logging_handler import initialize_logging
 
 _logger = logging.getLogger(__name__)
@@ -264,20 +266,48 @@ class PollingWorker:
         """
         _logger.debug("Polling cycle started.")
 
+        cycle_payload = self.collect_influx_points()
+        if cycle_payload is None:
+            return
+
+        self.write_influx_points(
+            cycle_payload.influx_client,
+            cycle_payload.influx_points,
+        )
+
+        _logger.debug(
+            "Polling cycle completed: %d measurement(s) written.",
+            len(cycle_payload.influx_points),
+        )
+
+    def collect_influx_points(
+        self,
+    ) -> PollingCyclePayload | None:
+        """Collect mapped InfluxDB points required for one polling cycle.
+
+        Reads current runtime dependencies and target references, then maps
+        SMEs to InfluxDB points that are ready for persistence.
+
+        Returns:
+            PollingCyclePayload | None: Collection result containing the
+                initialized InfluxDB client and mapped points, or None if
+                required prerequisites are unavailable or mapping fails.
+        """
+
         influx_client = self._runtime_deps.influx_client_provider()
         if influx_client is None:
             _logger.warning("InfluxDB client unavailable – skipping cycle.")
-            return
+            return None
 
         target_references = getattr(self._app.state, "target_references", [])
         if not target_references:
             _logger.warning("No target references available – skipping cycle.")
-            return
+            return None
 
         db_mapping = self._runtime_deps.mapping_handler_provider().db_mapping
         if db_mapping is None:
             _logger.warning("No DB mapping configuration available – skipping cycle.")
-            return
+            return None
 
         mapper = self._runtime_deps.mapper_factory(
             server_handler=self._server_handler,
@@ -289,7 +319,24 @@ class PollingWorker:
             influx_points = mapper.map_smes_to_influx()
         except Exception:
             _logger.exception("Failed to map SMEs to InfluxDB points.")
-            return
+            return None
+
+        return PollingCyclePayload(
+            influx_client=influx_client,
+            influx_points=influx_points,
+        )
+
+    def write_influx_points(
+        self,
+        influx_client: IInfluxClient,
+        influx_points: InfluxPointBatch,
+    ) -> None:
+        """Persist a prepared set of InfluxDB points for one polling cycle.
+
+        Args:
+            influx_client: Connected client used to write points to InfluxDB.
+            influx_points: Points grouped by measurement name for bulk handling.
+        """
 
         for measurement_name, points in influx_points.items():
             for point in points:
@@ -303,10 +350,6 @@ class PollingWorker:
                     _logger.error(
                         "Failed to write point for measurement '%s'.", measurement_name
                     )
-
-        _logger.debug(
-            "Polling cycle completed: %d measurement(s) written.", len(influx_points)
-        )
 
 
 @asynccontextmanager
