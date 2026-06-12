@@ -5,12 +5,13 @@ from pathlib import Path
 from pydantic import ValidationError
 
 from ms_database_connector.config.server_configuration import ServerConfiguration
+from ms_database_connector.config.server_config_loader import ServerConfigLoader
 from ms_database_connector.models.constants import CONFIG_BASE_PATH
 
 _logger = logging.getLogger(__name__)
 
 
-class ServerConfigurationsHandler:
+class ServerConfigurationsHandler(ServerConfigLoader):
     """Handler for loading and managing server configurations.
 
     Loads and manages configuration files for AAS registry, Submodel registry,
@@ -21,10 +22,6 @@ class ServerConfigurationsHandler:
         sm_registry_configuration: Configuration for the Submodel registry server.
         repo_server_configurations: List of configurations for AAS repository servers.
     """
-
-    aas_registry_configuration: ServerConfiguration
-    sm_registry_configuration: ServerConfiguration
-    repo_server_configurations: list[ServerConfiguration]
 
     def __init__(self):
         """Initialize ServerConfigurationsHandler and load all configuration files.
@@ -38,8 +35,42 @@ class ServerConfigurationsHandler:
             HTTPException: If configuration directory does not exist or required
                 configuration files are not found.
         """
-        self.repo_server_configurations = []
+        self._aas_registry_configuration: ServerConfiguration | None = None
+        self._sm_registry_configuration: ServerConfiguration | None = None
+        self._repo_server_configurations: list[ServerConfiguration] = []
         self._get_config_files()
+
+    @property
+    def aas_registry_configuration(self) -> ServerConfiguration:
+        """Get the AAS registry server configuration.
+
+        Returns:
+            ServerConfiguration: The AAS registry configuration.
+        """
+        if self._aas_registry_configuration is None:
+            raise RuntimeError("AAS registry configuration not loaded")
+        return self._aas_registry_configuration
+
+    @property
+    def sm_registry_configuration(self) -> ServerConfiguration:
+        """Get the Submodel registry server configuration.
+
+        Returns:
+            ServerConfiguration: The Submodel registry configuration.
+        """
+        if self._sm_registry_configuration is None:
+            raise RuntimeError("Submodel registry configuration not loaded")
+        return self._sm_registry_configuration
+
+    @property
+    def repo_server_configurations(self) -> list[ServerConfiguration]:
+        """Get all AAS repository server configurations.
+
+        Returns:
+            list[ServerConfiguration]: List of repository server configurations.
+                May be empty if no repositories are configured.
+        """
+        return self._repo_server_configurations
 
     def _get_config_files(self):
         """Initialize configuration file loading for all server types.
@@ -108,7 +139,7 @@ class ServerConfigurationsHandler:
             )
 
         try:
-            self.aas_registry_configuration = ServerConfiguration.model_validate_json(
+            self._aas_registry_configuration = ServerConfiguration.model_validate_json(
                 json_files[0].read_text()
             )
         except ValidationError as ve:
@@ -160,7 +191,7 @@ class ServerConfigurationsHandler:
             )
 
         try:
-            self.sm_registry_configuration = ServerConfiguration.model_validate_json(
+            self._sm_registry_configuration = ServerConfiguration.model_validate_json(
                 json_files[0].read_text()
             )
         except ValidationError as ve:
@@ -204,12 +235,12 @@ class ServerConfigurationsHandler:
                 aas_server_configuration = ServerConfiguration.model_validate_json(
                     json_file.read_text()
                 )
-                self.repo_server_configurations.append(aas_server_configuration)
+                self._repo_server_configurations.append(aas_server_configuration)
             except ValidationError as ve:
                 _logger.error(
                     f"Invalid AAS repository connection file '{json_file}': {ve}"
                 )
 
         _logger.debug(
-            f"Found {len(self.repo_server_configurations)} AAS repository configuration files in folder '{config_path}'."
+            f"Found {len(self._repo_server_configurations)} AAS repository configuration files in folder '{config_path}'."
         )

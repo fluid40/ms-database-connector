@@ -9,10 +9,14 @@ from ms_database_connector.config.service_configuration import (
     ServiceConfiguration,
     load_configuration,
 )
+from ms_database_connector.config.server_config_loader import ServerConfigLoader
 from ms_database_connector.core.db_connection import initialize_db_connection
 from ms_database_connector.core.influx_mapping import InfluxMapper
 from ms_database_connector.core.server_handling import ServerHandler
 from ms_database_connector.services.influx_service import IInfluxClient
+from ms_database_connector.utils.configuration_handling import (
+    ServerConfigurationsHandler,
+)
 from ms_database_connector.utils.mapping_handler import DbMappingHandler
 
 
@@ -28,6 +32,7 @@ class AppRuntimeDeps:
     mapping_handler_provider: Callable[[], DbMappingHandler]
     influx_client_provider: Callable[[], IInfluxClient | None]
     server_handler_factory: Callable[[], ServerHandler]
+    config_loader_factory: Callable[[], ServerConfigLoader]
     mapper_factory: Callable[..., InfluxMapper]
 
 
@@ -38,6 +43,7 @@ def build_app_runtime_deps() -> AppRuntimeDeps:
         mapping_handler_provider=get_db_mapping_handler,
         influx_client_provider=get_influx_client,
         server_handler_factory=ServerHandler,
+        config_loader_factory=ServerConfigurationsHandler,
         mapper_factory=InfluxMapper,
     )
 

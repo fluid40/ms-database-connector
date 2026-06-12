@@ -20,9 +20,6 @@ from ms_database_connector.dependencies import (
     build_app_runtime_deps,
 )
 from ms_database_connector.routers.endpoints import router as mapping_router
-from ms_database_connector.utils.configuration_handling import (
-    ServerConfigurationsHandler,
-)
 from ms_database_connector.utils.logging_handler import initialize_logging
 
 _logger = logging.getLogger(__name__)
@@ -137,16 +134,13 @@ def _setup_influx_connection(
 def _setup_aas_connection(
     startup_state: dict,
     runtime_deps: AppRuntimeDeps,
-    server_config_factory=ServerConfigurationsHandler,
 ) -> ServerHandler:
     """Initialize AAS server connections.
 
     Args:
         startup_state: The startup state dictionary to update on success.
-        runtime_deps: Runtime dependency composition object.
-        server_config_factory: Callable that returns a
-            :class:`ServerConfigurationsHandler` instance. Defaults to
-            :class:`ServerConfigurationsHandler`. Pass a fake in tests.
+        runtime_deps: Runtime dependency composition object containing the
+            config loader factory.
 
     Returns:
         ServerHandler: The initialized server handler instance.
@@ -157,7 +151,7 @@ def _setup_aas_connection(
     with _track_startup(startup_state, "aas_client", "registry_connected"):
         _logger.info("Initializing AAS server connections.")
         server_handler = runtime_deps.server_handler_factory()
-        server_configurations = server_config_factory()
+        server_configurations = runtime_deps.config_loader_factory()
         server_handler.connect_to_server(server_configurations)
         _logger.info("AAS server connections established.")
         return server_handler
