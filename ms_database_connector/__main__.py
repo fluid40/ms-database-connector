@@ -14,12 +14,10 @@ from ms_database_connector.core.server_handling import ServerHandler
 from ms_database_connector.core.influx_mapping import (
     get_aimc_submodel,
     extract_target_references_from_aimc,
-    InfluxMapper,
 )
 from ms_database_connector.dependencies import (
-    get_influx_client,
-    get_db_mapping_handler,
-    get_service_configuration,
+    AppRuntimeDeps,
+    build_app_runtime_deps,
 )
 from ms_database_connector.routers.endpoints import router as mapping_router
 from ms_database_connector.utils.configuration_handling import (
@@ -79,59 +77,56 @@ def _track_startup(state: dict, key: str, flag: str):
 
 def _setup_service_config(
     startup_state: dict,
-    get_config=get_service_configuration,
+    runtime_deps: AppRuntimeDeps,
 ) -> None:
     """Load and validate service configuration.
 
     Args:
         startup_state: The startup state dictionary to update on success.
-        get_config: Provider callable for the service configuration. Defaults to
-            :func:`get_service_configuration`. Pass a fake in tests.
+        runtime_deps: Runtime dependency composition object.
 
     Raises:
         Exception: If service configuration fails to load.
     """
     with _track_startup(startup_state, "service_configuration", "config_loaded"):
         _logger.info("Loading service configuration.")
-        get_config()
+        runtime_deps.config_provider()
 
 
 def _setup_mapping_service(
     startup_state: dict,
-    get_mapping=get_db_mapping_handler,
+    runtime_deps: AppRuntimeDeps,
 ) -> None:
     """Initialize mapping configuration service singleton.
 
     Args:
         startup_state: The startup state dictionary to update on success.
-        get_mapping: Provider callable for the DB mapping handler. Defaults to
-            :func:`get_db_mapping_handler`. Pass a fake in tests.
+        runtime_deps: Runtime dependency composition object.
 
     Raises:
         Exception: If mapping configuration service initialization fails.
     """
     with _track_startup(startup_state, "mapping_configuration", "mapping_initialized"):
         _logger.info("Initializing mapping configuration service.")
-        get_mapping()
+        runtime_deps.mapping_handler_provider()
 
 
 def _setup_influx_connection(
     startup_state: dict,
-    get_client=get_influx_client,
+    runtime_deps: AppRuntimeDeps,
 ) -> None:
     """Establish InfluxDB connection.
 
     Args:
         startup_state: The startup state dictionary to update on success.
-        get_client: Provider callable for the InfluxDB client. Defaults to
-            :func:`get_influx_client`. Pass a fake in tests.
+        runtime_deps: Runtime dependency composition object.
 
     Raises:
         RuntimeError: If InfluxDB connection cannot be established.
     """
     with _track_startup(startup_state, "influxdb", "influx_connected"):
         _logger.info("Establishing InfluxDB connection.")
-        client = get_client()
+        client = runtime_deps.influx_client_provider()
         if not client:
             raise RuntimeError(
                 "InfluxDB connection failed. Set INFLUXDB_V2_TOKEN and ensure server reachability."
@@ -141,15 +136,14 @@ def _setup_influx_connection(
 
 def _setup_aas_connection(
     startup_state: dict,
-    server_handler_factory=ServerHandler,
+    runtime_deps: AppRuntimeDeps,
     server_config_factory=ServerConfigurationsHandler,
 ) -> ServerHandler:
     """Initialize AAS server connections.
 
     Args:
         startup_state: The startup state dictionary to update on success.
-        server_handler_factory: Callable that returns a :class:`ServerHandler`
-            instance. Defaults to :class:`ServerHandler`. Pass a fake in tests.
+        runtime_deps: Runtime dependency composition object.
         server_config_factory: Callable that returns a
             :class:`ServerConfigurationsHandler` instance. Defaults to
             :class:`ServerConfigurationsHandler`. Pass a fake in tests.
@@ -162,7 +156,7 @@ def _setup_aas_connection(
     """
     with _track_startup(startup_state, "aas_client", "registry_connected"):
         _logger.info("Initializing AAS server connections.")
-        server_handler = server_handler_factory()
+        server_handler = runtime_deps.server_handler_factory()
         server_configurations = server_config_factory()
         server_handler.connect_to_server(server_configurations)
         _logger.info("AAS server connections established.")
@@ -174,7 +168,7 @@ def _preload_aas_metadata(
     app: FastAPI,
     server_handler: ServerHandler,
     startup_state: dict,
-    get_config=get_service_configuration,
+    runtime_deps: AppRuntimeDeps,
     get_shell=get_shell_via_registry,
     get_aimc_sm=get_aimc_submodel,
     extract_refs=extract_target_references_from_aimc,
@@ -185,8 +179,7 @@ def _preload_aas_metadata(
         app: The FastAPI application instance to store preloaded references.
         server_handler: The initialized server handler for AAS communication.
         startup_state: The startup state dictionary to update on success.
-        get_config: Provider callable for the service configuration. Defaults to
-            :func:`get_service_configuration`. Pass a fake in tests.
+        runtime_deps: Runtime dependency composition object.
         get_shell: Callable ``(server_handler, aas_id) -> shell``. Defaults to
             :func:`get_shell_via_registry`. Pass a fake in tests.
         get_aimc_sm: Callable ``(server_handler, shell) -> submodel``. Defaults
@@ -199,7 +192,7 @@ def _preload_aas_metadata(
     """
     with _track_startup(startup_state, "aas_retrieval", "aimc_loaded"):
         _logger.info("Loading AAS and AIMC metadata.")
-        aas_id = get_config().aas_id
+        aas_id = runtime_deps.config_provider().aas_id
         shell = get_shell(server_handler, aas_id)
         aimc_sm = get_aimc_sm(server_handler, shell)
         target_references = extract_refs(aimc_sm)
@@ -225,10 +218,12 @@ class PollingWorker:
         app: FastAPI,
         server_handler: ServerHandler,
         polling_interval: int,
+        runtime_deps: AppRuntimeDeps,
     ) -> None:
         self._app = app
         self._server_handler = server_handler
         self._polling_interval = polling_interval
+        self._runtime_deps = runtime_deps
         self._task: asyncio.Task | None = None
         self._stop_event = asyncio.Event()
 
@@ -275,7 +270,7 @@ class PollingWorker:
         """
         _logger.debug("Polling cycle started.")
 
-        influx_client = get_influx_client()
+        influx_client = self._runtime_deps.influx_client_provider()
         if influx_client is None:
             _logger.warning("InfluxDB client unavailable – skipping cycle.")
             return
@@ -285,12 +280,12 @@ class PollingWorker:
             _logger.warning("No target references available – skipping cycle.")
             return
 
-        db_mapping = get_db_mapping_handler().db_mapping
+        db_mapping = self._runtime_deps.mapping_handler_provider().db_mapping
         if db_mapping is None:
             _logger.warning("No DB mapping configuration available – skipping cycle.")
             return
 
-        mapper = InfluxMapper(
+        mapper = self._runtime_deps.mapper_factory(
             server_handler=self._server_handler,
             db_mapping=db_mapping,
             target_references=target_references,
@@ -339,19 +334,21 @@ async def lifespan(app: FastAPI):
     """
     _logger.info("Starting up the microservice database connector.")
     app.state.startup = _init_startup_state()
+    app.state.runtime_deps = build_app_runtime_deps()
+    runtime_deps: AppRuntimeDeps = app.state.runtime_deps
 
     try:
-        _setup_service_config(app.state.startup)
-        _setup_mapping_service(app.state.startup)
-        _setup_influx_connection(app.state.startup)
-        server_handler = _setup_aas_connection(app.state.startup)
-        _preload_aas_metadata(app, server_handler, app.state.startup)
+        _setup_service_config(app.state.startup, runtime_deps)
+        _setup_mapping_service(app.state.startup, runtime_deps)
+        _setup_influx_connection(app.state.startup, runtime_deps)
+        server_handler = _setup_aas_connection(app.state.startup, runtime_deps)
+        _preload_aas_metadata(app, server_handler, app.state.startup, runtime_deps)
     except Exception:
         _logger.exception("Startup initialization failed.")
         raise
 
-    polling_interval = get_service_configuration().polling_interval
-    worker = PollingWorker(app, server_handler, polling_interval)
+    polling_interval = runtime_deps.config_provider().polling_interval
+    worker = PollingWorker(app, server_handler, polling_interval, runtime_deps)
     worker.start()
 
     yield

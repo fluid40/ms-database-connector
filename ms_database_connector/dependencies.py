@@ -1,5 +1,7 @@
 """Global dependency providers (DI) for the FastAPI application."""
 
+from collections.abc import Callable
+from dataclasses import dataclass
 from functools import lru_cache
 import os
 
@@ -8,8 +10,36 @@ from ms_database_connector.config.service_configuration import (
     load_configuration,
 )
 from ms_database_connector.core.db_connection import initialize_db_connection
+from ms_database_connector.core.influx_mapping import InfluxMapper
+from ms_database_connector.core.server_handling import ServerHandler
 from ms_database_connector.services.influx_service import IInfluxClient
 from ms_database_connector.utils.mapping_handler import DbMappingHandler
+
+
+@dataclass(frozen=True)
+class AppRuntimeDeps:
+    """Composition object for runtime providers and factories.
+
+    Keeping runtime wiring in one immutable object simplifies testing by reducing
+    monkeypatch targets from many globals to a single dependency container.
+    """
+
+    config_provider: Callable[[], ServiceConfiguration]
+    mapping_handler_provider: Callable[[], DbMappingHandler]
+    influx_client_provider: Callable[[], IInfluxClient | None]
+    server_handler_factory: Callable[[], ServerHandler]
+    mapper_factory: Callable[..., InfluxMapper]
+
+
+def build_app_runtime_deps() -> AppRuntimeDeps:
+    """Build the default runtime dependency composition object."""
+    return AppRuntimeDeps(
+        config_provider=get_service_configuration,
+        mapping_handler_provider=get_db_mapping_handler,
+        influx_client_provider=get_influx_client,
+        server_handler_factory=ServerHandler,
+        mapper_factory=InfluxMapper,
+    )
 
 
 @lru_cache(maxsize=1)
