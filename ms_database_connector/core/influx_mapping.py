@@ -333,7 +333,7 @@ class InfluxMapper:
             try:
                 dt = datetime.fromisoformat(sme_value.replace("Z", "+00:00"))
                 return dt.isoformat()
-            except (ValueError, AttributeError):
+            except (ValueError, AttributeError, OverflowError):
                 _logger.warning(f"Could not parse timestamp string: {sme_value}")
                 return sme_value
         elif isinstance(sme_value, datetime):
@@ -342,7 +342,7 @@ class InfluxMapper:
             try:
                 dt = datetime.fromtimestamp(sme_value, tz=timezone.utc)
                 return dt.isoformat()
-            except (ValueError, OSError):
+            except (ValueError, OSError, OverflowError):
                 _logger.warning(f"Could not convert numeric timestamp: {sme_value}")
                 return str(sme_value)
         else:
