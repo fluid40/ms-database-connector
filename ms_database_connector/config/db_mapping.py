@@ -48,7 +48,7 @@ class DbMapping(RootModel[dict[str, MeasurementMapping]]):
     """
 
 
-class RawMeasurementMapping(RootModel[dict[str, str | None]]):
+class RawMeasurementMapping(RootModel[dict[str, MappingTargetType | None]]):
     """Raw measurement mapping allowing None values for unfilled templates.
 
     Similar to MeasurementMapping but allows ``None`` values to represent
@@ -58,6 +58,39 @@ class RawMeasurementMapping(RootModel[dict[str, str | None]]):
     Example structure with unfilled entry:
         {"path.to.field": "field", "path.to.unknown": null}
     """
+
+    @model_validator(mode="before")
+    @classmethod
+    def validate_value_types(
+        cls, data: dict[str, object] | object
+    ) -> dict[str, object] | object:
+        """Ensure all values are None or valid MappingTargetType values."""
+        if not isinstance(data, dict):
+            return data
+
+        invalid_entries: list[tuple[str, object]] = []
+        allowed_values = {target.value for target in MappingTargetType}
+
+        for sink_path, value in data.items():
+            if value is None or isinstance(value, MappingTargetType):
+                continue
+            if isinstance(value, str) and value in allowed_values:
+                continue
+            invalid_entries.append((sink_path, value))
+
+        if invalid_entries:
+            formatted_entries = ", ".join(
+                f"{sink_path}={value!r}" for sink_path, value in invalid_entries
+            )
+            allowed_values_text = ", ".join(
+                sorted(repr(value) for value in allowed_values)
+            )
+            raise ValueError(
+                "RawMeasurementMapping values must be None or one of "
+                f"{allowed_values_text}. Invalid entries: {formatted_entries}"
+            )
+
+        return data
 
     def has_unfilled_entries(self) -> bool:
         """Check if this measurement mapping contains any unfilled (None) entries."""
