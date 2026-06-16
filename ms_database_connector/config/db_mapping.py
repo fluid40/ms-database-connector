@@ -47,6 +47,20 @@ class DbMapping(RootModel[dict[str, MeasurementMapping]]):
         {"measurement_name": {"path.to.field": "field"}}
     """
 
+    @model_validator(mode="after")
+    def validate_measurements_not_none(self) -> "DbMapping":
+        """Ensure all MeasurementMapping values are not None or empty."""
+        for measurement_name, mapping in self.root.items():
+            if mapping is None:
+                raise ValueError(
+                    f"MeasurementMapping for '{measurement_name}' must not be None."
+                )
+            if not mapping.root:
+                raise ValueError(
+                    f"MeasurementMapping for '{measurement_name}' must not be empty."
+                )
+        return self
+
 
 class RawMeasurementMapping(RootModel[dict[str, MappingTargetType | None]]):
     """Raw measurement mapping allowing None values for unfilled templates.
