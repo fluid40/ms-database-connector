@@ -121,3 +121,106 @@ def test_skips_invalid_repo_configs_and_loads_valid_ones(monkeypatch, tmp_path):
     assert handler.sm_registry_configuration.secret_var_name == "SM_SECRET"
     assert len(handler.repo_server_configurations) == 1
     assert handler.repo_server_configurations[0].secret_var_name == "REPO_SECRET"
+
+
+def test_raises_path_error_when_aas_registry_directory_missing(monkeypatch, tmp_path):
+    """Raise a path error when aas_registry directory does not exist."""
+    _prepare_required_dirs(tmp_path)
+    (tmp_path / "aas_registry").rmdir()  # Remove the aas_registry directory
+    monkeypatch.setattr(configuration_module, "CONFIG_BASE_PATH", str(tmp_path))
+
+    with pytest.raises(ConfigurationPathError) as exc_info:
+        configuration_module.ServerConfigurationsHandler()
+
+    assert "aas_registry" in str(exc_info.value)
+    assert "not found" in str(exc_info.value)
+
+
+def test_raises_path_error_when_sm_registry_directory_missing(monkeypatch, tmp_path):
+    """Raise a path error when submodel_registry directory does not exist."""
+    _prepare_required_dirs(tmp_path)
+    monkeypatch.setattr(configuration_module, "CONFIG_BASE_PATH", str(tmp_path))
+
+    # Create valid AAS registry config
+    _write_json(
+        tmp_path / "aas_registry" / "aas_registry.json",
+        _valid_server_config("AAS_SECRET"),
+    )
+
+    # Remove submodel_registry directory
+    (tmp_path / "submodel_registry").rmdir()
+
+    with pytest.raises(ConfigurationPathError) as exc_info:
+        configuration_module.ServerConfigurationsHandler()
+
+    assert "submodel_registry" in str(exc_info.value)
+    assert "not found" in str(exc_info.value)
+
+
+def test_raises_file_error_when_sm_registry_has_no_json_files(monkeypatch, tmp_path):
+    """Raise a file error when no Submodel registry JSON files exist."""
+    _prepare_required_dirs(tmp_path)
+    monkeypatch.setattr(configuration_module, "CONFIG_BASE_PATH", str(tmp_path))
+
+    # Create valid AAS registry config
+    _write_json(
+        tmp_path / "aas_registry" / "aas_registry.json",
+        _valid_server_config("AAS_SECRET"),
+    )
+
+    # submodel_registry directory exists but has no JSON files
+
+    with pytest.raises(ConfigurationFileError) as exc_info:
+        configuration_module.ServerConfigurationsHandler()
+
+    assert "Submodel registry" in str(exc_info.value)
+    assert "No" in str(exc_info.value)
+
+
+def test_raises_path_error_when_repo_server_directory_missing(monkeypatch, tmp_path):
+    """Raise a path error when repo_server directory does not exist."""
+    _prepare_required_dirs(tmp_path)
+    monkeypatch.setattr(configuration_module, "CONFIG_BASE_PATH", str(tmp_path))
+
+    # Create valid registry configs
+    _write_json(
+        tmp_path / "aas_registry" / "aas_registry.json",
+        _valid_server_config("AAS_SECRET"),
+    )
+    _write_json(
+        tmp_path / "submodel_registry" / "sm_registry.json",
+        _valid_server_config("SM_SECRET"),
+    )
+
+    # Remove repo_server directory
+    (tmp_path / "repo_server").rmdir()
+
+    with pytest.raises(ConfigurationPathError) as exc_info:
+        configuration_module.ServerConfigurationsHandler()
+
+    assert "repo_server" in str(exc_info.value)
+    assert "not found" in str(exc_info.value)
+
+
+def test_empty_repo_configs_when_no_repo_json_files(monkeypatch, tmp_path):
+    """Allow empty repository configurations when no repo JSON files exist."""
+    _prepare_required_dirs(tmp_path)
+    monkeypatch.setattr(configuration_module, "CONFIG_BASE_PATH", str(tmp_path))
+
+    # Create valid registry configs
+    _write_json(
+        tmp_path / "aas_registry" / "aas_registry.json",
+        _valid_server_config("AAS_SECRET"),
+    )
+    _write_json(
+        tmp_path / "submodel_registry" / "sm_registry.json",
+        _valid_server_config("SM_SECRET"),
+    )
+
+    # repo_server directory exists but has no JSON files
+
+    handler = configuration_module.ServerConfigurationsHandler()
+
+    assert handler.aas_registry_configuration.secret_var_name == "AAS_SECRET"
+    assert handler.sm_registry_configuration.secret_var_name == "SM_SECRET"
+    assert len(handler.repo_server_configurations) == 0
