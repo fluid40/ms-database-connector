@@ -5,8 +5,12 @@ import os
 
 import uvicorn
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.concurrency import asynccontextmanager
+from fastapi.responses import JSONResponse
+from ms_database_connector.models.exceptions.configuration_errors import (
+    ConfigurationError,
+)
 from ms_database_connector.services.aas_infrastructure_service import (
     get_shell_via_registry,
 )
@@ -400,6 +404,16 @@ app = FastAPI(
     version="v1",
     lifespan=lifespan,
 )
+
+
+@app.exception_handler(ConfigurationError)
+async def handle_configuration_error(
+    request: Request, exc: ConfigurationError
+) -> JSONResponse:
+    """Translate configuration errors into HTTP responses at API boundary."""
+    _logger.error("Configuration error while handling request %s: %s", request.url, exc)
+    return JSONResponse(status_code=400, content={"detail": str(exc)})
+
 
 app.include_router(mapping_router)
 
