@@ -47,7 +47,7 @@ class DbMappingHandler:
     def db_mapping(self) -> DbMapping | None:
         """Return the typed mapping when available.
 
-        This is ``None`` when only a template (with ``null`` values) is stored.
+        This is ``None`` when only a template (with ``None`` values) is stored.
         """
         return self._db_mapping
 
@@ -60,7 +60,7 @@ class DbMappingHandler:
     def reload_db_mapping_from_file(self) -> bool:
         """Reload db mapping from disk.
 
-        Reads db_mapping.json and validates it. Invalid or missing files
+        Reads db_mapping.json and validates it to match the RawDbMapping model. Invalid or missing files
         are logged but do not raise exceptions, allowing recovery via API.
 
         Returns:
@@ -102,7 +102,7 @@ class DbMappingHandler:
             return False
         except ValidationError as exc:
             _logger.error(
-                "DB mapping file '%s' has invalid structure: %s",
+                "Validation failed for DB mapping file '%s': %s",
                 self._db_mapping_file,
                 exc,
             )
@@ -154,20 +154,20 @@ class DbMappingHandler:
         self,
         persist: bool = True,
     ) -> bool:
-        """Validate raw mapping data and optionally persist it.
-
-        Accepts template-like mappings with ``None`` values as unfilled entries.
-        Non-template values must validate against ``DbMapping`` target types.
-        Invalid mappings are logged but do not raise exceptions.
+        """Validate if raw DB mapping is complete and update typed mapping.
 
         Args:
-            raw_mapping: The raw mapping structure to validate and store.
             persist: If True, persist the mapping to disk (default: True).
 
         Returns:
             bool: True if valid and stored/persisted successfully, False otherwise.
         """
-        if self._raw_db_mapping and self._raw_db_mapping.has_unfilled_entries():
+        if self._raw_db_mapping is None:
+            _logger.error("No raw DB mapping available to update from.")
+            self._db_mapping = None
+            return False
+
+        if self._raw_db_mapping.has_unfilled_entries():
             _logger.info(
                 "DB mapping contains unfilled entries (null values). "
                 "Keeping raw template and clearing typed mapping."
@@ -176,25 +176,12 @@ class DbMappingHandler:
             return False
 
         try:
-            db_mapping = DbMapping.model_validate(self._raw_db_mapping)
+            db_mapping = DbMapping.model_validate(self._raw_db_mapping.model_dump())
         except ValidationError as exc:
             _logger.error("DB mapping validation failed: %s", exc)
             self._db_mapping = None
-            # Validation errors represent invalid schema/value constraints.
-            # Keep handler uninitialized in these cases.
-            self._raw_db_mapping = None
             return False
 
-        # Keep one source of truth in memory as plain dict for easy API responses.
-        serialized_mapping: dict[str, dict[str, str | None]] = {
-            measurement_name: {
-                sink_path: target_type.value
-                for sink_path, target_type in measurement_mapping.root.items()
-            }
-            for measurement_name, measurement_mapping in db_mapping.root.items()
-        }
-        # Convert to RawDbMapping model
-        self._raw_db_mapping = RawDbMapping.model_validate(serialized_mapping)
         self._db_mapping = db_mapping
 
         if not persist:
@@ -215,24 +202,24 @@ class DbMappingHandler:
     def initialize_db_mapping(self, mapping_template: dict) -> dict:
         """Create and persist an unfilled DB mapping template.
 
-        Stores a DB mapping structure with null values for later completion.
+        Stores a DB mapping structure with None values for later completion.
         Used when initializing DB mappings based on detected AIMC measurements.
 
         Args:
-            mapping_template: Template dict with structure {"measurement": {"path": null}}.
+            mapping_template: Template dict with structure {"measurement": {"path": None}}.
 
         Returns:
             dict: Status response with key 'status': 'mapping_initialized'.
         """
         self._db_mapping = None
-        # Validate and store as RawDbMapping
+
         try:
             self._raw_db_mapping = RawDbMapping.model_validate(mapping_template)
-        except Exception:
+        except ValidationError as exc:
             self._raw_db_mapping = None
+            return {"status": "Invalid mapping structure", "details": exc.json()}
 
-        if self._raw_db_mapping is not None:
-            self._persist_db_mapping(self._raw_db_mapping)
+        self._persist_db_mapping(self._raw_db_mapping)
         return {"status": "mapping_initialized"}
 
     def _persist_db_mapping(self, raw_mapping: RawDbMapping) -> None:
