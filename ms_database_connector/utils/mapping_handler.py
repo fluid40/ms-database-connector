@@ -7,7 +7,7 @@ from pathlib import Path
 
 from pydantic import ValidationError
 
-from ms_database_connector.config.db_mapping import DbMapping
+from ms_database_connector.config.db_mapping import DbMapping, RawDbMapping
 from ms_database_connector.models.constants import CONFIG_BASE_PATH
 
 _logger = logging.getLogger(__name__)
@@ -35,7 +35,7 @@ class DbMappingHandler:
         self._db_mapping_file = Path(config_base_path) / "db_mapping.json"
         self._persist_db_mapping_file_changes = persist_db_mapping_file_changes
         self._db_mapping: DbMapping | None = None
-        self._raw_db_mapping: dict[str, dict[str, str | None]] | None = None
+        self._raw_db_mapping: RawDbMapping | None = None
         self.reload_db_mapping_from_file()
 
     @property
@@ -51,7 +51,7 @@ class DbMappingHandler:
         """
         return self._db_mapping
 
-    def get_raw(self) -> dict[str, dict[str, str | None]] | None:
+    def get_raw(self) -> RawDbMapping | None:
         """Return a defensive copy of the currently stored raw mapping."""
         if self._raw_db_mapping is None:
             return None
@@ -77,7 +77,11 @@ class DbMappingHandler:
             return False
 
         try:
-            raw_mapping = json.loads(self._db_mapping_file.read_text(encoding="utf-8"))
+            raw_mapping_json = json.loads(
+                self._db_mapping_file.read_text(encoding="utf-8")
+            )
+            self._raw_db_mapping = RawDbMapping.model_validate(raw_mapping_json)
+
         except json.JSONDecodeError as exc:
             _logger.error(
                 "Invalid JSON in DB mapping file '%s': %s",
@@ -96,13 +100,22 @@ class DbMappingHandler:
             self._db_mapping = None
             self._raw_db_mapping = None
             return False
+        except ValidationError as exc:
+            _logger.error(
+                "DB mapping file '%s' has invalid structure: %s",
+                self._db_mapping_file,
+                exc,
+            )
+            self._db_mapping = None
+            self._raw_db_mapping = None
+            return False
 
-        return self.update_db_mapping_from_raw(raw_mapping, persist=False)
+        return self.update_db_mapping_from_raw(persist=False)
 
     def update_db_mapping(self, db_mapping: DbMapping) -> bool:
         """Store and persist a validated db mapping.
 
-        Serializes the typed mapping to raw dict format and persists to disk.
+        Serializes the typed mapping to raw model format and persists to disk.
 
         Args:
             db_mapping: A validated DbMapping object.
@@ -119,11 +132,14 @@ class DbMappingHandler:
             for measurement_name, measurement_mapping in db_mapping.root.items()
         }
 
+        # Convert to RawDbMapping model
+        raw_db_mapping = RawDbMapping.model_validate(serialized_mapping)
+
         self._db_mapping = db_mapping
-        self._raw_db_mapping = serialized_mapping
+        self._raw_db_mapping = raw_db_mapping
 
         try:
-            self._persist_db_mapping(serialized_mapping)
+            self._persist_db_mapping(raw_db_mapping)
         except OSError as exc:
             _logger.error(
                 "Failed to persist DB mapping to '%s': %s",
@@ -136,12 +152,12 @@ class DbMappingHandler:
 
     def update_db_mapping_from_raw(
         self,
-        raw_mapping: dict,
         persist: bool = True,
     ) -> bool:
         """Validate raw mapping data and optionally persist it.
 
-        Validates that all entries have target types (no null or 'one' values).
+        Accepts template-like mappings with ``None`` values as unfilled entries.
+        Non-template values must validate against ``DbMapping`` target types.
         Invalid mappings are logged but do not raise exceptions.
 
         Args:
@@ -151,35 +167,34 @@ class DbMappingHandler:
         Returns:
             bool: True if valid and stored/persisted successfully, False otherwise.
         """
-        if self._contains_unfilled_entries(raw_mapping):
-            _logger.error(
-                "DB mapping validation failed: each mapping entry needs a target type and "
-                "no value may remain 'one' or null."
+        if self._raw_db_mapping and self._raw_db_mapping.has_unfilled_entries():
+            _logger.info(
+                "DB mapping contains unfilled entries (null values). "
+                "Keeping raw template and clearing typed mapping."
             )
             self._db_mapping = None
-            self._raw_db_mapping = (
-                deepcopy(raw_mapping) if isinstance(raw_mapping, dict) else None
-            )
             return False
 
         try:
-            db_mapping = DbMapping.model_validate(raw_mapping)
+            db_mapping = DbMapping.model_validate(self._raw_db_mapping)
         except ValidationError as exc:
             _logger.error("DB mapping validation failed: %s", exc)
             self._db_mapping = None
-            self._raw_db_mapping = (
-                deepcopy(raw_mapping) if isinstance(raw_mapping, dict) else None
-            )
+            # Validation errors represent invalid schema/value constraints.
+            # Keep handler uninitialized in these cases.
+            self._raw_db_mapping = None
             return False
 
         # Keep one source of truth in memory as plain dict for easy API responses.
-        self._raw_db_mapping = {
+        serialized_mapping: dict[str, dict[str, str | None]] = {
             measurement_name: {
                 sink_path: target_type.value
                 for sink_path, target_type in measurement_mapping.root.items()
             }
             for measurement_name, measurement_mapping in db_mapping.root.items()
         }
+        # Convert to RawDbMapping model
+        self._raw_db_mapping = RawDbMapping.model_validate(serialized_mapping)
         self._db_mapping = db_mapping
 
         if not persist:
@@ -210,19 +225,24 @@ class DbMappingHandler:
             dict: Status response with key 'status': 'mapping_initialized'.
         """
         self._db_mapping = None
-        self._raw_db_mapping = deepcopy(mapping_template)
+        # Validate and store as RawDbMapping
+        try:
+            self._raw_db_mapping = RawDbMapping.model_validate(mapping_template)
+        except Exception:
+            self._raw_db_mapping = None
 
-        self._persist_db_mapping(self._raw_db_mapping)
+        if self._raw_db_mapping is not None:
+            self._persist_db_mapping(self._raw_db_mapping)
         return {"status": "mapping_initialized"}
 
-    def _persist_db_mapping(self, raw_mapping: dict) -> None:
+    def _persist_db_mapping(self, raw_mapping: RawDbMapping) -> None:
         """Persist a DB mapping structure to disk as formatted JSON.
 
         Creates parent directories if needed. If persistence is disabled via
         constructor, logs and returns without writing.
 
         Args:
-            raw_mapping: The mapping structure to persist.
+            raw_mapping: The RawDbMapping model instance to persist.
 
         Raises:
             OSError: If file writing fails.
@@ -236,36 +256,6 @@ class DbMappingHandler:
 
         self._db_mapping_file.parent.mkdir(parents=True, exist_ok=True)
         self._db_mapping_file.write_text(
-            json.dumps(raw_mapping, indent=4, sort_keys=False),
+            json.dumps(raw_mapping.model_dump(), indent=4, sort_keys=False),
             encoding="utf-8",
         )
-
-    @staticmethod
-    def _contains_unfilled_entries(raw_mapping: dict) -> bool:
-        """Check for placeholder or unfilled values in a DB mapping structure.
-
-        Validates that all measurements and paths have filled target type values
-        (not null or the string 'one').
-
-        Args:
-            raw_mapping: The DB mapping structure to check.
-
-        Returns:
-            bool: True if unfilled entries are found, False if fully filled.
-        """
-        if not isinstance(raw_mapping, dict):
-            return True
-
-        for measurement_mapping in raw_mapping.values():
-            if not isinstance(measurement_mapping, dict):
-                return True
-            for target_type in measurement_mapping.values():
-                if target_type is None:
-                    return True
-                if (
-                    isinstance(target_type, str)
-                    and target_type.strip().lower() == "one"
-                ):
-                    return True
-
-        return False

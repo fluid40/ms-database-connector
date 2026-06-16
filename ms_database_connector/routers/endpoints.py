@@ -165,7 +165,7 @@ def get_db_mapping(
     raw = mapping_service.get_raw()
     if raw is None:
         return {}
-    return raw
+    return raw.model_dump()
 
 
 # ------------------------------------------------------------------ #
@@ -210,9 +210,9 @@ def set_db_mapping(
 
     # If a template already exists, enforce completeness by requiring the exact
     # measurement/path structure in the posted mapping.
-    existing = mapping_service.get_raw() or {}
+    existing = mapping_service.get_raw()
     if existing:
-        existing_measurements = set(existing.keys())
+        existing_measurements = set(existing.root.keys())
         posted_measurements = set(mapping.root.keys())
         if posted_measurements != existing_measurements:
             raise HTTPException(
@@ -224,8 +224,8 @@ def set_db_mapping(
                 ),
             )
 
-        for measurement_name, expected_mapping in existing.items():
-            expected_paths = set(expected_mapping.keys())
+        for measurement_name, expected_mapping in existing.root.items():
+            expected_paths = set(expected_mapping.root.keys())
             posted_paths = set(mapping.root[measurement_name].root.keys())
             if posted_paths != expected_paths:
                 missing = sorted(expected_paths - posted_paths)

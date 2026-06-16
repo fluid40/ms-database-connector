@@ -166,7 +166,6 @@ class TestCollectInfluxPoints:
         assert result is None
         mapper_instance.map_smes_to_influx.assert_called_once()
 
-
     def test_returns_payload_when_all_dependencies_available(
         self, build_worker, mocker
     ):
@@ -276,7 +275,6 @@ class TestWriteInfluxPoints:
 
         # Assert
         assert influx_client.write_data.call_count == 2
-
 
     def test_logs_failure_when_write_data_returns_false(
         self, mocker, caplog, build_worker
@@ -398,7 +396,6 @@ class TestPollOnce:
         assert context.influx_client.write_data.called
 
     @pytest.mark.asyncio
-
     async def test_poll_once_handles_mapper_exception_gracefully(
         self, mocker, build_worker
     ):

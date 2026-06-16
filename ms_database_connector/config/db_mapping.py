@@ -46,3 +46,35 @@ class DbMapping(RootModel[dict[str, MeasurementMapping]]):
     Example structure:
         {"measurement_name": {"path.to.field": "field"}}
     """
+
+
+class RawMeasurementMapping(RootModel[dict[str, str | None]]):
+    """Raw measurement mapping allowing None values for unfilled templates.
+
+    Similar to MeasurementMapping but allows ``None`` values to represent
+    unfilled template entries. Used to store partial/incomplete mappings
+    before they are validated and filled in.
+
+    Example structure with unfilled entry:
+        {"path.to.field": "field", "path.to.unknown": null}
+    """
+
+    def has_unfilled_entries(self) -> bool:
+        """Check if this measurement mapping contains any unfilled (None) entries."""
+        return any(value is None for value in self.root.values())
+
+
+class RawDbMapping(RootModel[dict[str, RawMeasurementMapping]]):
+    """Raw AIMC-to-InfluxDB mapping with optional unfilled entries.
+
+    Top-level mapping keyed by measurement names, where each measurement can
+    contain ``None`` values for unfilled template entries. Used to store
+    partial mappings that will be completed later.
+
+    Example structure:
+        {"measurement_name": {"path.to.field": "field", "path.to.unknown": null}}
+    """
+
+    def has_unfilled_entries(self) -> bool:
+        """Check if any measurement mapping contains unfilled (None) entries."""
+        return any(m.has_unfilled_entries() for m in self.root.values())
