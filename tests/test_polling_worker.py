@@ -77,7 +77,9 @@ def build_worker(mocker):
         mapping_handler = mocker.Mock()
         # Use a minimal mapping by default so collection can proceed unless a
         # test intentionally overrides this input.
-        mapping_handler.db_mapping = {"measurement": {"field": "path"}} if db_mapping is ... else db_mapping
+        mapping_handler.db_mapping = (
+            {"measurement": {"field": "path"}} if db_mapping is ... else db_mapping
+        )
 
         if mapper_instance is ...:
             mapper_instance = mocker.Mock()
@@ -164,10 +166,15 @@ class TestCollectInfluxPoints:
         assert result is None
         mapper_instance.map_smes_to_influx.assert_called_once()
 
-    def test_returns_payload_when_all_dependencies_available(self, build_worker, mocker):
+
+    def test_returns_payload_when_all_dependencies_available(
+        self, build_worker, mocker
+    ):
         """Test that collection returns PollingCyclePayload when all dependencies are available."""
         target_ref = mocker.Mock()
-        data_point = InfluxDataPoint(measurement="measurement1", fields={"value": 42}, tags={"source": "test"})
+        data_point = InfluxDataPoint(
+            measurement="measurement1", fields={"value": 42}, tags={"source": "test"}
+        )
         influx_points = {"measurement1": [data_point]}
 
         mapper_instance = mocker.Mock()
@@ -223,7 +230,7 @@ class TestWriteInfluxPoints:
 
         # Assert
         assert influx_client.write_data.call_count == 2
-        
+
         # Verify each call with correct arguments
         expected_calls = [
             mocker.call(
@@ -270,7 +277,10 @@ class TestWriteInfluxPoints:
         # Assert
         assert influx_client.write_data.call_count == 2
 
-    def test_logs_failure_when_write_data_returns_false(self, mocker, caplog, build_worker):
+
+    def test_logs_failure_when_write_data_returns_false(
+        self, mocker, caplog, build_worker
+    ):
         """Test that a failure is logged when write_data returns False."""
         context = build_worker()
 
@@ -388,7 +398,10 @@ class TestPollOnce:
         assert context.influx_client.write_data.called
 
     @pytest.mark.asyncio
-    async def test_poll_once_handles_mapper_exception_gracefully(self, mocker, build_worker):
+
+    async def test_poll_once_handles_mapper_exception_gracefully(
+        self, mocker, build_worker
+    ):
         """Test that _poll_once returns early when mapper raises an exception."""
         target_ref = mocker.Mock()
 
