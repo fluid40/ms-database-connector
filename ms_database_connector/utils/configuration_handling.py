@@ -1,9 +1,13 @@
-from fastapi import HTTPException, status
 import logging
 from pathlib import Path
 
 from pydantic import ValidationError
 
+from ms_database_connector.models.exceptions.configuration_errors import (
+    ConfigurationFileError,
+    ConfigurationPathError,
+    ConfigurationValidationError,
+)
 from ms_database_connector.config.server_configuration import ServerConfiguration
 from ms_database_connector.config.server_config_loader import ServerConfigLoader
 from ms_database_connector.models.constants import CONFIG_BASE_PATH
@@ -32,7 +36,7 @@ class ServerConfigurationsHandler(ServerConfigLoader):
         - AAS repository configurations from repo_server/
 
         Raises:
-            HTTPException: If configuration directory does not exist or required
+            ConfigurationError: If configuration directory does not exist or required
                 configuration files are not found.
         """
         self._aas_registry_configuration: ServerConfiguration | None = None
@@ -79,7 +83,7 @@ class ServerConfigurationsHandler(ServerConfigLoader):
         for AAS registry, Submodel registry, and AAS repositories.
 
         Raises:
-            HTTPException: If the configuration base path does not exist or is
+            ConfigurationPathError: If the configuration base path does not exist or is
                 not accessible.
         """
         config_base_path = Path(CONFIG_BASE_PATH)
@@ -88,9 +92,8 @@ class ServerConfigurationsHandler(ServerConfigLoader):
             _logger.error(
                 f"Configuration base path '{config_base_path}' not found or inaccessible."
             )
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"Configuration base path '{config_base_path}' not found.",
+            raise ConfigurationPathError(
+                f"Configuration base path '{config_base_path}' not found."
             )
 
         self._get_aas_registry_config()
@@ -104,7 +107,7 @@ class ServerConfigurationsHandler(ServerConfigLoader):
         and parses it into a ServerConfiguration object.
 
         Raises:
-            HTTPException: If configuration directory does not exist, no configuration
+            ConfigurationError: If configuration directory does not exist, no configuration
                 files are found, or the configuration file is invalid (validation error).
         """
         config_path = Path(f"{CONFIG_BASE_PATH}/aas_registry")
@@ -113,9 +116,8 @@ class ServerConfigurationsHandler(ServerConfigLoader):
             _logger.error(
                 f"AAS registry configuration path '{config_path}' not found or inaccessible."
             )
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"AAS registry configuration path '{config_path}' not found.",
+            raise ConfigurationPathError(
+                f"AAS registry configuration path '{config_path}' not found."
             )
 
         json_files = list(config_path.rglob("*.json"))
@@ -124,9 +126,8 @@ class ServerConfigurationsHandler(ServerConfigLoader):
             _logger.error(
                 f"No AAS registry configuration files found in folder '{config_path}'."
             )
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"No AAS registry configuration files found in folder '{config_path}'.",
+            raise ConfigurationFileError(
+                f"No AAS registry configuration files found in folder '{config_path}'."
             )
 
         _logger.debug(
@@ -143,10 +144,9 @@ class ServerConfigurationsHandler(ServerConfigLoader):
                 json_files[0].read_text()
             )
         except ValidationError as ve:
-            _logger.error(f"Invalid Submodel registry connection file: {ve}")
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Invalid Submodel registry connection file.",
+            _logger.error(f"Invalid AAS registry connection file: {ve}")
+            raise ConfigurationValidationError(
+                "Invalid AAS registry connection file."
             ) from ve
 
     def _get_sm_registry_config(self):
@@ -156,7 +156,7 @@ class ServerConfigurationsHandler(ServerConfigLoader):
         and parses it into a ServerConfiguration object.
 
         Raises:
-            HTTPException: If configuration directory does not exist, no configuration
+            ConfigurationError: If configuration directory does not exist, no configuration
                 files are found, or the configuration file is invalid (validation error).
         """
         config_path = Path(f"{CONFIG_BASE_PATH}/submodel_registry")
@@ -165,9 +165,8 @@ class ServerConfigurationsHandler(ServerConfigLoader):
             _logger.error(
                 f"Submodel registry configuration path '{config_path}' not found or inaccessible."
             )
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"Submodel registry configuration path '{config_path}' not found.",
+            raise ConfigurationPathError(
+                f"Submodel registry configuration path '{config_path}' not found."
             )
 
         json_files = list(config_path.rglob("*.json"))
@@ -176,9 +175,8 @@ class ServerConfigurationsHandler(ServerConfigLoader):
             _logger.error(
                 f"No Submodel registry configuration files found in folder '{config_path}'."
             )
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"No Submodel registry configuration files found in folder '{config_path}'.",
+            raise ConfigurationFileError(
+                f"No Submodel registry configuration files found in folder '{config_path}'."
             )
 
         _logger.debug(
@@ -196,9 +194,8 @@ class ServerConfigurationsHandler(ServerConfigLoader):
             )
         except ValidationError as ve:
             _logger.error(f"Invalid Submodel registry connection file: {ve}")
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Invalid Submodel registry connection file.",
+            raise ConfigurationValidationError(
+                "Invalid Submodel registry connection file."
             ) from ve
 
     def _get_repos_configs(self):
@@ -217,9 +214,8 @@ class ServerConfigurationsHandler(ServerConfigLoader):
             _logger.error(
                 f"AAS repository configuration path '{config_path}' not found or inaccessible."
             )
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"AAS repository configuration path '{config_path}' not found.",
+            raise ConfigurationPathError(
+                f"AAS repository configuration path '{config_path}' not found."
             )
 
         json_files = list(config_path.rglob("*.json"))
