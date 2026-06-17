@@ -1,0 +1,5 @@
+{
+    "MappingConfigurations[0]": {
+        "EnergyMonitoring/submodel-elements/EnergyConnection1.EnergyMeasures.TotalElectricEnergy.value": "field"
+    }
+}

@@ -1,6 +1,6 @@
 {
-    "AasId": "https://fluid40.de/ids/shell/5793_5449_7830_4223",
-    "PollingInterval": 5,
+    "AasId": "https://fluid40.de/ids/aas/9911_6092_2508_3450",
+    "PollingInterval": 2,
     "ExternalUrl": "http://127.0.0.1",
     "ExternalPort": "3088",
     "PersistDbMappingFileChanges": true,
