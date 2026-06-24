@@ -28,11 +28,11 @@ def initialize_db_connection(
         None: Returns None on error rather than raising exceptions.
     """
 
-    _logger.info("Get Influx DB password from environment variable 'RUNTIME_INFLUX_PW'")
+    _logger.info("Get Influx DB password from environment variable 'INFLUXDB_V2_TOKEN'")
     password = os.getenv("INFLUXDB_V2_TOKEN")
     if not password:
         _logger.warning(
-            "No Influx DB password provided in environment variable 'RUNTIME_INFLUX_PW'. Database interactions disabled."
+            "No Influx DB password provided in environment variable 'INFLUXDB_V2_TOKEN'. Database interactions disabled."
         )
         return None
 
