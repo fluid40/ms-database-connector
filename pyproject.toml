@@ -1,6 +1,6 @@
 [project]
 name = "ms-database-connector"
-version = "0.1.0"
+version = "0.1.1"
 description = "Fluid4.0 Microservice Database Connector"
 authors = [
     {name = "Celina Adelhardt", email = "celina.adelhardt@em.ag"}
