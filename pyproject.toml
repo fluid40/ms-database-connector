@@ -15,6 +15,10 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
+[build-system]
+requires = ["poetry-core>=1.9.0"]
+build-backend = "poetry.core.masonry.api"
+
 # Missing library stubs or py.typed marker files are ignored to avoid mypy errors.
 [[tool.mypy.overrides]]
 module = ["influxdb.*", "aas_http_client", "aas_http_client.*"]
