@@ -68,12 +68,10 @@ jobs:
       - name: Run tests
         run: poetry run pytest -v tests
 
-  docker-release:
+  release:
     name: Build Local Docker Image and Release Bundle
     needs: [detect-project-changes, run-tests]
-    if: >-
-      github.ref == 'refs/heads/main' &&
-      needs.detect-project-changes.outputs.changed == 'true'
+    if: needs.detect-project-changes.outputs.changed == 'true'
     runs-on: ubuntu-latest
 
     steps:
@@ -99,9 +97,13 @@ jobs:
           PY
           )
           GIT_HASH=$(git rev-parse --short HEAD)
+          IMAGE_TAG="ms-database-connector:${VERSION}-${GIT_HASH}"
+          ARTIFACT_NAME="dist/release.tar.gz"
 
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "hash=$GIT_HASH" >> "$GITHUB_OUTPUT"
+          echo "image_tag=$IMAGE_TAG" >> "$GITHUB_OUTPUT"
+          echo "artifact_name=$ARTIFACT_NAME" >> "$GITHUB_OUTPUT"
 
       - name: Build Docker image
         shell: bash
