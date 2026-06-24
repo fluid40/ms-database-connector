@@ -37,7 +37,6 @@ aas-standard-parser = "^0.6.4"
 basyx-python-sdk = "^2.0.1"
 fastapi-health = "^0.4.0"
 pydantic-settings = "^2.14.1"
-pydantic-core = "^2.47.0"
 
 [dependency-groups]
 dev = [
