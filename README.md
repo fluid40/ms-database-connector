@@ -37,3 +37,31 @@ When you run this service (default: `APP_HOST=127.0.0.1`, `APP_PORT=3088`), thes
 - http://127.0.0.1:3088/health
 - http://127.0.0.1:3088/aas/shells
 - http://127.0.0.1:3088/aas/registry
+
+### GitHub Release Bundle
+
+The GitHub Actions workflow builds a local Docker image and uploads a portable release bundle.
+
+The bundle contains:
+
+- `image.tar` for `docker load`
+- the `configuration/` directory next to it
+- a short usage note
+
+Typical local usage after downloading and extracting the bundle:
+
+```bash
+docker load -i image.tar
+docker run --rm -p 3090:3090 \
+	-e DBC_CONFIGURATION_FILE=/app/configuration/service_config.json \
+	ms-database-connector:0.0.1-<git-hash>
+```
+
+If you want to override the bundled configuration with a local directory, mount it into the container:
+
+```bash
+docker run --rm -p 3090:3090 \
+	-v "$(pwd)/configuration:/app/configuration" \
+	-e DBC_CONFIGURATION_FILE=/app/configuration/service_config.json \
+	ms-database-connector:0.0.1-<git-hash>
+```

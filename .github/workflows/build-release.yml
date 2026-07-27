@@ -1,0 +1,188 @@
+---
+name: Build Release
+
+on:
+  push:
+    branches:
+      - "**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  detect-project-changes:
+    name: Check for new version
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.check.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Check if pyproject.toml changed
+        id: check
+        shell: bash
+        run: |
+          if git rev-parse HEAD^ >/dev/null 2>&1; then
+            CHANGED_FILES="$(git diff --name-only HEAD^ HEAD)"
+          else
+            echo "No parent commit found, using full file list"
+            CHANGED_FILES="$(git ls-files)"
+          fi
+
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+
+          if echo "$CHANGED_FILES" | grep -q '^pyproject\.toml$'; then
+            echo "pyproject.toml changed, marking as changed"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "pyproject.toml not changed, skipping release"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  run-tests:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Poetry
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install poetry
+
+      - name: Install dependencies
+        run: poetry install --with dev --no-interaction --no-ansi
+
+      - name: Run tests
+        run: poetry run pytest -v tests
+
+  release:
+    name: Build Local Docker Image and Release Bundle
+    needs: [detect-project-changes, run-tests]
+    if: needs.detect-project-changes.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Extract version and commit hash
+        id: meta
+        shell: bash
+        run: |
+          VERSION=$(python - <<'PY'
+          import tomllib
+
+          with open('pyproject.toml', 'rb') as file_handle:
+              print(tomllib.load(file_handle)['project']['version'])
+          PY
+          )
+          GIT_HASH=$(git rev-parse --short HEAD)
+          IMAGE_TAG="ms-database-connector:${VERSION}-${GIT_HASH}"
+          ARTIFACT_NAME="dist/release.tar.gz"
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "hash=$GIT_HASH" >> "$GITHUB_OUTPUT"
+          echo "image_tag=$IMAGE_TAG" >> "$GITHUB_OUTPUT"
+          echo "artifact_name=$ARTIFACT_NAME" >> "$GITHUB_OUTPUT"
+
+      - name: Generate Changelog
+        id: changelog
+        uses: mikepenz/release-changelog-builder-action@v4
+        with:
+          configuration: .github/changelog-config.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Docker image
+        shell: bash
+        env:
+          IMAGE_TAG: ${{ steps.meta.outputs.image_tag }}
+        run: |
+          docker build \
+            --tag "$IMAGE_TAG" \
+            --tag "ms-database-connector:latest" \
+            .
+
+      - name: Create release bundle
+        shell: bash
+        env:
+          IMAGE_TAG: ${{ steps.meta.outputs.image_tag }}
+          ARTIFACT_NAME: ${{ steps.meta.outputs.artifact_name }}
+        run: |
+          mkdir -p dist/release-bundle
+          docker save "$IMAGE_TAG" -o dist/release-bundle/image.tar
+          cp -R configuration dist/release-bundle/configuration
+
+          cat > dist/release-bundle/README.txt <<EOF
+          This bundle contains the Docker image tarball and the
+          configuration directory.
+
+          Usage:
+            docker load -i image.tar
+            docker run --rm -p 3090:3090 \
+              -e DBC_CONFIGURATION_FILE=/app/configuration/service_config.json \
+              "$IMAGE_TAG"
+
+          If you want to mount the configuration from the extracted bundle
+          instead of using the copy baked into the image, run the container
+          with:
+            -v "./configuration:/app/configuration"
+          EOF
+
+          tar -czf "$ARTIFACT_NAME" -C dist/release-bundle .
+
+      - name: Create Git Tag
+        shell: bash
+        run: |
+          VERSION_TAG="v${{ steps.meta.outputs.version }}"
+          if git rev-parse "$VERSION_TAG" >/dev/null 2>&1; then
+            echo "Tag $VERSION_TAG already exists."
+          else
+            git tag "$VERSION_TAG"
+            git push origin "$VERSION_TAG"
+          fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: v${{ steps.meta.outputs.version }}
+          name: Release v${{ steps.meta.outputs.version }}
+          generate_release_notes: true
+          files: |
+            dist/release.tar.gz
+          body: |
+            Download the attached release archive to get the Docker image
+            tarball and the configuration directory side by side.
+
+            Local usage:
+
+            ```bash
+            tar -xzf release.tar.gz
+            docker load -i image.tar
+            IMAGE_TAG=ms-database-connector:0.0.1-<git-hash>
+            docker run --rm -p 3090:3090 \
+              -e DBC_CONFIGURATION_FILE=/app/configuration/service_config.json \
+              "$IMAGE_TAG"
+            ```
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

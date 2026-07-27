@@ -1,6 +1,6 @@
 [project]
 name = "ms-database-connector"
-version = "0.0.1"
+version = "0.1.1"
 description = "Fluid4.0 Microservice Database Connector"
 authors = [
     {name = "Celina Adelhardt", email = "celina.adelhardt@em.ag"}
@@ -15,6 +15,10 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
+[build-system]
+requires = ["poetry-core>=1.9.0"]
+build-backend = "poetry.core.masonry.api"
+
 # Missing library stubs or py.typed marker files are ignored to avoid mypy errors.
 [[tool.mypy.overrides]]
 module = ["influxdb.*", "aas_http_client", "aas_http_client.*"]
@@ -24,12 +28,12 @@ ignore_missing_imports = true
 pydantic = "^2.13.4"
 requests = "^2.33.1"
 influxdb = "^5.3.2"
-fastapi = "^0.136.1"
+fastapi = "^0.138.0"
 python = ">=3.11,<4.0"
 influxdb-client = ">=1.35.0"
-uvicorn = "^0.46.0"
+uvicorn = "^0.49.0"
 aas-http-client = "^1.0.11"
-aas-standard-parser = "^0.5.1"
+aas-standard-parser = "^0.6.4"
 basyx-python-sdk = "^2.0.1"
 fastapi-health = "^0.4.0"
 pydantic-settings = "^2.14.1"
