@@ -1,7 +1,7 @@
 ---
 name: Build Release
 
-'on':
+on:
   push:
     branches:
       - "**"
@@ -104,6 +104,14 @@ jobs:
           echo "hash=$GIT_HASH" >> "$GITHUB_OUTPUT"
           echo "image_tag=$IMAGE_TAG" >> "$GITHUB_OUTPUT"
           echo "artifact_name=$ARTIFACT_NAME" >> "$GITHUB_OUTPUT"
+
+      - name: Generate Changelog
+        id: changelog
+        uses: mikepenz/release-changelog-builder-action@v4
+        with:
+          configuration: .github/changelog-config.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Docker image
         shell: bash
