@@ -3,7 +3,7 @@ var searchData=
   ['data_20flow_20example_0',['Data Flow Example',['../md_docs_2mapping.html#autotoc_md43',1,'']]],
   ['data_20mapping_20processor_1',['Option 1: Configure DBC for direct integration with ms-data-mapping-processor',['../md_docs_2process.html#autotoc_md61',1,'']]],
   ['data_20visualization_20in_20influxdb_2',['Tips and Tricks for Data Visualization in InfluxDB',['../md_docs_2visualization.html',1,'']]],
-  ['database_20connector_3',['ms-database-connector',['../index.html',1,'']]],
+  ['database_20connector_3',['Microservice: Database Connector',['../index.html',1,'']]],
   ['database_20connector_20api_20development_20run_4',['Database Connector API (development run)',['../index.html#autotoc_md71',1,'']]],
   ['database_20connector_20demo_20workflow_5',['Setup for Database Connector Demo Workflow',['../md_docs_2demo.html',1,'']]],
   ['db_20connector_20with_20other_20components_6',['Interaction of ms-db-connector with other components',['../md_docs_2process.html',1,'']]],

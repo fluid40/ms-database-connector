@@ -1,7 +1,0 @@
-<map id="ms_database_connector.utils.configuration_handling.ServerConfigurationsHandler._get_repos_configs" name="ms_database_connector.utils.configuration_handling.ServerConfigurationsHandler._get_repos_configs">
-<area shape="rect" id="Node000001" title="Load all AAS repository server configurations." alt="" coords="729,5,1029,60"/>
-<area shape="rect" id="Node000002" href="$classms__database__connector_1_1utils_1_1configuration__handling_1_1ServerConfigurationsHandler.html#a0b00711788ec4428b4c33f2ee6df483b" title="Initialize configuration file loading for all server types." alt="" coords="381,5,681,60"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="715,35,682,35,682,30,715,30"/>
-<area shape="rect" id="Node000003" href="$classms__database__connector_1_1utils_1_1configuration__handling_1_1ServerConfigurationsHandler.html#a8cbef88d2372ad94e96103c4e9444f16" title="Initialize ServerConfigurationsHandler and load all configuration files." alt="" coords="5,13,333,53"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="368,35,334,35,334,30,368,30"/>
-</map>

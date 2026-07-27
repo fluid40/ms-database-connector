@@ -1,19 +1,13 @@
 <map id="ms_database_connector.core.influx_mapping.InfluxMapper.map_smes_to_influx" name="ms_database_connector.core.influx_mapping.InfluxMapper.map_smes_to_influx">
-<area shape="rect" id="Node000001" title="Create InfluxDB data points from mapped SubmodelElements." alt="" coords="5,124,256,179"/>
-<area shape="rect" id="Node000002" href="$classms__database__connector_1_1core_1_1influx__mapping_1_1InfluxMapper.html#a372d8389e2c70f7ebc1cc12641c427b6" title="Build a lookup map from sink paths to their references." alt="" coords="323,5,574,60"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="184,121,241,95,303,69,324,62,326,67,305,74,243,99,186,126"/>
-<area shape="rect" id="Node000003" href="$classms__database__connector_1_1core_1_1influx__mapping_1_1InfluxMapper.html#a247370beae520496a61e9fe3a54efb03" title="Process a single measurement and its mapped sink paths." alt="" coords="323,84,574,139"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="256,133,309,126,310,131,257,138"/>
-<area shape="rect" id="Node000008" href="$classms__database__connector_1_1core_1_1influx__mapping_1_1InfluxMapper.html#a6a9d8ce5edcbc3505dba58bb1ea31a7c" title="Validate that all target elements are accessible." alt="" coords="323,163,574,217"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="256,164,310,170,309,176,256,169"/>
-<area shape="rect" id="Node000009" href="$classms__database__connector_1_1utils_1_1mapping__handler_1_1DbMappingHandler.html#a164b5f7ab94db507c49b1416c119d1a1" title=" " alt="" coords="304,242,593,282"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="185,176,242,203,305,227,333,236,331,241,303,233,240,208,183,181"/>
-<area shape="rect" id="Node000004" href="$classms__database__connector_1_1core_1_1influx__mapping_1_1InfluxMapper.html#afa7791f1e7cae77c0980f56613196ee5" title="Retrieve a SME value and add it to the Point object." alt="" coords="641,84,892,139"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="574,109,628,109,628,114,574,114"/>
-<area shape="rect" id="Node000005" href="$classms__database__connector_1_1core_1_1influx__mapping_1_1InfluxMapper.html#a98d76ba3511d3e4908da872217487cd5" title="Assign a value to the InfluxDataPoint as field, tag, or timestamp." alt="" coords="940,44,1191,99"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="892,92,926,87,927,93,893,97"/>
-<area shape="rect" id="Node000007" href="$classms__database__connector_1_1core_1_1influx__mapping_1_1InfluxMapper.html#a832e53f47ce860bb05561935483e4001" title="Retrieve the value from a SubmodelElement." alt="" coords="940,123,1191,177"/>
-<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="893,125,927,129,926,135,892,130"/>
-<area shape="rect" id="Node000006" href="$classms__database__connector_1_1core_1_1influx__mapping_1_1InfluxMapper.html#ab490af941c4b10e1aa4f6c382136b1c3" title="Convert different timestamp formats to ISO 8601 format." alt="" coords="1239,44,1489,99"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="1191,69,1225,69,1225,74,1191,74"/>
+<area shape="rect" id="Node000001" title="Create InfluxDB data points from mapped SubmodelElements." alt="" coords="5,80,256,135"/>
+<area shape="rect" id="Node000002" href="$classms__database__connector_1_1core_1_1influx__mapping_1_1InfluxMapper.html#a247370beae520496a61e9fe3a54efb03" title="Process a single measurement and its mapped sink paths." alt="" coords="323,44,574,99"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="256,91,309,84,310,90,256,96"/>
+<area shape="rect" id="Node000006" href="$classms__database__connector_1_1utils_1_1mapping__handler_1_1DbMappingHandler.html#a164b5f7ab94db507c49b1416c119d1a1" title=" " alt="" coords="304,123,593,163"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="256,119,291,123,290,128,256,124"/>
+<area shape="rect" id="Node000003" href="$classms__database__connector_1_1core_1_1influx__mapping_1_1InfluxMapper.html#afa7791f1e7cae77c0980f56613196ee5" title="Retrieve a SME value and add it to the Point object." alt="" coords="641,5,892,60"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="574,53,627,47,628,52,574,59"/>
+<area shape="rect" id="Node000005" href="$classms__database__connector_1_1core_1_1influx__mapping_1_1InfluxMapper.html#a832e53f47ce860bb05561935483e4001" title="Retrieve the value from a SubmodelElement." alt="" coords="641,84,892,139"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="575,84,628,91,627,97,574,90"/>
+<area shape="rect" id="Node000004" href="$classms__database__connector_1_1core_1_1influx__mapping_1_1InfluxMapper.html#a98d76ba3511d3e4908da872217487cd5" title="Assign a value to the InfluxDataPoint as field, tag, or timestamp." alt="" coords="940,5,1191,60"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="892,30,926,30,926,35,892,35"/>
 </map>

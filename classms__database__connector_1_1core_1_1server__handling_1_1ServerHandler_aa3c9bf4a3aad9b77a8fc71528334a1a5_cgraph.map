@@ -1,13 +1,7 @@
 <map id="ms_database_connector.core.server_handling.ServerHandler.connect_to_server" name="ms_database_connector.core.server_handling.ServerHandler.connect_to_server">
-<area shape="rect" id="Node000001" title="Initialize all configured registry clients and repository wrappers." alt="" coords="5,84,261,139"/>
-<area shape="rect" id="Node000002" href="$classms__database__connector_1_1core_1_1server__handling_1_1ServerHandler.html#a89d65e48026434ee18bca41921ed1887" title="Create and store the AAS registry client." alt="" coords="309,5,565,60"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="239,81,317,61,319,66,240,87"/>
-<area shape="rect" id="Node000004" href="$classms__database__connector_1_1core_1_1server__handling_1_1ServerHandler.html#af1b10255c7b579ee36be438c56db18fc" title="Create and cache wrappers for configured repository servers." alt="" coords="309,84,565,139"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="262,109,296,109,296,114,262,114"/>
-<area shape="rect" id="Node000005" href="$classms__database__connector_1_1core_1_1server__handling_1_1ServerHandler.html#ab55b854c91c5ba62e8ecaeef8b252b34" title="Create and store the Submodel registry client." alt="" coords="309,163,565,217"/>
-<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="240,136,319,157,317,162,239,141"/>
-<area shape="rect" id="Node000003" href="$namespacems__database__connector_1_1core_1_1server__handling.html#afd67e9d96c090023ed685d99b1f51468" title="Create an AAS SDK wrapper from server configuration and secret." alt="" coords="613,91,869,131"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="544,57,651,85,649,90,543,63"/>
-<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="566,109,600,109,600,114,566,114"/>
-<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="543,160,649,132,651,137,544,165"/>
+<area shape="rect" id="Node000001" title="Initialize all configured registry clients and repository wrappers." alt="" coords="5,5,261,60"/>
+<area shape="rect" id="Node000002" href="$classms__database__connector_1_1core_1_1server__handling_1_1ServerHandler.html#af1b10255c7b579ee36be438c56db18fc" title="Create and cache wrappers for configured repository servers." alt="" coords="309,5,565,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="262,30,296,30,296,35,262,35"/>
+<area shape="rect" id="Node000003" href="$namespacems__database__connector_1_1core_1_1server__handling.html#afd67e9d96c090023ed685d99b1f51468" title="Create an AAS SDK wrapper from server configuration and secret." alt="" coords="613,13,869,53"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="566,30,600,30,600,35,566,35"/>
 </map>

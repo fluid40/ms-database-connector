@@ -1,5 +1,0 @@
-<map id="test_polling_worker.TestCollectInfluxPoints.test_returns_none_when_db_mapping_missing" name="test_polling_worker.TestCollectInfluxPoints.test_returns_none_when_db_mapping_missing">
-<area shape="rect" id="Node000001" title="Test that collection returns None when DB mapping is unavailable." alt="" coords="5,5,248,75"/>
-<area shape="rect" id="Node000002" href="$namespacetest__polling__worker.html#a309e77a8b38f219dafb3b39a648341fe" title="Create a configurable PollingWorker test context." alt="" coords="296,20,480,60"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="248,37,282,37,282,43,248,43"/>
-</map>

@@ -1,9 +1,7 @@
 <map id="ms_database_connector.utils.mapping_handler.DbMappingHandler._persist_db_mapping" name="ms_database_connector.utils.mapping_handler.DbMappingHandler._persist_db_mapping">
-<area shape="rect" id="Node000001" title="Persist a DB mapping structure to disk as formatted JSON." alt="" coords="325,84,597,139"/>
-<area shape="rect" id="Node000002" href="$classms__database__connector_1_1utils_1_1mapping__handler_1_1DbMappingHandler.html#afa9e45da293bda54ebea12d048972d98" title="Create and persist an unfilled DB mapping template." alt="" coords="5,5,277,60"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="336,83,253,63,254,58,337,78"/>
-<area shape="rect" id="Node000003" href="$classms__database__connector_1_1utils_1_1mapping__handler_1_1DbMappingHandler.html#aa131a774c420253b7b3f8ce8398205fc" title="Store and persist a validated db mapping." alt="" coords="5,84,277,139"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="311,114,278,114,278,109,311,109"/>
-<area shape="rect" id="Node000004" href="$classms__database__connector_1_1utils_1_1mapping__handler_1_1DbMappingHandler.html#a5d32b8eae2d33cb175af8b43e7278c45" title="Validate if raw DB mapping is complete and update typed mapping." alt="" coords="5,163,277,217"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="337,145,254,165,253,160,336,139"/>
+<area shape="rect" id="Node000001" title="Persist a DB mapping structure to disk as formatted JSON." alt="" coords="325,45,597,100"/>
+<area shape="rect" id="Node000002" href="$classms__database__connector_1_1utils_1_1mapping__handler_1_1DbMappingHandler.html#aa131a774c420253b7b3f8ce8398205fc" title="Store and persist a validated db mapping." alt="" coords="5,5,277,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="311,57,277,52,278,47,312,51"/>
+<area shape="rect" id="Node000003" href="$classms__database__connector_1_1utils_1_1mapping__handler_1_1DbMappingHandler.html#a5d32b8eae2d33cb175af8b43e7278c45" title="Validate if raw DB mapping is complete and update typed mapping." alt="" coords="5,84,277,139"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="312,93,278,98,277,92,311,88"/>
 </map>

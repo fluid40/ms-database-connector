@@ -39,7 +39,7 @@ var searchData=
   ['connection_20failed_20set_20influxdb_5fv2_5ftoken_20and_20ensure_20server_20reachability_20tt_36',['6) &lt;tt&gt;InfluxDB connection failed. Set INFLUXDB_V2_TOKEN and ensure server reachability.&lt;/tt&gt;',['../md_docs_2configuration.html#autotoc_md24',1,'']]],
   ['connection_20file_20tt_20tt_20invalid_20submodel_20registry_20connection_20file_20tt_37',['5) &lt;tt&gt;Invalid AAS registry connection file.&lt;/tt&gt; / &lt;tt&gt;Invalid Submodel registry connection file.&lt;/tt&gt;',['../md_docs_2configuration.html#autotoc_md23',1,'']]],
   ['connection_5ftime_5fout_38',['connection_time_out',['../classms__database__connector_1_1services_1_1influx__v2__service_1_1InfluxV2Client.html#aeb0d2fde6e9e057f10ef49c737010963',1,'ms_database_connector::services::influx_v2_service::InfluxV2Client']]],
-  ['connector_39',['ms-database-connector',['../index.html',1,'']]],
+  ['connector_39',['Microservice: Database Connector',['../index.html',1,'']]],
   ['connector_20api_20development_20run_40',['Database Connector API (development run)',['../index.html#autotoc_md71',1,'']]],
   ['connector_20demo_20workflow_41',['Setup for Database Connector Demo Workflow',['../md_docs_2demo.html',1,'']]],
   ['connector_20with_20other_20components_42',['Interaction of ms-db-connector with other components',['../md_docs_2process.html',1,'']]],

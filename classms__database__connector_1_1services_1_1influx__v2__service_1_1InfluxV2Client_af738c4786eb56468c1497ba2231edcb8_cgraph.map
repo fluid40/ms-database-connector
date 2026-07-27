@@ -1,7 +1,5 @@
 <map id="ms_database_connector.services.influx_v2_service.InfluxV2Client.write_data" name="ms_database_connector.services.influx_v2_service.InfluxV2Client.write_data">
-<area shape="rect" id="Node000001" title="Write data point to InfluxDB." alt="" coords="5,49,283,89"/>
-<area shape="rect" id="Node000002" href="$classms__database__connector_1_1services_1_1influx__v2__service_1_1InfluxV2Client.html#aae1f5bf613e2555fe40316d329982ca9" title="Validate measurement names to prevent high&#45;cardinality series creation." alt="" coords="331,5,608,60"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="283,51,316,47,317,52,283,56"/>
-<area shape="rect" id="Node000003" href="$classms__database__connector_1_1services_1_1influx__v2__service_1_1InfluxV2Client.html#a1b537e7b10f7f42485c5c247f4751bc6" title="Write a pre&#45;built Point object directly to InfluxDB." alt="" coords="331,85,608,125"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="283,81,317,85,316,90,283,87"/>
+<area shape="rect" id="Node000001" title="Write data point to InfluxDB." alt="" coords="5,5,283,45"/>
+<area shape="rect" id="Node000002" href="$classms__database__connector_1_1services_1_1influx__v2__service_1_1InfluxV2Client.html#a1b537e7b10f7f42485c5c247f4751bc6" title="Write a pre&#45;built Point object directly to InfluxDB." alt="" coords="331,5,608,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="283,23,317,23,317,28,283,28"/>
 </map>

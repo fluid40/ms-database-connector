@@ -1,0 +1,5 @@
+<map id="ms_database_connector.__main__.PollingWorker.write_influx_points" name="ms_database_connector.__main__.PollingWorker.write_influx_points">
+<area shape="rect" id="Node000001" title="Persist a prepared set of InfluxDB points for one polling cycle." alt="" coords="5,5,217,60"/>
+<area shape="rect" id="Node000002" href="$namespacems__database__connector_1_1____main____.html#ac65fab42643b046720bb338f5a7b36b4" title="Initialize application startup state tracking." alt="" coords="265,13,473,53"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="218,30,251,30,251,35,218,35"/>
+</map>

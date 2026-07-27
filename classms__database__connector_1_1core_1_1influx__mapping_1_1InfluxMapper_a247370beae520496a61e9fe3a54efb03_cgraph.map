@@ -1,11 +1,9 @@
 <map id="ms_database_connector.core.influx_mapping.InfluxMapper._process_measurement" name="ms_database_connector.core.influx_mapping.InfluxMapper._process_measurement">
 <area shape="rect" id="Node000001" title="Process a single measurement and its mapped sink paths." alt="" coords="5,45,256,100"/>
-<area shape="rect" id="Node000002" href="$classms__database__connector_1_1core_1_1influx__mapping_1_1InfluxMapper.html#afa7791f1e7cae77c0980f56613196ee5" title="Retrieve a SME value and add it to the Point object." alt="" coords="304,45,555,100"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="256,70,290,70,290,75,256,75"/>
+<area shape="rect" id="Node000002" href="$classms__database__connector_1_1core_1_1influx__mapping_1_1InfluxMapper.html#afa7791f1e7cae77c0980f56613196ee5" title="Retrieve a SME value and add it to the Point object." alt="" coords="304,5,555,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="256,53,290,49,291,54,257,59"/>
+<area shape="rect" id="Node000004" href="$classms__database__connector_1_1core_1_1influx__mapping_1_1InfluxMapper.html#a832e53f47ce860bb05561935483e4001" title="Retrieve the value from a SubmodelElement." alt="" coords="304,84,555,139"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="257,86,291,91,290,96,256,92"/>
 <area shape="rect" id="Node000003" href="$classms__database__connector_1_1core_1_1influx__mapping_1_1InfluxMapper.html#a98d76ba3511d3e4908da872217487cd5" title="Assign a value to the InfluxDataPoint as field, tag, or timestamp." alt="" coords="603,5,853,60"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="555,53,589,49,589,54,555,59"/>
-<area shape="rect" id="Node000005" href="$classms__database__connector_1_1core_1_1influx__mapping_1_1InfluxMapper.html#a832e53f47ce860bb05561935483e4001" title="Retrieve the value from a SubmodelElement." alt="" coords="603,84,853,139"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="555,86,589,91,589,96,555,92"/>
-<area shape="rect" id="Node000004" href="$classms__database__connector_1_1core_1_1influx__mapping_1_1InfluxMapper.html#ab490af941c4b10e1aa4f6c382136b1c3" title="Convert different timestamp formats to ISO 8601 format." alt="" coords="901,5,1152,60"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="854,30,887,30,887,35,854,35"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="555,30,589,30,589,35,555,35"/>
 </map>

@@ -1,5 +1,9 @@
 <map id="ms_database_connector.__main__._init_startup_state" name="ms_database_connector.__main__._init_startup_state">
-<area shape="rect" id="Node000001" title="Initialize application startup state tracking." alt="" coords="236,5,444,45"/>
-<area shape="rect" id="Node000002" href="$namespacems__database__connector_1_1____main____.html#acddc54ec800068c118719bfdaff112ab" title="Lifespan function for the FastAPI application." alt="" coords="5,5,188,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="222,28,188,28,188,23,222,23"/>
+<area shape="rect" id="Node000001" title="Initialize application startup state tracking." alt="" coords="751,13,959,53"/>
+<area shape="rect" id="Node000002" href="$classms__database__connector_1_1____main_____1_1PollingWorker.html#a78b3dd07cc2549a85b0034defef9d457" title="Persist a prepared set of InfluxDB points for one polling cycle." alt="" coords="491,5,703,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="737,35,703,35,703,30,737,30"/>
+<area shape="rect" id="Node000003" href="$classms__database__connector_1_1____main_____1_1PollingWorker.html#ae9b7c889967bb00b3800d62a03f33941" title="Main polling loop." alt="" coords="236,13,443,53"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="477,35,443,35,443,30,477,30"/>
+<area shape="rect" id="Node000004" href="$classms__database__connector_1_1____main_____1_1PollingWorker.html#a166365bacaca0b37745e946af2675cc0" title=" " alt="" coords="5,5,188,60"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="222,35,188,35,188,30,222,30"/>
 </map>

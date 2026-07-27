@@ -1,5 +1,0 @@
-<map id="ms_database_connector.__main__.lifespan" name="ms_database_connector.__main__.lifespan">
-<area shape="rect" id="Node000001" title="Lifespan function for the FastAPI application." alt="" coords="5,5,188,45"/>
-<area shape="rect" id="Node000002" href="$namespacems__database__connector_1_1____main____.html#ac65fab42643b046720bb338f5a7b36b4" title="Initialize application startup state tracking." alt="" coords="236,5,444,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="188,23,222,23,222,28,188,28"/>
-</map>

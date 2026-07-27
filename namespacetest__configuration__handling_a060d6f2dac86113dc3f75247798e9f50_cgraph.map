@@ -1,5 +1,7 @@
 <map id="test_configuration_handling.test_raises_path_error_when_aas_registry_directory_missing" name="test_configuration_handling.test_raises_path_error_when_aas_registry_directory_missing">
-<area shape="rect" id="Node000001" title="Raise a path error when aas_registry directory does not exist." alt="" coords="5,5,231,75"/>
-<area shape="rect" id="Node000002" href="$namespacetest__configuration__handling.html#a04644a6fa21802e498ecc9f4cfff4ead" title="Create the required configuration directory structure." alt="" coords="279,20,517,60"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="231,37,265,37,265,43,231,43"/>
+<area shape="rect" id="Node000001" title="Raise a path error when aas_registry directory does not exist." alt="" coords="5,23,231,92"/>
+<area shape="rect" id="Node000002" href="$namespacetest__configuration__handling.html#a04644a6fa21802e498ecc9f4cfff4ead" title="Create the required configuration directory structure." alt="" coords="279,5,517,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="231,42,265,38,265,43,231,47"/>
+<area shape="rect" id="Node000003" href="$namespacetest__configuration__handling.html#a614e5048bfcd6a3b32de1bdb954c7fa2" title="Write a JSON payload to disk." alt="" coords="317,69,479,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="231,68,303,76,303,81,231,73"/>
 </map>

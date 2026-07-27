@@ -1,9 +1,0 @@
-<map id="ms_database_connector.utils.configuration_handling.ServerConfigurationsHandler._get_config_files" name="ms_database_connector.utils.configuration_handling.ServerConfigurationsHandler._get_config_files">
-<area shape="rect" id="Node000001" title="Initialize configuration file loading for all server types." alt="" coords="5,84,305,139"/>
-<area shape="rect" id="Node000002" href="$classms__database__connector_1_1utils_1_1configuration__handling_1_1ServerConfigurationsHandler.html#a55d495dc0630f6a36a24ec169124c0e7" title="Load and validate AAS registry server configuration." alt="" coords="353,5,653,60"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="276,81,368,61,369,66,278,87"/>
-<area shape="rect" id="Node000003" href="$classms__database__connector_1_1utils_1_1configuration__handling_1_1ServerConfigurationsHandler.html#aece0ea6ae49a61a673db539bc80292f2" title="Load all AAS repository server configurations." alt="" coords="353,84,653,139"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="306,109,339,109,339,114,306,114"/>
-<area shape="rect" id="Node000004" href="$classms__database__connector_1_1utils_1_1configuration__handling_1_1ServerConfigurationsHandler.html#ac266bd18842f1a450762025aa1c42098" title="Load and validate Submodel registry server configuration." alt="" coords="353,163,653,217"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="278,136,369,157,368,162,276,141"/>
-</map>

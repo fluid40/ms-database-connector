@@ -46,9 +46,9 @@
   </g>
 </defs>
 <script type="application/ecmascript">
-var viewWidth = 539;
+var viewWidth = 558;
 var viewHeight = 108;
-var sectionId = 'dynsection-2';
+var sectionId = 'dynsection-1';
 </script>
 <script type="application/ecmascript" xlink:href="svg.min.js"/>
 <svg id="graph" class="graph">
@@ -67,11 +67,11 @@ var sectionId = 'dynsection-2';
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="classms__database__connector_1_1____main_____1_1PollingWorker.html#af7c38f98f90895538e22a56796472558" target="_top" xlink:title="Execute a single polling cycle.">
-<polygon fill="white" stroke="#666666" points="328,-70 191,-70 191,-29 328,-29 328,-70"/>
-<text text-anchor="start" x="199" y="-58" font-family="Helvetica,sans-Serif" font-size="10.00">ms_database_connector.</text>
-<text text-anchor="start" x="199" y="-47" font-family="Helvetica,sans-Serif" font-size="10.00">__main__.PollingWorker.</text>
-<text text-anchor="middle" x="259.5" y="-36" font-family="Helvetica,sans-Serif" font-size="10.00">_poll_once</text>
+<g id="a_Node000002"><a xlink:href="classms__database__connector_1_1____main_____1_1PollingWorker.html#a8ecba1a2300fba67b48e8ed37e99fc8e" target="_top" xlink:title="Collect mapped InfluxDB points required for one polling cycle.">
+<polygon fill="white" stroke="#666666" points="358,-100 191,-100 191,-59 358,-59 358,-100"/>
+<text text-anchor="start" x="199" y="-88" font-family="Helvetica,sans-Serif" font-size="10.00">ms_database_connector.</text>
+<text text-anchor="start" x="199" y="-77" font-family="Helvetica,sans-Serif" font-size="10.00">__main__.PollingWorker.collect</text>
+<text text-anchor="middle" x="274.5" y="-66" font-family="Helvetica,sans-Serif" font-size="10.00">_influx_points</text>
 </a>
 </g>
 </g>
@@ -79,48 +79,47 @@ var sectionId = 'dynsection-2';
 <g id="edge1_Node000001_Node000002" class="edge">
 <title>Node1&#45;&gt;Node2</title>
 <g id="a_edge1_Node000001_Node000002"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M155.1,-49.5C163.53,-49.5 172.13,-49.5 180.58,-49.5"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="180.8,-53 190.8,-49.5 180.8,-46 180.8,-53"/>
+<path fill="none" stroke="#63b8ff" d="M155.01,-61.27C163.45,-62.57 172.1,-63.9 180.71,-65.22"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="180.36,-68.71 190.77,-66.77 181.42,-61.79 180.36,-68.71"/>
 </a>
 </g>
 </g>
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="classms__database__connector_1_1____main_____1_1PollingWorker.html#a8ecba1a2300fba67b48e8ed37e99fc8e" target="_top" xlink:title="Collect mapped InfluxDB points required for one polling cycle.">
-<polygon fill="white" stroke="#666666" points="531,-100 364,-100 364,-59 531,-59 531,-100"/>
-<text text-anchor="start" x="372" y="-88" font-family="Helvetica,sans-Serif" font-size="10.00">ms_database_connector.</text>
-<text text-anchor="start" x="372" y="-77" font-family="Helvetica,sans-Serif" font-size="10.00">__main__.PollingWorker.collect</text>
-<text text-anchor="middle" x="447.5" y="-66" font-family="Helvetica,sans-Serif" font-size="10.00">_influx_points</text>
+<g id="a_Node000003"><a xlink:href="classms__database__connector_1_1____main_____1_1PollingWorker.html#a78b3dd07cc2549a85b0034defef9d457" target="_top" xlink:title="Persist a prepared set of InfluxDB points for one polling cycle.">
+<polygon fill="white" stroke="#666666" points="354,-41 195,-41 195,0 354,0 354,-41"/>
+<text text-anchor="start" x="203" y="-29" font-family="Helvetica,sans-Serif" font-size="10.00">ms_database_connector.</text>
+<text text-anchor="start" x="203" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">__main__.PollingWorker.write</text>
+<text text-anchor="middle" x="274.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">_influx_points</text>
 </a>
 </g>
 </g>
-<!-- Node2&#45;&gt;Node3 -->
-<g id="edge2_Node000002_Node000003" class="edge">
-<title>Node2&#45;&gt;Node3</title>
-<g id="a_edge2_Node000002_Node000003"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M328.18,-60.42C336.54,-61.76 345.2,-63.16 353.85,-64.56"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="353.56,-68.05 363.99,-66.19 354.67,-61.14 353.56,-68.05"/>
+<!-- Node1&#45;&gt;Node3 -->
+<g id="edge2_Node000001_Node000003" class="edge">
+<title>Node1&#45;&gt;Node3</title>
+<g id="a_edge2_Node000001_Node000003"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M155.01,-38.12C164.85,-36.66 175,-35.15 185.01,-33.66"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="185.59,-37.11 194.97,-32.18 184.56,-30.19 185.59,-37.11"/>
 </a>
 </g>
 </g>
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="classms__database__connector_1_1____main_____1_1PollingWorker.html#a78b3dd07cc2549a85b0034defef9d457" target="_top" xlink:title="Persist a prepared set of InfluxDB points for one polling cycle.">
-<polygon fill="white" stroke="#666666" points="527,-41 368,-41 368,0 527,0 527,-41"/>
-<text text-anchor="start" x="376" y="-29" font-family="Helvetica,sans-Serif" font-size="10.00">ms_database_connector.</text>
-<text text-anchor="start" x="376" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">__main__.PollingWorker.write</text>
-<text text-anchor="middle" x="447.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">_influx_points</text>
+<g id="a_Node000004"><a xlink:href="namespacems__database__connector_1_1____main____.html#ac65fab42643b046720bb338f5a7b36b4" target="_top" xlink:title="Initialize application startup state tracking.">
+<polygon fill="white" stroke="#666666" points="550,-35.5 394,-35.5 394,-5.5 550,-5.5 550,-35.5"/>
+<text text-anchor="start" x="402" y="-23.5" font-family="Helvetica,sans-Serif" font-size="10.00">ms_database_connector.</text>
+<text text-anchor="middle" x="472" y="-12.5" font-family="Helvetica,sans-Serif" font-size="10.00">__main__._init_startup_state</text>
 </a>
 </g>
 </g>
-<!-- Node2&#45;&gt;Node4 -->
-<g id="edge3_Node000002_Node000004" class="edge">
-<title>Node2&#45;&gt;Node4</title>
-<g id="a_edge3_Node000002_Node000004"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M328.18,-38.95C337.84,-37.44 347.89,-35.87 357.88,-34.32"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="358.48,-37.77 367.83,-32.77 357.41,-30.85 358.48,-37.77"/>
+<!-- Node3&#45;&gt;Node4 -->
+<g id="edge3_Node000003_Node000004" class="edge">
+<title>Node3&#45;&gt;Node4</title>
+<g id="a_edge3_Node000003_Node000004"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M354.17,-20.5C363.86,-20.5 373.8,-20.5 383.61,-20.5"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="383.76,-24 393.76,-20.5 383.76,-17 383.76,-24"/>
 </a>
 </g>
 </g>

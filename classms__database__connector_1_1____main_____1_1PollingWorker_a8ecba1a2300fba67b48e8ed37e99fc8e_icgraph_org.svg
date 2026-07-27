@@ -22,11 +22,10 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="classms__database__connector_1_1____main_____1_1PollingWorker.html#af7c38f98f90895538e22a56796472558" target="_top" xlink:title="Execute a single polling cycle.">
-<polygon fill="white" stroke="#666666" points="328,-41 191,-41 191,0 328,0 328,-41"/>
-<text text-anchor="start" x="199" y="-29" font-family="Helvetica,sans-Serif" font-size="10.00">ms_database_connector.</text>
-<text text-anchor="start" x="199" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">__main__.PollingWorker.</text>
-<text text-anchor="middle" x="259.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">_poll_once</text>
+<g id="a_Node000002"><a xlink:href="classms__database__connector_1_1____main_____1_1PollingWorker.html#ae9b7c889967bb00b3800d62a03f33941" target="_top" xlink:title="Main polling loop.">
+<polygon fill="white" stroke="#666666" points="328,-35.5 173,-35.5 173,-5.5 328,-5.5 328,-35.5"/>
+<text text-anchor="start" x="181" y="-23.5" font-family="Helvetica,sans-Serif" font-size="10.00">ms_database_connector.</text>
+<text text-anchor="middle" x="250.5" y="-12.5" font-family="Helvetica,sans-Serif" font-size="10.00">__main__.PollingWorker._run</text>
 </a>
 </g>
 </g>
@@ -34,18 +33,19 @@
 <g id="edge1_Node000001_Node000002" class="edge">
 <title>Node1&#45;&gt;Node2</title>
 <g id="a_edge1_Node000001_Node000002"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M353.73,-20.5C345.1,-20.5 336.48,-20.5 328.14,-20.5"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="353.83,-24 363.83,-20.5 353.83,-17 353.83,-24"/>
+<path fill="none" stroke="#63b8ff" d="M353.76,-20.5C345.18,-20.5 336.54,-20.5 328.13,-20.5"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="353.8,-24 363.8,-20.5 353.8,-17 353.8,-24"/>
 </a>
 </g>
 </g>
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="classms__database__connector_1_1____main_____1_1PollingWorker.html#ae9b7c889967bb00b3800d62a03f33941" target="_top" xlink:title="Main polling loop.">
-<polygon fill="white" stroke="#666666" points="155,-35.5 0,-35.5 0,-5.5 155,-5.5 155,-35.5"/>
-<text text-anchor="start" x="8" y="-23.5" font-family="Helvetica,sans-Serif" font-size="10.00">ms_database_connector.</text>
-<text text-anchor="middle" x="77.5" y="-12.5" font-family="Helvetica,sans-Serif" font-size="10.00">__main__.PollingWorker._run</text>
+<g id="a_Node000003"><a xlink:href="classms__database__connector_1_1____main_____1_1PollingWorker.html#a166365bacaca0b37745e946af2675cc0" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#666666" points="137,-41 0,-41 0,0 137,0 137,-41"/>
+<text text-anchor="start" x="8" y="-29" font-family="Helvetica,sans-Serif" font-size="10.00">ms_database_connector.</text>
+<text text-anchor="start" x="8" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">__main__.PollingWorker.</text>
+<text text-anchor="middle" x="68.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">__init__</text>
 </a>
 </g>
 </g>
@@ -53,8 +53,8 @@
 <g id="edge2_Node000002_Node000003" class="edge">
 <title>Node2&#45;&gt;Node3</title>
 <g id="a_edge2_Node000002_Node000003"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M180.73,-20.5C172.26,-20.5 163.64,-20.5 155.19,-20.5"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="180.96,-24 190.96,-20.5 180.96,-17 180.96,-24"/>
+<path fill="none" stroke="#63b8ff" d="M162.84,-20.5C154.23,-20.5 145.58,-20.5 137.2,-20.5"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="162.9,-24 172.9,-20.5 162.9,-17 162.9,-24"/>
 </a>
 </g>
 </g>

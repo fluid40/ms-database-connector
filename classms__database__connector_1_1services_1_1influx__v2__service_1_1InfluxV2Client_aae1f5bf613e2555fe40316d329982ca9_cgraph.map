@@ -1,0 +1,4 @@
+<map id="ms_database_connector.services.influx_v2_service.InfluxV2Client._is_valid_measurement_name" name="ms_database_connector.services.influx_v2_service.InfluxV2Client._is_valid_measurement_name">
+<area shape="rect" id="Node000001" title="Validate measurement names to prevent high&#45;cardinality series creation." alt="" coords="5,29,283,84"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="90,29,91,19,100,10,118,5,144,3,175,6,193,14,191,18,174,11,144,8,119,10,103,15,96,21,96,29"/>
+</map>

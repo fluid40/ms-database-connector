@@ -153,8 +153,6 @@ Protected Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="____main_____8py_source.html#l00231">231</a> of file <a class="el" href="____main_____8py_source.html">__main__.py</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a166365bacaca0b37745e946af2675cc0" name="a166365bacaca0b37745e946af2675cc0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a166365bacaca0b37745e946af2675cc0">&#9670;&#160;</a></span>__init__()</h2>
@@ -199,8 +197,11 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="____main_____8py_source.html#l00233">233</a> of file <a class="el" href="____main_____8py_source.html">__main__.py</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classms__database__connector_1_1____main_____1_1PollingWorker_a166365bacaca0b37745e946af2675cc0_cgraph.svg" width="100%" height="408"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+</div>
 
 </div>
 </div>
@@ -234,18 +235,6 @@ Protected Attributes</h2></td></tr>
    startup to collect and persist SME values. Target SME references are
    retrieved from the app state.
 </pre> 
-<p class="definition">Definition at line <a class="el" href="____main_____8py_source.html#l00291">291</a> of file <a class="el" href="____main_____8py_source.html">__main__.py</a>.</p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classms__database__connector_1_1____main_____1_1PollingWorker_af7c38f98f90895538e22a56796472558_cgraph.svg" width="464" height="144"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classms__database__connector_1_1____main_____1_1PollingWorker_af7c38f98f90895538e22a56796472558_icgraph.svg" width="448" height="66"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-
 </div>
 </div>
 <a id="ae9b7c889967bb00b3800d62a03f33941" name="ae9b7c889967bb00b3800d62a03f33941"></a>
@@ -276,12 +265,15 @@ Here is the caller graph for this function:</div>
 <pre class="fragment">   On each cycle the worker uses the AAS server handler and InfluxDB
    client established during startup. AAS and AIMC metadata are preloaded
    once at startup via _preload_aas_metadata and are not re-fetched here.
-</pre> 
-<p class="definition">Definition at line <a class="el" href="____main_____8py_source.html#l00269">269</a> of file <a class="el" href="____main_____8py_source.html">__main__.py</a>.</p>
-<div class="dynheader">
+</pre> <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classms__database__connector_1_1____main_____1_1PollingWorker_ae9b7c889967bb00b3800d62a03f33941_cgraph.svg" width="100%" height="408"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classms__database__connector_1_1____main_____1_1PollingWorker_ae9b7c889967bb00b3800d62a03f33941_icgraph.svg" width="448" height="66"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -306,8 +298,6 @@ Here is the call graph for this function:</div>
 <pre class="fragment">   Reads current runtime dependencies and target references, then maps
    SMEs to InfluxDB points that are ready for persistence.
 </pre> <dl class="section return"><dt>Returns</dt><dd>PollingCyclePayload | None: Collection result containing the initialized InfluxDB client and mapped points, or None if required prerequisites are unavailable or mapping fails. </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="____main_____8py_source.html#l00318">318</a> of file <a class="el" href="____main_____8py_source.html">__main__.py</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -334,8 +324,6 @@ Here is the caller graph for this function:</div>
 
 <p>Schedule the polling loop as an asyncio background task. </p>
 
-<p class="definition">Definition at line <a class="el" href="____main_____8py_source.html#l00248">248</a> of file <a class="el" href="____main_____8py_source.html">__main__.py</a>.</p>
-
 </div>
 </div>
 <a id="a4b4a9a5afc548c012a38886b13bd7c07" name="a4b4a9a5afc548c012a38886b13bd7c07"></a>
@@ -355,8 +343,6 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p>Signal the polling loop to stop and await its completion. </p>
-
-<p class="definition">Definition at line <a class="el" href="____main_____8py_source.html#l00254">254</a> of file <a class="el" href="____main_____8py_source.html">__main__.py</a>.</p>
 
 </div>
 </div>
@@ -400,8 +386,11 @@ Here is the caller graph for this function:</div>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="____main_____8py_source.html#l00360">360</a> of file <a class="el" href="____main_____8py_source.html">__main__.py</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classms__database__connector_1_1____main_____1_1PollingWorker_a78b3dd07cc2549a85b0034defef9d457_cgraph.svg" width="479" height="66"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -431,8 +420,6 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="____main_____8py_source.html#l00240">240</a> of file <a class="el" href="____main_____8py_source.html">__main__.py</a>.</p>
-
 </div>
 </div>
 <a id="a1b7ae905cd2c9f345952145b6201e652" name="a1b7ae905cd2c9f345952145b6201e652"></a>
@@ -454,8 +441,6 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="____main_____8py_source.html#l00242">242</a> of file <a class="el" href="____main_____8py_source.html">__main__.py</a>.</p>
 
 </div>
 </div>
@@ -479,8 +464,6 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="____main_____8py_source.html#l00243">243</a> of file <a class="el" href="____main_____8py_source.html">__main__.py</a>.</p>
-
 </div>
 </div>
 <a id="a8f2f4a8375f3507cb5a26d0f03219f08" name="a8f2f4a8375f3507cb5a26d0f03219f08"></a>
@@ -502,8 +485,6 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="____main_____8py_source.html#l00241">241</a> of file <a class="el" href="____main_____8py_source.html">__main__.py</a>.</p>
 
 </div>
 </div>
@@ -527,8 +508,6 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="____main_____8py_source.html#l00245">245</a> of file <a class="el" href="____main_____8py_source.html">__main__.py</a>.</p>
-
 </div>
 </div>
 <a id="afb7771ea0d03a858f0d9f124c3a47c34" name="afb7771ea0d03a858f0d9f124c3a47c34"></a>
@@ -551,12 +530,10 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="____main_____8py_source.html#l00250">250</a> of file <a class="el" href="____main_____8py_source.html">__main__.py</a>.</p>
-
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>ms_database_connector/<a class="el" href="____main_____8py_source.html">__main__.py</a></li>
+<li>ms_database_connector/<a class="el" href="____main_____8py.html">__main__.py</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

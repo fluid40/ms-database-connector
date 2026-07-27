@@ -1,5 +1,0 @@
-<map id="test_polling_worker.TestWriteInfluxPoints.test_continues_writing_after_failure" name="test_polling_worker.TestWriteInfluxPoints.test_continues_writing_after_failure">
-<area shape="rect" id="Node000001" title="Test that writing continues even when a point fails to write." alt="" coords="5,5,187,75"/>
-<area shape="rect" id="Node000002" href="$namespacetest__polling__worker.html#a309e77a8b38f219dafb3b39a648341fe" title="Create a configurable PollingWorker test context." alt="" coords="235,20,419,60"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="187,37,221,37,221,43,187,43"/>
-</map>

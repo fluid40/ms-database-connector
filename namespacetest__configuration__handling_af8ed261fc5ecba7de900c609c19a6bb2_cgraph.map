@@ -1,5 +1,7 @@
 <map id="test_configuration_handling.test_raises_http_exception_when_aas_registry_has_no_json_files" name="test_configuration_handling.test_raises_http_exception_when_aas_registry_has_no_json_files">
-<area shape="rect" id="Node000001" title="Raise a file error when no AAS registry JSON file exists." alt="" coords="5,5,205,75"/>
-<area shape="rect" id="Node000002" href="$namespacetest__configuration__handling.html#a04644a6fa21802e498ecc9f4cfff4ead" title="Create the required configuration directory structure." alt="" coords="253,20,492,60"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="206,37,240,37,240,43,206,43"/>
+<area shape="rect" id="Node000001" title="Raise a file error when no AAS registry JSON file exists." alt="" coords="5,23,205,92"/>
+<area shape="rect" id="Node000002" href="$namespacetest__configuration__handling.html#a04644a6fa21802e498ecc9f4cfff4ead" title="Create the required configuration directory structure." alt="" coords="253,5,492,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="205,43,240,39,240,44,206,48"/>
+<area shape="rect" id="Node000003" href="$namespacetest__configuration__handling.html#a614e5048bfcd6a3b32de1bdb954c7fa2" title="Write a JSON payload to disk." alt="" coords="291,69,454,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="206,67,278,75,277,81,205,72"/>
 </map>

@@ -25,7 +25,7 @@
 var NAVTREE =
 [
   [ "Database Connector Documentation", "index.html", [
-    [ "ms-database-connector", "index.html", "index" ],
+    [ "Microservice: Database Connector", "index.html", "index" ],
     [ "Configuration Guide", "md_docs_2configuration.html", [
       [ "Table of Contents", "md_docs_2configuration.html#autotoc_md2", null ],
       [ "Overview", "md_docs_2configuration.html#autotoc_md3", null ],
@@ -130,9 +130,9 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "____init_____8py.html",
-"classtest__db__mapping__validation_1_1TestHttpErrorsForInvalidMapping.html#a56258324fc99189c164735196d9096f6",
-"classtest__polling__worker_1_1TestWriteInfluxPoints.html#a2f910c28aee2c3cb7732d02d31decac3",
-"md_docs_2mapping.html#autotoc_md51"
+"classtest__db__mapping__validation_1_1TestHttpErrorsForInvalidMapping.html#ac3318bcabadd976c061ce317fa662b17",
+"classtest__polling__worker_1_1TestWriteInfluxPoints.html#ab97f7e86b180e61a438797e852894e2b",
+"namespacems__database__connector.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
