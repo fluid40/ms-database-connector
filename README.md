@@ -1,4 +1,8 @@
-# ms-database-connector
+# Microservice: Database Connector
+
+[![License: MIT](https://img.shields.io/badge/license-MIT-%23f8a602?label=License&labelColor=%23992b2e)](https://github.com/fluid40/ms-database-connector/blob/main/LICENSE)
+[![CI](https://github.com/fluid40/ms-database-connector/actions/workflows/CI.yml/badge.svg?branch=main&cache-bust=1)](https://github.com/fluid40/ms-database-connector/actions)
+
 Microservice 'database connector' to write dynamic data into a time series database
 
 This service reads mapping and infrastructure configuration from the AAS ecosystem and continuously writes mapped dynamic asset data into a configured time-series database.
