@@ -1,6 +1,35 @@
 # ms-database-connector
 Microservice 'database connector' to write dynamic data into a time series database
 
+This service reads mapping and infrastructure configuration from the AAS ecosystem and continuously writes mapped dynamic asset data into a configured time-series database.
+
+## Features
+
+- Connects to AAS infrastructure services to resolve shells and submodels.
+- Loads Asset Interface Mapping Configuration (AIMC) and referenced AID submodels.
+- Maps incoming asset data to InfluxDB-compatible measurements and fields.
+- Supports local development, container execution, and GitHub release bundle deployment.
+
+## Prerequisites
+
+- Python 3.11 or newer.
+- Reachable AAS infrastructure services (AAS Registry, Submodel Registry, and at least one Repository server).
+- Valid JSON configuration files under the `configuration/` folder, including:
+  - `configuration/service_config.json`
+  - `configuration/db_mapping.json`
+  - `configuration/aas_registry/*.json`
+  - `configuration/submodel_registry/*.json`
+  - `configuration/repo_server/*.json`
+- An AAS containing an AIMC submodel and referenced AID submodels.
+- Optional for containerized deployment: Docker engine with network access to the required backend services.
+
+## Process
+
+1. The service reads `service_config.json` and the referenced infrastructure connector configuration files.
+2. It discovers and resolves target AAS shells and submodels via registry and repository endpoints.
+3. It loads AIMC and AID information, builds the mapping model, and initializes polling jobs.
+4. It continuously polls asset data, transforms values according to the mapping, and writes time-series points to the database.
+
 ## Devcontainer Endpoint Overview
 
 This project uses the services defined in `.devcontainer/docker-compose.yaml`.
@@ -9,7 +38,7 @@ The following endpoints are exposed to your host machine during local developmen
 ### Direct host endpoints (port mappings)
 
 | Service | URL | Purpose |
-|---|---|---|
+| --- | --- | --- |
 | InfluxDB v2 | http://127.0.0.1:8031 | InfluxDB v2 API and UI |
 | AAS Environment | http://127.0.0.1:8081 | AAS repository endpoints |
 | AAS Discovery | http://127.0.0.1:8084 | AAS discovery/lookup service |
@@ -65,3 +94,14 @@ docker run --rm -p 3090:3090 \
 	-e DBC_CONFIGURATION_FILE=/app/configuration/service_config.json \
 	ms-database-connector:0.0.1-<git-hash>
 ```
+
+## Resources
+
+- Documentation:
+  - [Configuration Guide](docs/configuration.md)
+  - [Demo Setup Guide](docs/demo.md)
+  - Detailed description of the [Mapping Process](docs/mapping.md)
+  - Process description for planned [interaction processes with the Connector](docs/process.md)
+- Changelog: [GitHub releases notes](https://github.com/fluid40/ms-database-connector/releases)
+- GitHub Release: [Latest release](https://github.com/fluid40/ms-database-connector/releases/latest)
+- MIT License: [LICENSE](LICENSE)
