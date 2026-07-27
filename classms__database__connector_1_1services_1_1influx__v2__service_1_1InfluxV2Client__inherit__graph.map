@@ -1,0 +1,7 @@
+<map id="ms_database_connector.services.influx_v2_service.InfluxV2Client" name="ms_database_connector.services.influx_v2_service.InfluxV2Client">
+<area shape="rect" id="Node000001" title="Client for InfluxDB v2 interactions." alt="" coords="111,93,388,133"/>
+<area shape="rect" id="Node000002" href="$classms__database__connector_1_1services_1_1influx__service_1_1IInfluxClient.html" title="Interface definitions for InfluxDB clients." alt="" coords="5,5,283,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="179,52,228,91,224,95,176,56"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="307,13,402,38"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="332,49,274,95,271,91,328,45"/>
+</map>

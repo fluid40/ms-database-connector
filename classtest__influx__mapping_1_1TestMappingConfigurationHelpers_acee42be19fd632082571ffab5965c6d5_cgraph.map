@@ -1,0 +1,5 @@
+<map id="test_influx_mapping.TestMappingConfigurationHelpers.test_extract_target_references_from_mapping_configuration_flattens_relations" name="test_influx_mapping.TestMappingConfigurationHelpers.test_extract_target_references_from_mapping_configuration_flattens_relations">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,249,89"/>
+<area shape="rect" id="Node000002" href="$namespacetest__influx__mapping.html#ab63bd702bf13f719d1fcc3462c51d86d" title="Create a lightweight reference&#45;like object for tests." alt="" coords="297,27,456,67"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="249,45,284,45,284,50,249,50"/>
+</map>

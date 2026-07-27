@@ -1,0 +1,9 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,45,55,70"/>
+<area shape="rect" id="Node000001" href="$classms__database__connector_1_1config_1_1server__config__loader_1_1ServerConfigLoader.html" title="Abstract interface for loading server configurations." alt="" coords="103,37,369,77"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="68,55,103,55,103,60,68,60"/>
+<area shape="rect" id="Node000002" href="$classmock__server__config__loader_1_1MockServerConfigLoader.html" title="Mock implementation of ServerConfigLoader for testing." alt="" coords="450,5,685,45"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="383,40,450,34,450,39,384,46"/>
+<area shape="rect" id="Node000003" href="$classms__database__connector_1_1utils_1_1configuration__handling_1_1ServerConfigurationsHandler.html" title="Handler for loading and managing server configurations." alt="" coords="417,69,717,109"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="383,69,418,72,417,78,383,74"/>
+</map>

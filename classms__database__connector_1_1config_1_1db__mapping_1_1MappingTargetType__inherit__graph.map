@@ -1,0 +1,15 @@
+<map id="ms_database_connector.config.db_mapping.MappingTargetType" name="ms_database_connector.config.db_mapping.MappingTargetType">
+<area shape="rect" id="Node000001" title="Enumeration of supported InfluxDB target types for mapped fields." alt="" coords="112,37,355,77"/>
+<area shape="rect" id="Node000004" href="$classms__database__connector_1_1config_1_1db__mapping_1_1MeasurementMapping.html" title="Mapping configuration for a single InfluxDB measurement." alt="" coords="413,5,656,45"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="368,40,413,36,413,41,369,46"/>
+<area shape="rect" id="Node000006" href="$classms__database__connector_1_1config_1_1db__mapping_1_1RawMeasurementMapping.html" title="Raw measurement mapping allowing None values for unfilled templates." alt="" coords="403,69,667,109"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="368,69,403,73,402,78,368,74"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="15,19,54,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="68,33,112,39,111,44,67,39"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,69,64,94"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="77,74,112,69,112,75,78,79"/>
+<area shape="rect" id="Node000005" href="$classms__database__connector_1_1config_1_1db__mapping_1_1DbMapping.html" title="Complete AIMC&#45;to&#45;InfluxDB field mapping configuration." alt="" coords="715,5,957,45"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="670,23,714,23,714,28,670,28"/>
+<area shape="rect" id="Node000007" href="$classms__database__connector_1_1config_1_1db__mapping_1_1RawDbMapping.html" title="Raw AIMC&#45;to&#45;InfluxDB mapping with optional unfilled entries." alt="" coords="715,69,957,109"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="680,87,715,87,715,92,680,92"/>
+</map>

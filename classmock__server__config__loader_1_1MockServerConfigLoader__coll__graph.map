@@ -1,0 +1,7 @@
+<map id="mock_server_config_loader.MockServerConfigLoader" name="mock_server_config_loader.MockServerConfigLoader">
+<area shape="rect" id="Node000001" title="Mock implementation of ServerConfigLoader for testing." alt="" coords="21,167,256,207"/>
+<area shape="rect" id="Node000002" href="$classms__database__connector_1_1config_1_1server__config__loader_1_1ServerConfigLoader.html" title="Abstract interface for loading server configurations." alt="" coords="5,79,272,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="141,133,141,166,136,166,136,133"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="114,5,163,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="141,44,141,79,136,79,136,44"/>
+</map>

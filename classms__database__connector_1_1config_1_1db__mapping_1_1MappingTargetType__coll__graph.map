@@ -1,0 +1,7 @@
+<map id="ms_database_connector.config.db_mapping.MappingTargetType" name="ms_database_connector.config.db_mapping.MappingTargetType">
+<area shape="rect" id="Node000001" title="Enumeration of supported InfluxDB target types for mapped fields." alt="" coords="5,79,248,119"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="71,5,110,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,42,120,77,116,80,99,44"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="135,5,193,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="155,44,138,80,133,77,150,42"/>
+</map>

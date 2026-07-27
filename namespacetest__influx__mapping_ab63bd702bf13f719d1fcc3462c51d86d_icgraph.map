@@ -1,0 +1,23 @@
+<map id="test_influx_mapping._make_ref" name="test_influx_mapping._make_ref">
+<area shape="rect" id="Node000001" title="Create a lightweight reference&#45;like object for tests." alt="" coords="297,456,456,496"/>
+<area shape="rect" id="Node000002" href="$classtest__influx__mapping_1_1TestInfluxMapper.html#adb6ac5407cac97f3d4176fd022313623" title=" " alt="" coords="21,5,234,75"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="371,443,363,370,344,276,328,226,307,176,280,130,247,89,233,76,236,72,251,85,285,127,311,174,333,224,349,275,369,369,376,442"/>
+<area shape="rect" id="Node000003" href="$classtest__influx__mapping_1_1TestAccessCheck.html#ae84c39f9b0b5e1f428e7a06c879b3bd8" title=" " alt="" coords="27,99,227,168"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="367,443,354,387,332,317,297,245,274,212,248,182,226,166,229,161,251,178,278,208,301,242,336,315,359,386,372,442"/>
+<area shape="rect" id="Node000004" href="$classtest__influx__mapping_1_1TestAccessCheck.html#a9cacae40b03a96b8302788ab76bef9d0" title=" " alt="" coords="30,192,225,261"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="360,444,343,406,318,361,286,315,248,275,223,259,226,255,251,271,290,312,323,358,348,403,365,442"/>
+<area shape="rect" id="Node000005" href="$classtest__influx__mapping_1_1TestMappingConfigurationHelpers.html#a9e1f94f9b82e10183909a6b0056f4afd" title=" " alt="" coords="5,285,249,355"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="345,448,301,408,248,369,226,357,229,353,251,364,305,404,349,444"/>
+<area shape="rect" id="Node000006" href="$classtest__influx__mapping_1_1TestMappingConfigurationHelpers.html#acee42be19fd632082571ffab5965c6d5" title=" " alt="" coords="5,379,249,463"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="284,458,249,451,250,446,285,453"/>
+<area shape="rect" id="Node000007" href="$classtest__influx__mapping_1_1TestInfluxMapper.html#a182b851e15956775d12e1408299c1921" title=" " alt="" coords="28,487,227,571"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="285,498,228,511,226,505,283,493"/>
+<area shape="rect" id="Node000008" href="$classtest__influx__mapping_1_1TestInfluxMapper.html#a557777ce072d4dcc21c19b8cbdd73b9e" title=" " alt="" coords="9,596,246,665"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="348,508,304,547,251,585,226,598,224,593,248,580,300,543,344,504"/>
+<area shape="rect" id="Node000009" href="$classtest__influx__mapping_1_1TestInfluxMapper.html#a6b0afccf629ea5c2595661333d289fa0" title=" " alt="" coords="10,689,245,759"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="365,510,347,548,322,594,290,639,251,679,234,691,231,687,248,675,286,636,318,591,343,546,360,508"/>
+<area shape="rect" id="Node000010" href="$classtest__influx__mapping_1_1TestInfluxMapper.html#a91a72329768b2f15797ccff21ec95cad" title=" " alt="" coords="10,783,245,852"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="372,510,359,566,336,636,301,709,278,742,251,773,236,785,233,781,247,769,274,739,296,706,331,634,354,564,367,509"/>
+<area shape="rect" id="Node000011" href="$classtest__influx__mapping_1_1TestInfluxMapper.html#a7284821ece1e0efc4867a4be64e7bc3d" title=" " alt="" coords="12,877,243,931"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="377,510,370,583,350,678,334,728,313,778,285,825,251,866,236,879,232,874,247,862,281,821,308,776,329,726,345,676,364,582,372,509"/>
+</map>

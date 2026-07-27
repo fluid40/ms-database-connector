@@ -1,0 +1,5 @@
+<map id="test_polling_worker.TestPollOnce.test_executes_write_when_collection_succeeds" name="test_polling_worker.TestPollOnce.test_executes_write_when_collection_succeeds">
+<area shape="rect" id="Node000001" title="Test that _poll_once executes write phase when collection succeeds." alt="" coords="5,5,184,75"/>
+<area shape="rect" id="Node000002" href="$namespacetest__polling__worker.html#a309e77a8b38f219dafb3b39a648341fe" title="Create a configurable PollingWorker test context." alt="" coords="232,20,416,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="184,37,218,37,218,43,184,43"/>
+</map>

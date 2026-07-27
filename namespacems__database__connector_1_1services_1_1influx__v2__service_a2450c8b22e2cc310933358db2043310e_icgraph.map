@@ -1,0 +1,5 @@
+<map id="ms_database_connector.services.influx_v2_service._establish_connection" name="ms_database_connector.services.influx_v2_service._establish_connection">
+<area shape="rect" id="Node000001" title="Establish connection to InfluxDB with retry logic." alt="" coords="331,5,608,45"/>
+<area shape="rect" id="Node000002" href="$namespacems__database__connector_1_1services_1_1influx__v2__service.html#a9290c14c0a7cb90065904eddfc4858f5" title="Create and initialize an InfluxDB v2 client." alt="" coords="5,5,283,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="317,28,283,28,283,23,317,23"/>
+</map>

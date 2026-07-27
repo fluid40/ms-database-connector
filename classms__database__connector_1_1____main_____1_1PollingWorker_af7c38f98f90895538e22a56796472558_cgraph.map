@@ -1,0 +1,7 @@
+<map id="ms_database_connector.__main__.PollingWorker._poll_once" name="ms_database_connector.__main__.PollingWorker._poll_once">
+<area shape="rect" id="Node000001" title="Execute a single polling cycle." alt="" coords="5,45,188,100"/>
+<area shape="rect" id="Node000002" href="$classms__database__connector_1_1____main_____1_1PollingWorker.html#a8ecba1a2300fba67b48e8ed37e99fc8e" title="Collect mapped InfluxDB points required for one polling cycle." alt="" coords="236,5,459,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="188,55,222,50,223,55,189,61"/>
+<area shape="rect" id="Node000003" href="$classms__database__connector_1_1____main_____1_1PollingWorker.html#a78b3dd07cc2549a85b0034defef9d457" title="Persist a prepared set of InfluxDB points for one polling cycle." alt="" coords="241,84,453,139"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="189,84,228,90,227,96,188,89"/>
+</map>

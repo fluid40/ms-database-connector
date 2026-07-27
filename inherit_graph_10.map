@@ -1,0 +1,11 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$classms__database__connector_1_1services_1_1influx__service_1_1IInfluxClient.html" title="Interface definitions for InfluxDB clients." alt="" coords="5,5,283,45"/>
+<area shape="rect" id="Node000001" href="$classms__database__connector_1_1services_1_1influx__v2__service_1_1InfluxV2Client.html" title="Client for InfluxDB v2 interactions." alt="" coords="331,5,608,45"/>
+<area shape="poly" id="edge27_Node000000_Node000001" title=" " alt="" coords="297,23,330,23,330,28,297,28"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="97,77,191,102"/>
+<area shape="poly" id="edge30_Node000002_Node000001" title=" " alt="" coords="205,75,366,43,367,48,206,80"/>
+<area shape="rect" id="Node000003" href="$classms__database__connector_1_1config_1_1server__configuration_1_1ServerConfiguration.html" title="Represents the HTTP server configuration." alt="" coords="336,69,603,109"/>
+<area shape="poly" id="edge28_Node000002_Node000003" title=" " alt="" coords="205,87,336,87,336,92,205,92"/>
+<area shape="rect" id="Node000004" href="$classms__database__connector_1_1config_1_1service__configuration_1_1ServiceConfiguration.html" title="Runtime configuration for the microservice application." alt="" coords="333,133,606,173"/>
+<area shape="poly" id="edge29_Node000002_Node000004" title=" " alt="" coords="206,99,367,131,366,136,205,104"/>
+</map>

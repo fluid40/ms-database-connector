@@ -1,0 +1,5 @@
+<map id="test_configuration_handling.test_raises_http_exception_for_malformed_aas_registry_config" name="test_configuration_handling.test_raises_http_exception_for_malformed_aas_registry_config">
+<area shape="rect" id="Node000001" title="Raise a validation error when AAS registry config contains malformed JSON." alt="" coords="5,5,236,75"/>
+<area shape="rect" id="Node000002" href="$namespacetest__configuration__handling.html#a04644a6fa21802e498ecc9f4cfff4ead" title="Create the required configuration directory structure." alt="" coords="284,20,523,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="236,37,271,37,271,43,236,43"/>
+</map>

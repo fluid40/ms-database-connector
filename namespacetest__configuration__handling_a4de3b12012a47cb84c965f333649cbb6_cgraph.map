@@ -1,0 +1,9 @@
+<map id="test_configuration_handling.test_empty_repo_configs_when_no_repo_json_files" name="test_configuration_handling.test_empty_repo_configs_when_no_repo_json_files">
+<area shape="rect" id="Node000001" title="Allow empty repository configurations when no repo JSON files exist." alt="" coords="5,63,181,132"/>
+<area shape="rect" id="Node000002" href="$namespacetest__configuration__handling.html#a04644a6fa21802e498ecc9f4cfff4ead" title="Create the required configuration directory structure." alt="" coords="229,5,468,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="181,69,229,55,258,46,260,52,230,60,182,74"/>
+<area shape="rect" id="Node000003" href="$namespacetest__configuration__handling.html#a6ec65e78441474e7fcb9eccb8d9c9744" title="Build a minimal valid ServerConfiguration payload." alt="" coords="261,70,437,125"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="182,95,247,95,247,100,182,100"/>
+<area shape="rect" id="Node000004" href="$namespacetest__configuration__handling.html#a614e5048bfcd6a3b32de1bdb954c7fa2" title="Write a JSON payload to disk." alt="" coords="267,149,430,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="182,120,230,133,264,143,262,148,229,139,181,125"/>
+</map>

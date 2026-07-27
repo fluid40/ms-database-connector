@@ -1,0 +1,5 @@
+<map id="ms_database_connector.services.aas_infrastructure_service.get_submodel_via_registry" name="ms_database_connector.services.aas_infrastructure_service.get_submodel_via_registry">
+<area shape="rect" id="Node000001" title="Retrieve a Submodel from AAS servers using the registry." alt="" coords="317,5,581,60"/>
+<area shape="rect" id="Node000002" href="$namespacems__database__connector_1_1services_1_1aas__infrastructure__service.html#a96670d4e86fd2c04e581a342b1ea6ea3" title="Check if read access to a SubmodelElement is available." alt="" coords="5,5,269,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="304,35,269,35,269,30,304,30"/>
+</map>

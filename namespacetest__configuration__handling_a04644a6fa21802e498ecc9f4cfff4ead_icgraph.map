@@ -1,0 +1,21 @@
+<map id="test_configuration_handling._prepare_required_dirs" name="test_configuration_handling._prepare_required_dirs">
+<area shape="rect" id="Node000001" title="Create the required configuration directory structure." alt="" coords="284,393,523,433"/>
+<area shape="rect" id="Node000002" href="$namespacetest__configuration__handling.html#a4de3b12012a47cb84c965f333649cbb6" title="Allow empty repository configurations when no repo JSON files exist." alt="" coords="33,5,209,75"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="391,381,372,320,340,242,294,160,266,122,234,89,207,70,210,65,238,85,270,119,299,157,344,239,377,318,396,379"/>
+<area shape="rect" id="Node000003" href="$namespacetest__configuration__handling.html#a9dab67340e256d1e7bdda4c6ae00c080" title="Raise a file error when no Submodel registry JSON files exist." alt="" coords="14,99,227,168"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="384,382,360,338,326,285,284,230,234,182,217,170,220,166,238,178,288,227,331,282,365,335,389,380"/>
+<area shape="rect" id="Node000004" href="$namespacetest__configuration__handling.html#aa704288ea70609ed80f4944519c48082" title="Raise a validation error when AAS registry config contains malformed JSON." alt="" coords="5,192,236,261"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="370,385,310,331,235,276,213,264,215,259,237,271,314,327,374,381"/>
+<area shape="rect" id="Node000005" href="$namespacetest__configuration__handling.html#a31b48289560a6dfcc1395795dc70c844" title="Raise a validation error when Submodel registry config contains malformed JSON." alt="" coords="5,285,236,355"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="328,391,225,357,227,352,330,386"/>
+<area shape="rect" id="Node000006" href="$namespacetest__configuration__handling.html#af8ed261fc5ecba7de900c609c19a6bb2" title="Raise a file error when no AAS registry JSON file exists." alt="" coords="21,379,221,448"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="270,416,221,416,221,411,270,411"/>
+<area shape="rect" id="Node000007" href="$namespacetest__configuration__handling.html#a060d6f2dac86113dc3f75247798e9f50" title="Raise a path error when aas_registry directory does not exist." alt="" coords="8,472,233,541"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="330,440,227,475,225,469,328,435"/>
+<area shape="rect" id="Node000008" href="$namespacetest__configuration__handling.html#a7f2116e3361b0b0624d1c7b46f843842" title="Raise a path error when repo_server directory does not exist." alt="" coords="24,565,217,635"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="374,445,314,500,237,556,215,568,213,563,235,551,310,496,370,441"/>
+<area shape="rect" id="Node000009" href="$namespacetest__configuration__handling.html#a9dbf013facd7eebc08e136b30e1562b4" title="Raise a path error when submodel_registry directory does not exist." alt="" coords="9,659,232,728"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="389,447,365,491,331,545,288,600,238,649,220,661,217,656,234,645,284,597,326,542,360,489,384,444"/>
+<area shape="rect" id="Node000010" href="$namespacetest__configuration__handling.html#a8b3b648f340112883aba30c6584d7d8f" title="Ignore malformed repository configs and keep valid repository configs." alt="" coords="35,752,207,821"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="396,447,377,509,344,587,299,669,270,708,238,742,209,762,206,758,234,738,266,704,294,667,340,585,372,507,391,446"/>
+</map>

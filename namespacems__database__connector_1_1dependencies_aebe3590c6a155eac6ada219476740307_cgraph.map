@@ -1,0 +1,5 @@
+<map id="ms_database_connector.dependencies.get_influx_client" name="ms_database_connector.dependencies.get_influx_client">
+<area shape="rect" id="Node000001" title="Create and cache an InfluxDB client using current service configuration." alt="" coords="5,5,304,45"/>
+<area shape="rect" id="Node000002" href="$namespacems__database__connector_1_1dependencies.html#a7af9b0b404b191c5748b0b8a89dfe0fe" title="Load the runtime service configuration from environment." alt="" coords="352,5,651,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="304,23,338,23,338,28,304,28"/>
+</map>

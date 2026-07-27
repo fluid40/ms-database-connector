@@ -1,0 +1,9 @@
+<map id="test_configuration_handling.test_skips_invalid_repo_configs_and_loads_valid_ones" name="test_configuration_handling.test_skips_invalid_repo_configs_and_loads_valid_ones">
+<area shape="rect" id="Node000001" title="Ignore malformed repository configs and keep valid repository configs." alt="" coords="5,63,177,132"/>
+<area shape="rect" id="Node000002" href="$namespacetest__configuration__handling.html#a04644a6fa21802e498ecc9f4cfff4ead" title="Create the required configuration directory structure." alt="" coords="225,5,464,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="177,69,225,55,254,47,255,52,226,60,178,74"/>
+<area shape="rect" id="Node000003" href="$namespacetest__configuration__handling.html#a6ec65e78441474e7fcb9eccb8d9c9744" title="Build a minimal valid ServerConfiguration payload." alt="" coords="257,70,433,125"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="178,95,243,95,243,100,178,100"/>
+<area shape="rect" id="Node000004" href="$namespacetest__configuration__handling.html#a614e5048bfcd6a3b32de1bdb954c7fa2" title="Write a JSON payload to disk." alt="" coords="263,149,426,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="178,120,226,133,259,143,258,148,225,139,177,125"/>
+</map>

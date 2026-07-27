@@ -1,0 +1,7 @@
+<map id="ms_database_connector.models.exceptions.configuration_errors.ConfigurationPathError" name="ms_database_connector.models.exceptions.configuration_errors.ConfigurationPathError">
+<area shape="rect" id="Node000001" title="Raised when required configuration files are missing." alt="" coords="5,167,400,207"/>
+<area shape="rect" id="Node000002" href="$classms__database__connector_1_1models_1_1exceptions_1_1configuration__errors_1_1ConfigurationError.html" title="Custom exceptions for configuration loading and validation failures." alt="" coords="5,79,400,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="205,133,205,166,200,166,200,133"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="159,5,246,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="205,44,205,79,200,79,200,44"/>
+</map>

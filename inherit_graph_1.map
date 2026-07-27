@@ -1,0 +1,31 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" title=" " alt="" coords="210,94,257,120"/>
+<area shape="rect" id="Node000001" href="$classms__database__connector_1_1config_1_1db__mapping_1_1DbMapping.html" title="Complete AIMC&#45;to&#45;InfluxDB field mapping configuration." alt="" coords="715,88,957,128"/>
+<area shape="poly" id="edge4_Node000000_Node000001" title=" " alt="" coords="270,99,402,83,535,77,667,83,715,88,714,93,666,88,535,83,403,88,270,104"/>
+<area shape="rect" id="Node000002" href="$classms__database__connector_1_1config_1_1db__mapping_1_1MeasurementMapping.html" title="Mapping configuration for a single InfluxDB measurement." alt="" coords="413,142,656,182"/>
+<area shape="poly" id="edge5_Node000000_Node000002" title=" " alt="" coords="271,111,424,139,423,144,270,116"/>
+<area shape="rect" id="Node000005" href="$classms__database__connector_1_1config_1_1db__mapping_1_1RawDbMapping.html" title="Raw AIMC&#45;to&#45;InfluxDB mapping with optional unfilled entries." alt="" coords="715,278,957,318"/>
+<area shape="poly" id="edge7_Node000000_Node000005" title=" " alt="" coords="270,98,345,89,446,85,502,88,559,95,615,108,668,127,720,159,764,200,800,242,824,276,820,279,795,245,760,204,716,163,666,132,613,113,558,101,502,93,446,91,346,94,271,103"/>
+<area shape="rect" id="Node000004" href="$classms__database__connector_1_1config_1_1db__mapping_1_1RawMeasurementMapping.html" title="Raw measurement mapping allowing None values for unfilled templates." alt="" coords="403,307,667,347"/>
+<area shape="poly" id="edge8_Node000000_Node000004" title=" " alt="" coords="268,125,356,185,511,305,507,309,353,189,265,129"/>
+<area shape="poly" id="edge6_Node000002_Node000001" title=" " alt="" coords="661,137,722,126,723,131,662,142"/>
+<area shape="poly" id="edge9_Node000004_Node000005" title=" " alt="" coords="680,310,714,307,715,312,681,315"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="205,365,261,390"/>
+<area shape="poly" id="edge10_Node000008_Node000004" title=" " alt="" coords="275,368,415,344,416,350,275,373"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="15,250,54,276"/>
+<area shape="poly" id="edge11_Node000006_Node000001" title=" " alt="" coords="36,236,43,199,56,156,77,114,92,95,110,80,152,54,195,35,241,20,288,10,385,3,481,8,574,23,658,43,787,86,785,91,657,48,573,28,481,14,385,8,289,16,242,25,197,40,154,59,114,84,96,99,82,117,61,158,48,201,41,237"/>
+<area shape="poly" id="edge15_Node000006_Node000002" title=" " alt="" coords="51,237,76,208,111,185,186,159,265,146,342,142,413,144,413,150,343,147,266,152,187,165,113,189,80,212,55,240"/>
+<area shape="poly" id="edge16_Node000006_Node000005" title=" " alt="" coords="59,285,66,295,80,327,85,355,92,379,100,390,113,401,157,425,203,441,251,452,300,458,350,458,400,454,499,436,593,408,677,375,747,343,799,315,801,320,749,347,679,380,594,413,500,441,401,459,350,463,300,463,250,458,201,447,155,429,111,405,97,394,88,382,79,356,74,328,62,298,55,288"/>
+<area shape="poly" id="edge17_Node000006_Node000004" title=" " alt="" coords="68,261,194,269,355,286,452,304,451,310,354,291,193,274,67,267"/>
+<area shape="rect" id="Node000003" href="$classms__database__connector_1_1config_1_1db__mapping_1_1MappingTargetType.html" title="Enumeration of supported InfluxDB target types for mapped fields." alt="" coords="112,300,355,340"/>
+<area shape="poly" id="edge12_Node000006_Node000003" title=" " alt="" coords="68,270,164,298,163,303,66,275"/>
+<area shape="poly" id="edge13_Node000003_Node000002" title=" " alt="" coords="283,292,494,180,497,184,286,296"/>
+<area shape="poly" id="edge14_Node000003_Node000004" title=" " alt="" coords="368,321,403,321,403,327,368,326"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="5,308,64,333"/>
+<area shape="poly" id="edge18_Node000009_Node000003" title=" " alt="" coords="77,318,112,318,112,323,77,323"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="187,200,279,225"/>
+<area shape="poly" id="edge19_Node000007_Node000001" title=" " alt="" coords="293,215,369,218,463,218,565,210,666,191,704,178,742,161,803,126,806,131,744,166,706,183,667,196,566,215,463,223,369,224,293,220"/>
+<area shape="poly" id="edge20_Node000007_Node000002" title=" " alt="" coords="292,200,415,179,416,184,293,205"/>
+<area shape="poly" id="edge21_Node000007_Node000005" title=" " alt="" coords="293,219,403,235,715,279,714,284,402,240,292,224"/>
+<area shape="poly" id="edge22_Node000007_Node000004" title=" " alt="" coords="293,219,325,229,356,242,371,253,381,265,390,275,404,286,446,305,444,309,401,291,386,279,377,268,368,257,353,247,323,234,292,224"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="ms_database_connector.core.server_handling.ServerHandler.connect_to_sm_registry" name="ms_database_connector.core.server_handling.ServerHandler.connect_to_sm_registry">
+<area shape="rect" id="Node000001" title="Create and store the Submodel registry client." alt="" coords="5,5,261,60"/>
+<area shape="rect" id="Node000002" href="$namespacems__database__connector_1_1core_1_1server__handling.html#afd67e9d96c090023ed685d99b1f51468" title="Create an AAS SDK wrapper from server configuration and secret." alt="" coords="309,13,565,53"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="262,30,296,30,296,35,262,35"/>
+</map>

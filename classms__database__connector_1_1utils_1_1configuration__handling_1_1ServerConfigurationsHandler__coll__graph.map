@@ -1,0 +1,7 @@
+<map id="ms_database_connector.utils.configuration_handling.ServerConfigurationsHandler" name="ms_database_connector.utils.configuration_handling.ServerConfigurationsHandler">
+<area shape="rect" id="Node000001" title="Handler for loading and managing server configurations." alt="" coords="5,167,305,207"/>
+<area shape="rect" id="Node000002" href="$classms__database__connector_1_1config_1_1server__config__loader_1_1ServerConfigLoader.html" title="Abstract interface for loading server configurations." alt="" coords="22,79,289,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="158,133,158,166,153,166,153,133"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="131,5,180,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="158,44,158,79,153,79,153,44"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,45,92,70"/>
+<area shape="rect" id="Node000001" href="$classms__database__connector_1_1models_1_1exceptions_1_1configuration__errors_1_1ConfigurationError.html" title="Custom exceptions for configuration loading and validation failures." alt="" coords="140,37,535,77"/>
+<area shape="poly" id="edge23_Node000000_Node000001" title=" " alt="" coords="106,55,139,55,139,60,106,60"/>
+<area shape="rect" id="Node000002" href="$classms__database__connector_1_1models_1_1exceptions_1_1configuration__errors_1_1ConfigurationFileError.html" title="Raised when a configuration file cannot be parsed or validated." alt="" coords="583,5,977,45"/>
+<area shape="poly" id="edge24_Node000001_Node000002" title=" " alt="" coords="548,39,582,37,583,42,548,45"/>
+<area shape="rect" id="Node000003" href="$classms__database__connector_1_1models_1_1exceptions_1_1configuration__errors_1_1ConfigurationPathError.html" title="Raised when required configuration files are missing." alt="" coords="583,69,977,109"/>
+<area shape="poly" id="edge25_Node000001_Node000003" title=" " alt="" coords="548,70,583,72,582,78,548,75"/>
+</map>

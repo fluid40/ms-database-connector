@@ -1,0 +1,7 @@
+<map id="ms_database_connector.utils.logging_handler.initialize_logging" name="ms_database_connector.utils.logging_handler.initialize_logging">
+<area shape="rect" id="Node000001" title="Initialize the standard logging." alt="" coords="5,5,268,45"/>
+<area shape="rect" id="Node000002" href="$namespacems__database__connector_1_1utils_1_1logging__handler.html#add75912c76631d239ffcc567602ec89a" title="Set the log file." alt="" coords="316,5,579,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="268,23,302,23,302,28,268,28"/>
+<area shape="rect" id="Node000003" href="$namespacems__database__connector_1_1utils_1_1logging__handler.html#a03662edf5fdbf774e1c8a54cd464ff2c" title=" " alt="" coords="627,5,889,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="579,23,613,23,613,28,579,28"/>
+</map>

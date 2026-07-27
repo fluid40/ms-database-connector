@@ -1,0 +1,5 @@
+<map id="ms_database_connector.core.server_handling.ServerHandler.connect_to_aas_registry" name="ms_database_connector.core.server_handling.ServerHandler.connect_to_aas_registry">
+<area shape="rect" id="Node000001" title="Create and store the AAS registry client." alt="" coords="309,5,565,60"/>
+<area shape="rect" id="Node000002" href="$classms__database__connector_1_1core_1_1server__handling_1_1ServerHandler.html#aa3c9bf4a3aad9b77a8fc71528334a1a5" title="Initialize all configured registry clients and repository wrappers." alt="" coords="5,5,261,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="296,35,261,35,261,30,296,30"/>
+</map>

@@ -1,0 +1,21 @@
+<map id="ms_database_connector.config.db_mapping.RawDbMapping" name="ms_database_connector.config.db_mapping.RawDbMapping">
+<area shape="rect" id="Node000001" title="Raw AIMC&#45;to&#45;InfluxDB mapping with optional unfilled entries." alt="" coords="5,255,248,295"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="73,86,165,111"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,125,128,254,123,255,117,125"/>
+<area shape="rect" id="Node000005" href="$classms__database__connector_1_1config_1_1db__mapping_1_1RawMeasurementMapping.html" title="Raw measurement mapping allowing None values for unfilled templates." alt="" coords="189,167,453,207"/>
+<area shape="poly" id="edge5_Node000005_Node000002" title=" " alt="" coords="160,114,278,164,276,169,158,119"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="189,86,235,111"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="202,125,180,168,138,256,133,253,175,165,197,122"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="239,118,299,164,296,169,236,122"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="254,5,293,31"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="241,26,139,46,91,62,73,71,62,80,51,101,48,124,52,148,60,172,85,218,112,253,107,256,80,220,55,174,46,149,43,124,46,100,58,77,70,66,89,57,137,41,240,21"/>
+<area shape="poly" id="edge7_Node000005_Node000004" title=" " alt="" coords="282,44,301,118,317,165,312,167,296,119,277,45"/>
+<area shape="rect" id="Node000006" href="$classms__database__connector_1_1config_1_1db__mapping_1_1MappingTargetType.html" title="Enumeration of supported InfluxDB target types for mapped fields." alt="" coords="311,79,553,119"/>
+<area shape="poly" id="edge9_Node000006_Node000004" title=" " alt="" coords="306,33,395,76,392,81,304,37"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="267,215,170,257,168,252,265,210"/>
+<area shape="poly" id="edge8_Node000005_Node000006" title=" " alt="" coords="398,129,347,169,344,164,395,125"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="403,5,461,31"/>
+<area shape="poly" id="edge10_Node000006_Node000007" title=" " alt="" coords="435,44,435,79,429,79,429,44"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="577,86,633,111"/>
+<area shape="poly" id="edge11_Node000005_Node000008" title=" " alt="" coords="571,119,566,121,483,148,404,169,403,164,482,143,564,116,569,114"/>
+</map>

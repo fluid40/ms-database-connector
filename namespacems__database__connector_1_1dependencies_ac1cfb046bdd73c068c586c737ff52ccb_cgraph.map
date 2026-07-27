@@ -1,0 +1,7 @@
+<map id="ms_database_connector.dependencies.reconnect_influx_client" name="ms_database_connector.dependencies.reconnect_influx_client">
+<area shape="rect" id="Node000001" title="Force a fresh InfluxDB client initialization." alt="" coords="5,5,347,45"/>
+<area shape="rect" id="Node000002" href="$namespacems__database__connector_1_1dependencies.html#aebe3590c6a155eac6ada219476740307" title="Create and cache an InfluxDB client using current service configuration." alt="" coords="395,5,693,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="347,23,381,23,381,28,347,28"/>
+<area shape="rect" id="Node000003" href="$namespacems__database__connector_1_1dependencies.html#a7af9b0b404b191c5748b0b8a89dfe0fe" title="Load the runtime service configuration from environment." alt="" coords="741,5,1040,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="694,23,727,23,727,28,694,28"/>
+</map>

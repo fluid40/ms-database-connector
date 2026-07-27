@@ -1,0 +1,5 @@
+<map id="ms_database_connector.services.influx_v2_service.InfluxV2Client.write_point" name="ms_database_connector.services.influx_v2_service.InfluxV2Client.write_point">
+<area shape="rect" id="Node000001" title="Write a pre&#45;built Point object directly to InfluxDB." alt="" coords="331,5,608,45"/>
+<area shape="rect" id="Node000002" href="$classms__database__connector_1_1services_1_1influx__v2__service_1_1InfluxV2Client.html#af738c4786eb56468c1497ba2231edcb8" title="Write data point to InfluxDB." alt="" coords="5,5,283,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="317,28,283,28,283,23,317,23"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="test_configuration_handling.test_raises_path_error_when_repo_server_directory_missing" name="test_configuration_handling.test_raises_path_error_when_repo_server_directory_missing">
+<area shape="rect" id="Node000001" title="Raise a path error when repo_server directory does not exist." alt="" coords="5,63,199,132"/>
+<area shape="rect" id="Node000002" href="$namespacetest__configuration__handling.html#a04644a6fa21802e498ecc9f4cfff4ead" title="Create the required configuration directory structure." alt="" coords="247,5,485,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="198,68,246,55,277,46,278,52,247,60,200,73"/>
+<area shape="rect" id="Node000003" href="$namespacetest__configuration__handling.html#a6ec65e78441474e7fcb9eccb8d9c9744" title="Build a minimal valid ServerConfiguration payload." alt="" coords="278,70,454,125"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="199,95,264,95,264,100,199,100"/>
+<area shape="rect" id="Node000004" href="$namespacetest__configuration__handling.html#a614e5048bfcd6a3b32de1bdb954c7fa2" title="Write a JSON payload to disk." alt="" coords="285,149,447,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="199,121,280,143,278,148,198,126"/>
+</map>

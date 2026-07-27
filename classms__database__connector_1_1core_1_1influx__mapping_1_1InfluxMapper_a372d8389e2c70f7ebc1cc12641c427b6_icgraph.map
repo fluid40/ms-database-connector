@@ -1,0 +1,5 @@
+<map id="ms_database_connector.core.influx_mapping.InfluxMapper._build_reference_map" name="ms_database_connector.core.influx_mapping.InfluxMapper._build_reference_map">
+<area shape="rect" id="Node000001" title="Build a lookup map from sink paths to their references." alt="" coords="304,5,555,60"/>
+<area shape="rect" id="Node000002" href="$classms__database__connector_1_1core_1_1influx__mapping_1_1InfluxMapper.html#aca67b19fde1aa62940201253caae777d" title="Create InfluxDB data points from mapped SubmodelElements." alt="" coords="5,5,256,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="290,35,256,35,256,30,290,30"/>
+</map>

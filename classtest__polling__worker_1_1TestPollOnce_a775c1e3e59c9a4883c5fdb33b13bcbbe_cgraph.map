@@ -1,0 +1,5 @@
+<map id="test_polling_worker.TestPollOnce.test_poll_once_handles_mapper_exception_gracefully" name="test_polling_worker.TestPollOnce.test_poll_once_handles_mapper_exception_gracefully">
+<area shape="rect" id="Node000001" title="Test that _poll_once returns early when mapper raises an exception." alt="" coords="5,5,213,75"/>
+<area shape="rect" id="Node000002" href="$namespacetest__polling__worker.html#a309e77a8b38f219dafb3b39a648341fe" title="Create a configurable PollingWorker test context." alt="" coords="261,20,445,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="213,37,248,37,248,43,213,43"/>
+</map>

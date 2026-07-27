@@ -1,0 +1,5 @@
+<map id="test_polling_worker.TestPollOnce.test_skips_write_when_collection_returns_none" name="test_polling_worker.TestPollOnce.test_skips_write_when_collection_returns_none">
+<area shape="rect" id="Node000001" title="Test that _poll_once skips write phase when collection returns None." alt="" coords="5,5,232,60"/>
+<area shape="rect" id="Node000002" href="$namespacetest__polling__worker.html#a309e77a8b38f219dafb3b39a648341fe" title="Create a configurable PollingWorker test context." alt="" coords="280,13,464,53"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="232,30,266,30,266,35,232,35"/>
+</map>

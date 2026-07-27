@@ -1,0 +1,5 @@
+<map id="test_polling_worker.TestCollectInfluxPoints.test_returns_payload_when_all_dependencies_available" name="test_polling_worker.TestCollectInfluxPoints.test_returns_payload_when_all_dependencies_available">
+<area shape="rect" id="Node000001" title="Test that collection returns PollingCyclePayload when all dependencies are available." alt="" coords="5,5,204,75"/>
+<area shape="rect" id="Node000002" href="$namespacetest__polling__worker.html#a309e77a8b38f219dafb3b39a648341fe" title="Create a configurable PollingWorker test context." alt="" coords="252,20,436,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="204,37,238,37,238,43,204,43"/>
+</map>

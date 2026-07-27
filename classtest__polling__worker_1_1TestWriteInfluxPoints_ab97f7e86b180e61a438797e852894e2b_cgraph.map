@@ -1,0 +1,5 @@
+<map id="test_polling_worker.TestWriteInfluxPoints.test_calls_write_data_for_each_point" name="test_polling_worker.TestWriteInfluxPoints.test_calls_write_data_for_each_point">
+<area shape="rect" id="Node000001" title="Test that write_data is called once for each point in the batch." alt="" coords="5,5,244,60"/>
+<area shape="rect" id="Node000002" href="$namespacetest__polling__worker.html#a309e77a8b38f219dafb3b39a648341fe" title="Create a configurable PollingWorker test context." alt="" coords="292,13,476,53"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="244,30,278,30,278,35,244,35"/>
+</map>

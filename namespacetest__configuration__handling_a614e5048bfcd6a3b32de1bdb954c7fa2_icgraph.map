@@ -1,0 +1,15 @@
+<map id="test_configuration_handling._write_json" name="test_configuration_handling._write_json">
+<area shape="rect" id="Node000001" title="Write a JSON payload to disk." alt="" coords="284,253,447,293"/>
+<area shape="rect" id="Node000002" href="$namespacetest__configuration__handling.html#a4de3b12012a47cb84c965f333649cbb6" title="Allow empty repository configurations when no repo JSON files exist." alt="" coords="33,5,209,75"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="347,242,303,166,271,125,234,89,208,72,211,67,238,85,275,121,307,163,351,239"/>
+<area shape="rect" id="Node000003" href="$namespacetest__configuration__handling.html#a9dab67340e256d1e7bdda4c6ae00c080" title="Raise a file error when no Submodel registry JSON files exist." alt="" coords="14,99,227,168"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="328,247,284,214,235,182,211,170,214,166,237,178,287,210,331,242"/>
+<area shape="rect" id="Node000004" href="$namespacetest__configuration__handling.html#a31b48289560a6dfcc1395795dc70c844" title="Raise a validation error when Submodel registry config contains malformed JSON." alt="" coords="5,192,236,261"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="270,258,236,251,237,246,271,253"/>
+<area shape="rect" id="Node000005" href="$namespacetest__configuration__handling.html#a7f2116e3361b0b0624d1c7b46f843842" title="Raise a path error when repo_server directory does not exist." alt="" coords="24,285,217,355"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="271,294,218,304,217,299,270,289"/>
+<area shape="rect" id="Node000006" href="$namespacetest__configuration__handling.html#a9dbf013facd7eebc08e136b30e1562b4" title="Raise a path error when submodel_registry directory does not exist." alt="" coords="9,379,232,448"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="331,304,287,337,237,369,214,381,211,376,235,364,284,333,328,300"/>
+<area shape="rect" id="Node000007" href="$namespacetest__configuration__handling.html#a8b3b648f340112883aba30c6584d7d8f" title="Ignore malformed repository configs and keep valid repository configs." alt="" coords="35,472,207,541"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="351,307,307,384,275,425,238,462,208,481,205,476,234,458,271,422,303,381,347,304"/>
+</map>

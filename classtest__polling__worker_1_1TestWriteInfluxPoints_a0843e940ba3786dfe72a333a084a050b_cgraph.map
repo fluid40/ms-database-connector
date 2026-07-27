@@ -1,0 +1,5 @@
+<map id="test_polling_worker.TestWriteInfluxPoints.test_logs_failure_when_write_data_returns_false" name="test_polling_worker.TestWriteInfluxPoints.test_logs_failure_when_write_data_returns_false">
+<area shape="rect" id="Node000001" title="Test that a failure is logged when write_data returns False." alt="" coords="5,5,192,75"/>
+<area shape="rect" id="Node000002" href="$namespacetest__polling__worker.html#a309e77a8b38f219dafb3b39a648341fe" title="Create a configurable PollingWorker test context." alt="" coords="240,20,424,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="192,37,226,37,226,43,192,43"/>
+</map>
