@@ -1,4 +1,5 @@
-To setup a demonstration, do the following:
+# Setup for Database Connector Demo Workflow
+
 1. Ensure the docker network referenced in the devcontainer docker compose exists (`docker network create ms-shared-network `)
 2. If not done yet, generate the Influx API Token
    1. Open to the influx db UI (`http://localhost:8031/`) and navigate to the API Token View

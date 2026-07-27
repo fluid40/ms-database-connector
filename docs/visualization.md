@@ -1,3 +1,5 @@
+# Tips and Tricks for Data Visualization in InfluxDB
+
 The initial field and tag names can be very long due to the Submodel Element paths used here.
 To make this more readable, an Influx Query can be used, where the fields are mapped to shorter and readable names.
 

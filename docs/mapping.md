@@ -1,4 +1,4 @@
-# SME to InfluxDB Mapping Process
+# Mapping Process: From SubmodelElements to Influx Objects
 
 ## Overview
 
